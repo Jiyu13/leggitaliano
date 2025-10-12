@@ -34,6 +34,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
     # use the email as the unique identifier for authentication, instead of the default "username"
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ["username"]
     objects = UserManager()
 
     def __str__(self):
