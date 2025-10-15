@@ -11,7 +11,7 @@ export const FormPageContainer = styled.div`
   color: rgb(82, 82, 82);
 `
 export const FormContainer = styled.div`
-  width: 325px;
+  width: 350px;
   position: relative;
   max-width: 90%;
   margin-top: auto;
@@ -19,7 +19,7 @@ export const FormContainer = styled.div`
 
 `
 export const FormTitle = styled.div`
-  text-align: center;
+  text-align: left;
 `
 
 export const FormWrapper = styled.div`
@@ -34,27 +34,32 @@ export const FieldBox = styled.div`
 `
 export const FormLabel = styled.label`
     color: rgb(82, 82, 82);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: bold;
     margin-bottom: 0.2rem
 `
 
 export const FormInput = styled.input`
-    margin-bottom: 1rem;
-    padding: 10px 12px;
-    font-size: 1.2rem;
-    border-radius: 6px;
-    box-shadow: rgba(25, 4, 69, 0.05) 0px 3px 6px;
-    border: 1px solid rgba(25, 4, 69, 0.15);
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 10px 12px;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  box-shadow: rgba(25, 4, 69, 0.05) 0px 3px 6px;
+  border: 1px solid rgba(25, 4, 69, 0.15);
 `
 
-export const FormHeader = styled.h3`
-  margin: 12px 0 42px;
-`
+export const PasswordWrapper = styled.div`
+  position: relative;
+  //display: flex;
+  //align-items: center;
+`;
 
-export const NameFieldBox = styled.div`
-    display: flex;
-`
+export const FormButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 // =============== link style ===============================
 export const CustomLink = styled.a`
