@@ -24,8 +24,10 @@ def custom_validation(data):
         errors['errors']['length'] = 'Password must be at least 8 characters long.'
     if not any(char.isdigit() for char in password):
         errors['errors']['numeric'] = 'Password must contain at least 1 number.'
-    if not any(char.isalpha() for char in password):
-        errors['errors']['alphabetic'] = 'Password must contain at least 1 alphabetic character.'
+    if not any(char.isupper() for char in password):
+        errors['errors']['upper'] = 'Password must contain at least 1 uppercase character.'
+    if not any(char.islower() for char in password):
+        errors['errors']['lower'] = 'Password must contain at least 1 lowercase character.'
 
     if errors['errors']:
         return errors
