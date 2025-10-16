@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora&family=Playfair+Display&family=Raleway&family=Roboto&display=swap');
+
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+    font-family: 'Raleway', 'Lora', 'Playfair Display', 'Roboto', sans-serif;
+    color: #4a4a4a;
+    //font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    background-color: #fff;
+    letter-spacing: 0.3px;
+}
+
+
+
+/*.App {*/
+/*    width: 100%;*/
+/*    box-sizing: border-box;*/
+/*    margin: 0 auto;*/
+/*    !*overflow-y: auto;*!*/
+/*}*/
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+
+/* Remove or change the background color of autocomplete suggestions */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+    -webkit-background-clip: text;  /*  cannot remove the bg-color  without this setting */
+    transition: background-color 5000s ease-in-out 0s;
+}
