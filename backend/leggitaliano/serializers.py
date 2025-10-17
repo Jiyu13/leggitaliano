@@ -1,5 +1,5 @@
 # convert model instances to JSON so that frontend can work with the received data
-
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .models import *
 
@@ -25,3 +25,16 @@ class AppUserRegisterSerializer(serializers.ModelSerializer):
         )
         new_user.save()
         return new_user
+
+
+class AppUserLoginSerializer(serializers.Serializer):
+    """ authenticate username & password of the user"""
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def check_user(self, clean_data):
+        user = authenticate(email=clean_data['email'], password=clean_data['password'])
+        if not user:
+            raise serializers.ValidationError(
+                {"email": ["Invalid email or password. Please try again."]})  # Use DRF's ValidationError
+        return user
