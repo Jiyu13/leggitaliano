@@ -14,19 +14,28 @@ function ProtectedRoutes({children}) {
 
     const refreshToken = async () => {
         // refresh the access  token automatically
-        const refreshToken = localStorage.getItem(REFRESH_TOKEN)
+        const refresh = localStorage.getItem(REFRESH_TOKEN)
+
+        if (!refresh) return false;
+
         try {
-            const res = await api.post('/token/refresh/', {
-                refresh: refreshToken
-            })
+            // { headers: { Authorization: undefined }
+            const res = await api.post('/token/refresh/', {refresh: refresh})
             if (res.status === 200) {
                 localStorage.setItem(ACCESS_TOKEN, res.data.access)
+                return true
             } else {
-                setIsAuthorized(false)
+                // cleanup on failed refresh
+                localStorage.removeItem(ACCESS_TOKEN);
+                localStorage.removeItem(REFRESH_TOKEN);
+                return false
             }
         } catch (error) {
             console.log(error)
-            setIsAuthorized(false)
+            // cleanup on failed refresh
+            localStorage.removeItem(ACCESS_TOKEN);
+            localStorage.removeItem(REFRESH_TOKEN);
+            return false
         }
     }
 
@@ -37,22 +46,30 @@ function ProtectedRoutes({children}) {
             setIsAuthorized(false)
             return
         }
-        const decoded = jwtDecode(token)
-        const tokenExpiration = decoded.exp
-        const now = Date.now() / 1000
 
-        if (tokenExpiration < now) {
-            await refreshToken()
+        let tokenExpiration = 0;
+        try {
+          const decoded = jwtDecode(token);
+          tokenExpiration = typeof decoded?.exp === "number" ? decoded.exp : 0;
+        } catch {
+          // token malformed/expired -> try refresh
+          const ok = await refreshToken();
+          setIsAuthorized(ok);
+          return;
+        }
+
+        const now = Math.floor(Date.now() / 1000)
+        const skew = 10 // second
+        if (tokenExpiration <= now + skew) {
+            const refreshed =  await refreshToken()
+            setIsAuthorized(refreshed)
         } else {
             setIsAuthorized(true)
         }
     }
 
-    if (isAuthorized === null) {
-        return <div>Loading...</div>
-    }
-
-    return isAuthorized ? children : <Navigate to="/login" />
+    if (isAuthorized === null) return <div>Loading...</div>
+    return isAuthorized ? children : <Navigate to="/login" replace/>
 }
 
 export default ProtectedRoutes
