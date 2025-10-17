@@ -68,6 +68,12 @@ export const CustomLink = styled.a`
         text-decoration-thickness: 2px;
     }
 `
+export const LoginLink = styled(CustomLink)`
+  color: rgb(82, 82, 82);
+  font-size: 0.9rem;
+  margin: 0 6px;
+  font-weight: bold;
+`
 
 // ============== select & options ===========================
 export const SelectBox = styled.select`
@@ -85,4 +91,11 @@ export const OptionBox = styled.option`
 export const RequiredWarning = styled.span`
     color: rgb(242, 79, 102);
     font-size: 1rem;
+`
+
+export const FormErrorContainer = styled.ul`
+  color: #e74c3c;
+  font-size: 0.9rem;
+  padding-left: 15px;  
+  margin: 0 0 1rem;
 `

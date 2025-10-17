@@ -1,7 +1,7 @@
 import react, {useEffect, useState} from "react"
 import {Routes, Route, Navigate} from "react-router-dom";
 import {Provider} from "react-redux";
-import {UserContext} from "../user-content/UserContent";
+import {UserContext} from "./user-content/UserContent";
 import Register from "./pages/Register";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import Home from "./pages/Home";
@@ -22,7 +22,7 @@ function App() {
     const [currentUser, setCurrentUser] = useState(null)
 
     const userContextValue = {
-
+        currentUser, setCurrentUser,
     }
     return (
         <UserContext.Provider value={userContextValue}>
