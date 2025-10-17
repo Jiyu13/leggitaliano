@@ -7,6 +7,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import {ACCESS_TOKEN} from "./constants";
 
 function Logout() {
   localStorage.clear()
@@ -24,14 +25,21 @@ function App() {
     const userContextValue = {
         currentUser, setCurrentUser,
     }
+
+    // console.log("currentUser=========================================", currentUser)
+    // console.log("localStorage.getItem(ACCESS_TOKEN)", localStorage.getItem(ACCESS_TOKEN))
     return (
         <UserContext.Provider value={userContextValue}>
         <Routes>
             <Route exact path="*" element={<NotFound />}/>
             <Route exact path="/register" element={<Register />}/>
             <Route exact path="/login" element={<Login />}/>
-            <Route exact path="/" element={<ProtectedRoutes><Home /></ProtectedRoutes>}/>
-      </Routes>
+
+            <Route element={<ProtectedRoutes/>}>
+                 <Route exact path="/" element={<Home />}/>
+            </Route>
+
+        </Routes>
         </UserContext.Provider>
 
     );
