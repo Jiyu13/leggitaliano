@@ -25,6 +25,7 @@ urlpatterns = [
     path('users/', AppUserView.as_view(), name='users'),
     path('register/', AppUserRegisterView.as_view(), name='register'),
     path('login/', AppUserLoginView.as_view(), name='login'),
+    path('logout/', AppUserLogoutView.as_view(), name='login'),
     path('token/', TokenObtainPairView.as_view(), name='get_token'),
     path('token/refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('auth/', include('rest_framework.urls')),
