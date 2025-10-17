@@ -10,7 +10,7 @@ import {UserContext} from "../user-content/UserContent";
 
 export function HeaderMenu() {
 
-    const { currentUser } = useContext(UserContext)
+    const { currentUser, setCurrentUser } = useContext(UserContext)
 
    const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate()
@@ -34,13 +34,13 @@ export function HeaderMenu() {
 
     // =========== logout =================================
     function handleLogout() {
-      api('/logout', {method: "DELETE"})
-      .then((r) => {
-        if (r.ok) {
-
-          navigate('/login')
-        }
-      })
+      api.post('/logout/', { refresh: localStorage.getItem("refresh") })
+      .then((res) => {
+        if (res.status === 200) {
+            localStorage.clear();
+            setCurrentUser(null)
+            navigate('/login', {replace: true})
+        }})
       .catch((error) => {
         console.error("Error logging out:", error);
       });
