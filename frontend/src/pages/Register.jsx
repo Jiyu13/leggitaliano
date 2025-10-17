@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import api from "../api";
 import {
     CustomLink,
@@ -8,17 +8,19 @@ import {
     FormLabel,
     FormPageContainer,
     FormWrapper,
-    FormTitle, FormContainer, PasswordWrapper, FormButtonWrapper,
+    FormTitle, FormContainer, PasswordWrapper, FormButtonWrapper, LoginLink, FormErrorContainer,
 } from "../styles/formStyles";
-import {useNavigate} from "react-router-dom";
+import {replace, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {SubmitInputButton} from "../styles/buttonStyles";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 import {VisibilityIcon} from "../components/VisibilityIcon";
+import {UserContext} from "../user-content/UserContent";
 
 
 
 function Register() {
+    const {currentUser, setCurrentUser} = useContext(UserContext)
     const [emailExistError, setEmailExistError] = useState(null)
     const [lengthError, setLengthError] = useState(null)
     const [numericError, setNumericError] = useState(null)
@@ -31,9 +33,9 @@ function Register() {
     const inputType = visible ?  "text" : "password"
 
     const initialValue = {
-        username: "jiyu",
-        email: "ziru.fish@gmail.com",
-        password: "19930913fish",
+        username: "",
+        email: "",
+        password: "",
     }
     const [formData, setFormData] = useState(initialValue)
 
@@ -46,6 +48,12 @@ function Register() {
 
     async function handleSubmitCreateAccount(e) {
         e.preventDefault()
+        setEmailExistError(null)
+        setLengthError(null)
+        setNumericError(null)
+        setUppercaseError(null)
+        setLowercaseError(null)
+
         const createAccountData = {
             username: formData.username,
             email: formData.email,
@@ -54,35 +62,17 @@ function Register() {
 
         api.post('/register/', createAccountData, { withCredentials: true })
             .then(res => {
-                const user = res.data.user
-                // setCurrentUser(user)
+                const {access, refresh, user} = res.data
 
-                // ================================= perform the login ===============
-                // const loginUser = {
-                //     email: formData.email,
-                //     password: formData.password
-                // }
-                // return api.post('/login/', loginUser, { withCredentials: true })
-            })
-            .then((res) => {
-                // ============== login successful & create cart =================
-                //setIsLogin(true)
-                const user = res.data
-                //setCurrentUser(user)
-            })
-            .then(res => {
+                //  Save tokens
+                localStorage.setItem(ACCESS_TOKEN, access);
+                localStorage.setItem(REFRESH_TOKEN, refresh);
 
+                setCurrentUser(user)
+
+                navigate('/', { replace: true })
             })
             .catch(err => {
-                //setIsLogin(false)
-
-                setEmailExistError(null)
-                setLengthError(null)
-                setNumericError(null)
-                setUppercaseError(null)
-                setLowercaseError(null)
-
-
                 const error = err.response.data
 
                 if (error["email"]) {
@@ -117,12 +107,6 @@ function Register() {
                     <p>Create a new account</p>
                 </FormTitle>
 
-                {/*<PasswordRestrictions*/}
-                {/*    lengthError={lengthError}*/}
-                {/*    numericError={numericError}*/}
-                {/*    alphabeticError={alphabeticError}*/}
-                {/*/>*/}
-
                 <FormWrapper className="form-wrapper">
                     <Form onSubmit={handleSubmitCreateAccount} className="form">
                          <FieldBox className="field-box">
@@ -134,11 +118,7 @@ function Register() {
                                 value={formData.username}
                                 onChange={handleInputChange}
                             />
-                            {/*{lastNameError && (*/}
-                            {/*     <ErrorContainer>*/}
-                            {/*         <span>*{lastNameError}</span>*/}
-                            {/*     </ErrorContainer>*/}
-                            {/* )}*/}
+
                         </FieldBox>
                         <FieldBox className="field-box">
                             <FormLabel>Email</FormLabel>
@@ -150,9 +130,9 @@ function Register() {
                                 onChange={handleInputChange}
                             />
                             {emailExistError && (
-                                 <ErrorContainer>
+                                 <FormErrorContainer>
                                      <li>{emailExistError}</li>
-                                 </ErrorContainer>
+                                 </FormErrorContainer>
                              )}
                         </FieldBox>
                         <FieldBox className="field-box">
@@ -170,7 +150,7 @@ function Register() {
                             <div style={{fontSize: "0.9rem", fontWeight: "Bold"}}>
                                 *At least: 8 characters, 1 numbers, 1 upper, 1 lower
                             </div>
-                            <ErrorContainer style={{marginTop: "1rem"}}>
+                            <FormErrorContainer style={{marginTop: "1rem"}}>
                                 {lengthError && (
                                      <li>{lengthError}</li>
                                 )}
@@ -183,7 +163,7 @@ function Register() {
                                 {lowercaseError && (
                                      <li>{lowercaseError}</li>
                                 )}
-                             </ErrorContainer>
+                             </FormErrorContainer>
 
 
                         </FieldBox>
@@ -195,7 +175,7 @@ function Register() {
                                 disabled={disabledButton}
                                 style={{
                                     backgroundColor: disabledButton ? "rgba(40,44,52,.7)" : "rgba(40,44,52, 1)",
-                                    cursor: disabledButton ? "no-drop" : "pointer",
+                                    opacity: disabledButton ? 0.6 : 1,
                                 }}
                             />
                         </FormButtonWrapper>
@@ -216,20 +196,5 @@ function Register() {
     )
 }
 
-
-const LoginLink = styled(CustomLink)`
-  color: rgb(82, 82, 82);
-  font-size: 0.9rem;
-  margin: 0 6px;
-  font-weight: bold;
-`
-
-
-const ErrorContainer = styled.ul`
-  color: #e74c3c;
-  font-size: 0.9rem;
-  padding-left: 15px;  
-  margin: 0 0 1rem;
-`
 
 export default Register
