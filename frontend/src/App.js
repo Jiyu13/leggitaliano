@@ -22,7 +22,7 @@ function App() {
     const [currentUser, setCurrentUser] = useState(null)
 
     const userContextValue = {
-
+        currentUser, setCurrentUser,
     }
     return (
         <UserContext.Provider value={userContextValue}>
