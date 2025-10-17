@@ -26,35 +26,11 @@ function App() {
     }
     return (
         <UserContext.Provider value={userContextValue}>
-            <Routes>
-        <Route
-            exact
-            path="*"
-            element={
-              <NotFound />
-            }
-        />
-        <Route
-            exact
-            path="/register"
-            element={
-              <Register />
-            }
-        />
-        <Route
-            exact
-            path="/login"
-            element={
-              <Login />
-            }
-        />
-        <Route
-            exact
-            path="/"
-            element={
-              <ProtectedRoutes><Home /></ProtectedRoutes>
-            }
-        />
+        <Routes>
+            <Route exact path="*" element={<NotFound />}/>
+            <Route exact path="/register" element={<Register />}/>
+            <Route exact path="/login" element={<Login />}/>
+            <Route exact path="/" element={<ProtectedRoutes><Home /></ProtectedRoutes>}/>
       </Routes>
         </UserContext.Provider>
 
