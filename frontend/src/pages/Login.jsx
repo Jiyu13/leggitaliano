@@ -50,9 +50,9 @@ function Login() {
                 // save tokens for interceptors
                 localStorage.setItem(ACCESS_TOKEN, access);
                 localStorage.setItem(REFRESH_TOKEN, refresh);
-                navigate('/', { replace: true })
-                setLoginError(null)
                 setCurrentUser(user)
+                setLoginError(null)
+                navigate('/', { replace: true })
             } catch (error) {
                 console.log(error.response.data)
                 const data = error.response?.data || {};
