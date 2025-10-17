@@ -4,6 +4,7 @@ import {Navigate} from "react-router-dom";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 import {jwtDecode} from "jwt-decode";
 import api from "../api";
+import Header from "./Header";
 
 function ProtectedRoutes({children}) {
     const [isAuthorized, setIsAuthorized] = useState(null)
@@ -69,7 +70,16 @@ function ProtectedRoutes({children}) {
     }
 
     if (isAuthorized === null) return <div>Loading...</div>
-    return isAuthorized ? children : <Navigate to="/login" replace/>
+    return isAuthorized ?
+        <>
+            <Header />
+            <main>
+               {children}
+            </main>
+
+        </>
+        :
+        <Navigate to="/login" replace/>
 }
 
 export default ProtectedRoutes
