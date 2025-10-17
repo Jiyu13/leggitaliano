@@ -84,3 +84,13 @@ class AppUserLoginView(APIView):
                 },
                 status=status.HTTP_200_OK
             )
+
+class AppUserLogoutView(APIView):
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist() # Invalidate token
+            return Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
