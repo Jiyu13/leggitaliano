@@ -85,6 +85,17 @@ class AppUserLoginView(APIView):
                 status=status.HTTP_200_OK
             )
 
+
+class GetUserView(APIView):
+    """ /me/ endpoint that returns the currently logged in user"""
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+
+    def get(self, request):
+        serializer = AppUserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class AppUserLogoutView(APIView):
     def post(self, request):
         try:
