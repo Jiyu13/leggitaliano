@@ -48,9 +48,9 @@ const HeaderContainer = styled.header`
     // prevent padding from making 100% width extend beyond screen
     box-sizing: border-box;
     position: fixed;
-    z-index: 1;   // make navbar on top of articleList when scrolling down
+    z-index: 1000;   // make navbar on top of articleList when scrolling down
     top: 0;
-  
+    background-color: #fff;
 `
 
 const LeftSection = styled.div`
