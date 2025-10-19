@@ -1,12 +1,13 @@
 // Wrapper for a protected route, need an authentication token before accessing the route
 import {useEffect, useState} from "react";
-import {Navigate} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 import {jwtDecode} from "jwt-decode";
 import api from "../api";
 import Header from "./Header";
+import styled from "styled-components";
 
-function ProtectedRoutes({children}) {
+function ProtectedRoutes() {
     const [isAuthorized, setIsAuthorized] = useState(null)
 
     useEffect(() => {
@@ -71,15 +72,23 @@ function ProtectedRoutes({children}) {
 
     if (isAuthorized === null) return <div>Loading...</div>
     return isAuthorized ?
-        <>
+        <PageContainer>
             <Header />
-            <main>
-               {children}
-            </main>
+            <Main>
+               <Outlet />
+            </Main>
 
-        </>
+        </PageContainer>
         :
         <Navigate to="/login" replace/>
 }
+
+const PageContainer = styled.div`
+    margin: 0 auto;
+`
+const Main = styled.main`
+  min-height: 100vh;      /* fill the viewport */
+  padding-top: 60px;      /* offset your fixed Header height */
+`;
 
 export default ProtectedRoutes
