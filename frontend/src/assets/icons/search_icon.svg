@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+     viewBox="0 -960 960 960" fill="none" stroke="#555B6E"
+     stroke-width="80" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Lens -->
+  <circle cx="440" cy="-520" r="220"/>
+  <!-- Handle -->
+  <path d="M600 -360 L780 -180"/>
+</svg>
