@@ -4,9 +4,13 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
+from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404
 
-from .models import AppUser
-from .serializers import AppUserSerializer, AppUserRegisterSerializer, AppUserLoginSerializer
+
+from .models import *
+from .serializers import *
 from .user_validations import custom_validation
 
 
@@ -105,3 +109,37 @@ class AppUserLogoutView(APIView):
             return Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ArticlesByUserView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        articles = Article.objects.filter(user=request.user)
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = ArticlesByUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+class ArticlesByIDView(APIView):
+    def get(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id, user=request.user)
+        serializer = ArticleSerializer(article)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id, user=request.user)
+        serializer = ArticleSerializer(article, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id, user=request.user)
+        article.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

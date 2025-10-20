@@ -38,3 +38,9 @@ class AppUserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"email": ["Invalid email or password. Please try again."]})  # Use DRF's ValidationError
         return user
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = "__all__"
