@@ -30,5 +30,8 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='get_token'),
     path('token/refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('auth/', include('rest_framework.urls')),
+
+    path('articles/', ArticlesByUserView.as_view(), name='user_articles'),
+    path('article/<int:article_id>/', ArticlesByIDView.as_view(), name='user_articles'),
 ]
 

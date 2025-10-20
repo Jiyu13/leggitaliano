@@ -1,6 +1,8 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+import uuid as _uuid
+
 
 
 class UserManager(BaseUserManager):
@@ -39,3 +41,21 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.email} - {self.username}"
+
+
+class Article(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='articles')
+
+    title = models.CharField(max_length=255, db_index=True)
+    content = models.TextField()
+    current_page = models.PositiveIntegerField(default=0)
+    uuid = models.UUIDField(default=_uuid.uuid4, editable=False, unique=True)
+    finished = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.id} - {self.title}"
