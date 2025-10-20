@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import {ACCESS_TOKEN} from "./constants";
 import api from "./api";
+import Article from "./pages/Article";
 
 function Logout() {
   localStorage.clear()
@@ -22,6 +23,8 @@ function RegisterAndLogout() {
 
 function App() {
     const [currentUser, setCurrentUser] = useState(null)
+    const [articles, setArticles] = useState(null)
+    const [currentArticle, setCurrentArticle] = useState(null)
 
     // ========================== get user ==========================
     useEffect(() => {
@@ -41,12 +44,25 @@ function App() {
         getUser()
     }, [])
 
+    useEffect(() => {
+        async function getArticles(){
+            try {
+                const res = await api.get('/articles/')
+                const articles = res.data
+                setArticles(articles)
+            } catch (error) {
+                console.log(error?.response?.data);
+            }
+        }
+        getArticles()
+    }, []);
+
+
     const userContextValue = {
-        currentUser, setCurrentUser,
+        currentUser, setCurrentUser, articles, setArticles, currentArticle, setCurrentArticle,
     }
 
-    console.log("currentUser=========================================", currentUser)
-    console.log("localStorage.getItem(ACCESS_TOKEN)", localStorage.getItem(ACCESS_TOKEN))
+
     return (
         <UserContext.Provider value={userContextValue}>
         <Routes>
@@ -56,6 +72,7 @@ function App() {
 
             <Route element={<ProtectedRoutes/>}>
                  <Route exact path="/" element={<Home />}/>
+                 <Route exact path='/article/:article_title/:article_id' element={<Article />} />
             </Route>
 
         </Routes>
