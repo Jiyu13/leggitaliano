@@ -8,3 +8,8 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('email',)
     ordering = ('email',)
     list_filter = ("is_staff",)
+
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", 'title', 'current_page', 'uuid', "finished", "created_at", "update_at")
