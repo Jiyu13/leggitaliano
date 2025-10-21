@@ -136,6 +136,8 @@ function Article() {
                 handlePrevPage={handlePrevPage}
                 handleNextPage={handleNextPage}
                 handleFinishReading={handleFinishReading}
+                sentence={sentence}
+                setSentence={setSentence}
             />
         </ArticleContainer>
     )
