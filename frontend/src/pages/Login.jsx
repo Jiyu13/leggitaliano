@@ -13,14 +13,16 @@ import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 
 function Login() {
 
-    const {currentUser, setCurrentUser} = useContext(UserContext)
+    const {
+        isLogin, setIsLogin,
+        currentUser, setCurrentUser} = useContext(UserContext)
 
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(false)
     const navigate = useNavigate()
     const inputType = visible ?  "text" : "password"
 
-    const initialValue = {email: "", password: "",}
+    const initialValue = {email: "395751849@qq.com", password: "395751849Aqq.com",}
 
     const [loginError, setLoginError] = useState(null)
     const [formData, setFormData] = useState(initialValue)
@@ -50,9 +52,10 @@ function Login() {
                 // save tokens for interceptors
                 localStorage.setItem(ACCESS_TOKEN, access);
                 localStorage.setItem(REFRESH_TOKEN, refresh);
+                setIsLogin(true)
                 setCurrentUser(user)
                 setLoginError(null)
-                navigate('/', { replace: true })
+                window.location.replace('/');
             } catch (error) {
                 console.log(error.response.data)
                 const data = error.response?.data || {};
@@ -60,7 +63,8 @@ function Login() {
                     data.email?.[0] ||   // our own validation
                     data.detail ||       // DRF default error
                     data.message ||      // any custom message
-                    "Login failed. Please try again.";
+                    "Login failed. Please try again."
+                setIsLogin(false)
                 setLoginError(msg);
             } finally {
                 setLoading(false)

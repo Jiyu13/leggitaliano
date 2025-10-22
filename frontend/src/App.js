@@ -26,39 +26,54 @@ function App() {
     const [articles, setArticles] = useState(null)
     const [currentArticle, setCurrentArticle] = useState(null)
 
+    // ========================== set "isLogin" localStorage =========================
+    // stays at this top level, stop infinitive loop of fetching users/articles when logout
+    const storeIsLogin = localStorage.getItem("isLogin") === "true"
+    const [isLogin, setIsLogin] = useState(storeIsLogin)
+    useEffect(() => {
+        localStorage.setItem("isLogin", isLogin)
+    }, [isLogin]);
+
     // ========================== get user ==========================
     useEffect(() => {
-        const token = localStorage.getItem(ACCESS_TOKEN);
-        if (!token) return;
+        if (isLogin) {
+            const token = localStorage.getItem(ACCESS_TOKEN);
+            if (!token) return;
 
-        async function getUser() {
-            try {
-                const res = await api.get('/user/', )
-                const user = res.data
-                setCurrentUser(user)
-            } catch (error) {
-                setCurrentUser(null);
-                console.log(error.response)
+            async function getUser() {
+                try {
+                    const res = await api.get('/user/', )
+                    const user = res.data
+                    setCurrentUser(user)
+                } catch (error) {
+                    setCurrentUser(null);
+                    console.log("failed to get user",  error.response.data)
+                }
             }
+            getUser()
         }
-        getUser()
+
     }, [])
 
     useEffect(() => {
-        async function getArticles(){
-            try {
-                const res = await api.get('/articles/')
-                const articles = res.data
-                setArticles(articles)
-            } catch (error) {
-                console.log(error?.response?.data);
+        if (isLogin) {
+            async function getArticles(){
+                try {
+                    const res = await api.get('/articles/')
+                    const articles = res.data
+                    setArticles(articles)
+                } catch (error) {
+                    console.log("failed to get articles", error?.response?.data);
+                }
             }
+            getArticles()
         }
-        getArticles()
     }, []);
 
 
+    // console.log(isLogin, localStorage.getItem("isLogin"))
     const userContextValue = {
+        isLogin,setIsLogin,
         currentUser, setCurrentUser, articles, setArticles, currentArticle, setCurrentArticle,
     }
 
