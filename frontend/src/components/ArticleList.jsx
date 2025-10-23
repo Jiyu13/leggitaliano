@@ -10,7 +10,7 @@ function ArticleList() {
         <ArticlesListContainer className="article-list-container">
             <ListWrapper className="aArticle-list-wrapper">
                     {articles?.map(each =>
-                        <ArticleItemContainer className="article-item-container">
+                        <ArticleItemContainer className="article-item-container" key={each.id}>
                              <Link to={`article/${each.title.replaceAll(" ", "-")}/${each.id}`} key={each.id}>
                                 <ArticleItem className="article-item">
                                     {each.title}

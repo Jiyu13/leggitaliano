@@ -32,7 +32,7 @@ function Article() {
                 setLoading(false)
 
             } catch(error) {
-                console.log(error.response.data)
+                console.log("article", error.response.data)
             }
         }
         getArticle()

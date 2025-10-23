@@ -10,7 +10,7 @@ import {UserContext} from "../user-content/UserContent";
 
 export function HeaderMenu() {
 
-    const { currentUser, setCurrentUser } = useContext(UserContext)
+    const { setIsLogin, currentUser, setCurrentUser } = useContext(UserContext)
 
    const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate()
@@ -38,6 +38,7 @@ export function HeaderMenu() {
       .then((res) => {
         if (res.status === 200) {
             localStorage.clear();
+            setIsLogin(false)
             setCurrentUser(null)
             navigate('/login', {replace: true})
         }})
