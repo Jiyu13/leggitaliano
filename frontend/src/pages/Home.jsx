@@ -31,7 +31,8 @@ function Home() {
 }
 const HomePageContainer = styled.div`
   height: 100vh;
-  padding: 36px 150px;
+  width: 100%;
+  padding-top: 30px;
 `
 const ExploreMenuContainer = styled.div`
   display: flex;
