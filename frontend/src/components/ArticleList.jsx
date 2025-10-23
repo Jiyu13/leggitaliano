@@ -1,7 +1,6 @@
 import {useContext} from "react";
 import {UserContext} from "../user-content/UserContent";
 import styled from "styled-components";
-import {Link} from "react-router-dom";
 
 function ArticleList() {
     const { articles, setArticles } = useContext(UserContext)
@@ -11,7 +10,7 @@ function ArticleList() {
             <ListWrapper className="aArticle-list-wrapper">
                     {articles?.map(each =>
                         <ArticleItemContainer className="article-item-container" key={each.id}>
-                             <Link to={`article/${each.title.replaceAll(" ", "-")}/${each.id}`} key={each.id}>
+                             <Link href={`article/${each.title.replaceAll(" ", "-")}/${each.id}`} key={each.id}>
                                 <ArticleItem className="article-item">
                                     {each.title}
                                 </ArticleItem>
@@ -51,4 +50,14 @@ const ArticleItem = styled.div`
     cursor: pointer;
   }
 `
+
+const Link = styled.a`
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: inherit;
+  
+  &:hover {
+    color: #000000;
+  }
+`;
 export default ArticleList
