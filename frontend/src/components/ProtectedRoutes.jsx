@@ -1,13 +1,16 @@
 // Wrapper for a protected route, need an authentication token before accessing the route
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Navigate, Outlet} from "react-router-dom";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 import {jwtDecode} from "jwt-decode";
 import api from "../api";
 import Header from "./Header";
 import styled from "styled-components";
+import {UserContext} from "../user-content/UserContent";
 
 function ProtectedRoutes() {
+
+    const {setIsLogin} = useContext(UserContext)
     const [isAuthorized, setIsAuthorized] = useState(null)
 
     useEffect(() => {
@@ -27,16 +30,19 @@ function ProtectedRoutes() {
                 localStorage.setItem(ACCESS_TOKEN, res.data.access)
                 return true
             } else {
+                console.log("protected route", res.data)
                 // cleanup on failed refresh
                 localStorage.removeItem(ACCESS_TOKEN);
                 localStorage.removeItem(REFRESH_TOKEN);
+                setIsLogin(false)
                 return false
             }
         } catch (error) {
-            console.log(error)
+            console.log("protected route", error)
             // cleanup on failed refresh
             localStorage.removeItem(ACCESS_TOKEN);
             localStorage.removeItem(REFRESH_TOKEN);
+            setIsLogin(false)
             return false
         }
     }
@@ -83,12 +89,13 @@ function ProtectedRoutes() {
         <Navigate to="/login" replace/>
 }
 
-const PageContainer = styled.div`
-    margin: 0 auto;
-`
+const PageContainer = styled.div``
 const Main = styled.main`
-  min-height: 100vh;      /* fill the viewport */
-  padding-top: 60px;      /* offset your fixed Header height */
+    height: 100vh;
+    width: 725px;
+    margin: 60px auto 0;
+    display: flex;
+    justify-content: center;
 `;
 
 export default ProtectedRoutes
