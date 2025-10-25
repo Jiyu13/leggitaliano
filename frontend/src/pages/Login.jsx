@@ -22,7 +22,7 @@ function Login() {
     const navigate = useNavigate()
     const inputType = visible ?  "text" : "password"
 
-    const initialValue = {email: "395751849@qq.com", password: "395751849Aqq.com",}
+    const initialValue = {email: "", password: "",}
 
     const [loginError, setLoginError] = useState(null)
     const [formData, setFormData] = useState(initialValue)
