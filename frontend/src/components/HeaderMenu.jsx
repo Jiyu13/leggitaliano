@@ -50,7 +50,7 @@ export function HeaderMenu() {
     return (
         <MenuContainer ref={menuRef}>
             <MenuTrigger onClick={handleClick} >
-                <UserName>hellohellohello</UserName>
+                <UserName>{currentUser?.username}</UserName>
             </MenuTrigger>
 
             {isOpen && (
