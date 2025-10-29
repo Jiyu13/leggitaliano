@@ -81,3 +81,6 @@ class Verb(models.Model):
         return self.infinitive
 
 
+class WordType(models.Model):
+    type = models.CharField(max_length=255, null=True)
+

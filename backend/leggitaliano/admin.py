@@ -21,3 +21,9 @@ class VerbAdmin(admin.ModelAdmin):
         "id", "infinitive", 'translation', 'presente', 'perfetto', "gerundio", "imperfetto", "passato_remoto",
         'futuro', 'congiuntivo_presente', 'congiuntivo_imperfetto', 'condizionale', 'imperativo', 'values'
     )
+
+
+@admin.register(WordType)
+class WordTypeAdmin(admin.ModelAdmin):
+    list_display = ("id", "type")
+
