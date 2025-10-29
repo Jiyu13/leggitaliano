@@ -13,3 +13,11 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ("id", "user", 'title', 'current_page', 'uuid', "finished", "created_at", "update_at")
+
+
+@admin.register(Verb)
+class VerbAdmin(admin.ModelAdmin):
+    list_display = (
+        "id", "infinitive", 'translation', 'presente', 'perfetto', "gerundio", "imperfetto", "passato_remoto",
+        'futuro', 'congiuntivo_presente', 'congiuntivo_imperfetto', 'condizionale', 'imperativo', 'values'
+    )
