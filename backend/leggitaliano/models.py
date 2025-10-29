@@ -84,3 +84,18 @@ class Verb(models.Model):
 class WordType(models.Model):
     type = models.CharField(max_length=255, null=True)
 
+
+class Language(models.Model):
+    name = models.CharField(max_length=255, db_index=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Dictionary(models.Model):
+    title = models.CharField(max_length=255, db_index=True)
+    source_lang = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True, related_name='source_dicts')
+    target_lang = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True, related_name='target_dicts')
+
+    def __str__(self):
+        return self.title

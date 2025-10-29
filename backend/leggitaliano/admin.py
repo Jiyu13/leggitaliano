@@ -27,3 +27,12 @@ class VerbAdmin(admin.ModelAdmin):
 class WordTypeAdmin(admin.ModelAdmin):
     list_display = ("id", "type")
 
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ("id", "name")
+
+
+@admin.register(Dictionary)
+class DictionaryAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "source_lang", "target_lang")
