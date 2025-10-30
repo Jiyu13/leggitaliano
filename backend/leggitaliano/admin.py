@@ -36,3 +36,9 @@ class LanguageAdmin(admin.ModelAdmin):
 @admin.register(Dictionary)
 class DictionaryAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "source_lang", "target_lang")
+
+
+@admin.register(DictionaryWord)
+class DictionaryWordAdmin(admin.ModelAdmin):
+    list_display = ("id", "word", "word_type", "parent", "dictionary")
+

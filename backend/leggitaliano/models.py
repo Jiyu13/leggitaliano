@@ -99,3 +99,23 @@ class Dictionary(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class DictionaryWord(models.Model):
+    # From Dictionary side, dictionary = Dictionary.objects.get(id=1), dictionary.words.all()
+    dictionary = models.ForeignKey(Dictionary, on_delete=models.CASCADE, related_name='words')
+    parent = models.ForeignKey("self", on_delete=models.SET_NULL, related_name='children', null=True, blank=True)
+    # From the WordType side, noun = WordType.objects.get(name="Noun"), noun.words.all()
+    word_type = models.ForeignKey(WordType, on_delete=models.SET_NULL, related_name='words', null=True, blank=True)
+
+    word = models.CharField(max_length=255)
+    translations = models.TextField(blank=True)
+    ipa = models.CharField(max_length=255, blank=True)
+    notes = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.word} - {self.word_type.name}"
+
+
+
+
