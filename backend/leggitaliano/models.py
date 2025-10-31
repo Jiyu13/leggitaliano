@@ -84,6 +84,9 @@ class Verb(models.Model):
 class WordType(models.Model):
     type = models.CharField(max_length=255, null=True)
 
+    def __str__(self):
+        return self.type
+
 
 class Language(models.Model):
     name = models.CharField(max_length=255, db_index=True)
@@ -114,7 +117,7 @@ class DictionaryWord(models.Model):
     notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.word} - {self.word_type.name}"
+        return f"{self.word} - {self.word_type.type}"
 
 
 
