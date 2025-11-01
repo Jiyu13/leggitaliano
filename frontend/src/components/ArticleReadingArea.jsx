@@ -5,7 +5,7 @@ import ArticleParagraph from "./ArticleParagraph";
 
 
 function ArticleReadingArea({
-    paragraphs, isLoading, divRef, pages, sentence, setSentence,
+    paragraphs, isLoading, divRef, pages, handleWordClicked, sentence, setSentence,
    currentPage, handlePrevPage, handleNextPage, handleFinishReading,
 }) {
     return (
@@ -28,6 +28,7 @@ function ArticleReadingArea({
                         <ArticleParagraph
                             key={index}
                             words={p.split(" ")}
+                            handleWordClicked={handleWordClicked}
                             // updateDictionaryWord={updateDictionaryWord}
                             // setWordExistError={setWordExistError}
                             setSentence={setSentence}
@@ -60,6 +61,8 @@ const ReadableArea = styled.div`
     color: #ddd;
     overflow: auto;
     border-radius: 8px;
+    padding: 16px;
+
 `
 
 export default ArticleReadingArea
