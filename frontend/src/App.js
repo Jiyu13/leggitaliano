@@ -24,6 +24,8 @@ function RegisterAndLogout() {
 function App() {
     const [currentUser, setCurrentUser] = useState(null)
     const [articles, setArticles] = useState(null)
+    const [wordTypes, setWordTypes] = useState(null)
+
     const [currentArticle, setCurrentArticle] = useState(null)
 
     // ========================== set "isLogin" localStorage =========================
@@ -70,11 +72,27 @@ function App() {
         }
     }, []);
 
+    useEffect(() => {
+        if (isLogin) {
+            async function getWordTypes() {
+                try {
+                    const res = await api.get('/word_types/')
+                    const types = res.data
+                    setWordTypes(types)
+                } catch (error) {
+                    console.log("failed to get word types", error?.response?.data);
+                }
+            }
+            getWordTypes()
+        }
+    }, [isLogin])
+
 
     // console.log(isLogin, localStorage.getItem("isLogin"))
     const userContextValue = {
         isLogin,setIsLogin,
         currentUser, setCurrentUser, articles, setArticles, currentArticle, setCurrentArticle,
+        wordTypes
     }
 
 

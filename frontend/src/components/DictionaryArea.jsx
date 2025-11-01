@@ -2,7 +2,9 @@ import styled from "styled-components";
 import search_icon from "../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
 
-function DictionaryArea({clickedWord, dictionaryWords}) {
+function DictionaryArea({ipa, clickedWord, dictionaryWords}) {
+
+
     return (
         <DictionaryContainer className="dinctionary-area-container">
             <SearchBarContainer>
@@ -16,8 +18,12 @@ function DictionaryArea({clickedWord, dictionaryWords}) {
             </SearchBarContainer>
 
 
-            <DictionarySidebar>
-                <div>{clickedWord}</div>
+            <DictionarySection>
+
+                <HeadSectionContainer>
+                    <Word>{clickedWord}</Word>
+                    <Ipa>{ipa}</Ipa>
+                </HeadSectionContainer>
 
                 {dictionaryWords?.map((dw, index) =>
                     <DictionaryWordItem
@@ -26,14 +32,26 @@ function DictionaryArea({clickedWord, dictionaryWords}) {
                     />
                 )}
 
-            </DictionarySidebar>
+            </DictionarySection>
 
 
         </DictionaryContainer>
     )
 }
+const Ipa = styled.div`
+    color: #5b80b2;
+    font-size: 0.9rem;
+`
+const Word = styled.div`
+  font-weight: bolder;
+  padding-right: 1rem;
+`
 
-const DictionarySidebar = styled.div`
+const HeadSectionContainer = styled.div`
+    display: flex;
+    align-items: center;
+`
+const DictionarySection = styled.div`
 `
 const SearchBarContainer = styled.div`
   display: block;

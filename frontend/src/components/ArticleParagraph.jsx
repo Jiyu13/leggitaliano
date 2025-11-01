@@ -1,7 +1,7 @@
 import ArticleWord from "./ArticleWord";
 import styled from "styled-components";
 
-export default function ArticleParagraph({words, setSentence, updateDictionaryWord, setWordExistError}) {
+export default function ArticleParagraph({words, handleWordClicked, setSentence, setWordExistError}) {
 
     // build the sentence from the clicked word
     function handleGetSentence(value, index) {
@@ -26,7 +26,7 @@ export default function ArticleParagraph({words, setSentence, updateDictionaryWo
             end ++
         }
         setSentence(string)
-        updateDictionaryWord(value)
+        // updateDictionaryWord(value)
     }
     return (
         <ParagraphContainer className="paragraph-container">
@@ -35,7 +35,8 @@ export default function ArticleParagraph({words, setSentence, updateDictionaryWo
                         key={index} 
                         word={word} 
                         index={index}
-                        onWordClicked={handleGetSentence}
+                        handleWordClicked={handleWordClicked}
+                        handleGetSentence={handleGetSentence}
                         setWordExistError={setWordExistError}
                     />
                 )}
