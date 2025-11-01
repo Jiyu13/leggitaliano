@@ -32,6 +32,12 @@ urlpatterns = [
     path('auth/', include('rest_framework.urls')),
 
     path('articles/', ArticlesByUserView.as_view(), name='user_articles'),
-    path('article/<int:article_id>/', ArticlesByIDView.as_view(), name='user_articles'),
+    path('article/<int:article_id>/', ArticlesByIDView.as_view(), name='article_by_id'),
+
+    path('word_types/', WordTypeView.as_view(), name='word_types'),
+
+    path("word/<str:word>/", DictionaryWordView.as_view(), name="word"),
+    path("word/<int:word_id>/", DictionaryWordByIDView.as_view(), name="word_by_id")
+
 ]
 

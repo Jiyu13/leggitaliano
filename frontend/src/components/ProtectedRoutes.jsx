@@ -21,7 +21,10 @@ function ProtectedRoutes() {
         // refresh the access  token automatically
         const refresh = localStorage.getItem(REFRESH_TOKEN)
 
-        if (!refresh) return false;
+        if (!refresh) {
+            console.log("---------------refresh token expired-----------------")
+            return false
+        }
 
         try {
             // { headers: { Authorization: undefined }
@@ -48,9 +51,10 @@ function ProtectedRoutes() {
     }
 
     const auth = async () => {
-        // check if token exists & if it needs to be refreshed if expored
+        // check if access token exists & if it needs to be refreshed if expired
         const token = localStorage.getItem(ACCESS_TOKEN)
         if (!token) {
+            console.log("---------------access token invalid----------------------------")
             setIsAuthorized(false)
             return
         }

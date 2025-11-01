@@ -59,3 +59,67 @@ class Article(models.Model):
 
     def __str__(self):
         return f"{self.id} - {self.title}"
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+class Verb(models.Model):
+    infinitive = models.CharField(max_length=255)
+    translation = models.CharField(max_length=255, null=True, blank=True)
+    presente = models.CharField(max_length=255, null=True, blank=True)
+    perfetto = models.CharField(max_length=255, null=True, blank=True)
+    gerundio = models.CharField(max_length=255, null=True, blank=True)
+    imperfetto = models.CharField(max_length=255, null=True, blank=True)
+    passato_remoto = models.CharField(max_length=255, null=True, blank=True)
+    futuro = models.CharField(max_length=255, null=True, blank=True)
+    congiuntivo_presente = models.CharField(max_length=255, null=True, blank=True)
+    congiuntivo_imperfetto = models.CharField(max_length=255, null=True, blank=True)
+    condizionale = models.CharField(max_length=255, null=True, blank=True)
+    imperativo = models.CharField(max_length=255, null=True, blank=True)
+    values = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.infinitive
+
+
+class WordType(models.Model):
+    type = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return self.type
+
+
+class Language(models.Model):
+    name = models.CharField(max_length=255, db_index=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Dictionary(models.Model):
+    title = models.CharField(max_length=255, db_index=True)
+    source_lang = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True, related_name='source_dicts')
+    target_lang = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True, related_name='target_dicts')
+
+    def __str__(self):
+        return self.title
+
+
+class DictionaryWord(models.Model):
+    # From Dictionary side, dictionary = Dictionary.objects.get(id=1), dictionary.words.all()
+    dictionary = models.ForeignKey(Dictionary, on_delete=models.CASCADE, related_name='words')
+    parent = models.ForeignKey("self", on_delete=models.SET_NULL, related_name='children', null=True, blank=True)
+    # From the WordType side, noun = WordType.objects.get(name="Noun"), noun.words.all()
+    word_type = models.ForeignKey(WordType, on_delete=models.SET_NULL, related_name='words', null=True, blank=True)
+
+    word = models.CharField(max_length=255)
+    translations = models.JSONField(default=list, blank=True)
+    # JSONField to keep the data a list (models.TextField(blank=True) -> make data a string)
+    ipa = models.CharField(max_length=255, blank=True)
+    notes = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.word} - {self.word_type.type}"
+
+
+
+

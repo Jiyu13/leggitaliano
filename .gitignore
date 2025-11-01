@@ -2,3 +2,6 @@
 .idea
 notes.txt
 *.sqlite3
+
+backend/leggitaliano/dictionary/*.json
+seed.py

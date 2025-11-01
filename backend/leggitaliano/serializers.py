@@ -44,3 +44,18 @@ class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = "__all__"
+
+
+class WordTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WordType
+        fields = "__all__"
+
+
+class DictionaryWordSerializer(serializers.ModelSerializer):
+    # show word_type.type instead of id in return data
+    word_type = serializers.CharField(source="word_type.type", allow_null=True)
+
+    class Meta:
+        model = DictionaryWord
+        fields = "__all__"
