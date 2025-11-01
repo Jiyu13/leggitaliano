@@ -142,3 +142,47 @@ class ArticlesByIDView(APIView):
         article = get_object_or_404(Article, pk=article_id, user=request.user)
         article.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class WordTypeView(APIView):
+    # permission_classes = (permissions.IsAdminUser,)
+    authentication_classes = (JWTAuthentication,)
+
+    def get(self, request):
+        # if not request.user.is_staff:
+        #     return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+        types = WordType.objects.all()
+        serializer = WordTypeSerializer(types, many=True)
+        return Response(serializer.data)
+
+
+class DictionaryWordView(APIView):
+    authentication_classes = (JWTAuthentication,)
+
+    def get(self,  request, word):
+        words = DictionaryWord.objects.filter(word__iexact=word)
+
+        if not words.exists():
+            return Response({"error": "Word not found."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = DictionaryWordSerializer(words, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class DictionaryWordByIDView(APIView):
+    def get(self, request, word_id):
+        word = DictionaryWord.objects.get(pk=word_id)
+        if word:
+            serializer = DictionaryWordSerializer(word)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            response = {"error": "Word not found"}
+            return Response(response)
+
+    def patch(self, request, word_id):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+        word = DictionaryWord.objects.get(pk=word_id)
+        serializer = DictionaryWordSerializer(word, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
