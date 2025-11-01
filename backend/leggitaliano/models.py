@@ -112,7 +112,8 @@ class DictionaryWord(models.Model):
     word_type = models.ForeignKey(WordType, on_delete=models.SET_NULL, related_name='words', null=True, blank=True)
 
     word = models.CharField(max_length=255)
-    translations = models.TextField(blank=True)
+    translations = models.JSONField(default=list, blank=True)
+    # JSONField to keep the data a list (models.TextField(blank=True) -> make data a string)
     ipa = models.CharField(max_length=255, blank=True)
     notes = models.TextField(null=True, blank=True)
 
