@@ -6,6 +6,7 @@ import styled from "styled-components";
 import ArticleReadingArea from "../components/ArticleReadingArea";
 import {splitText} from "../utils/splitText";
 import {calculatePages} from "../utils/calculatePages";
+import DictionaryArea from "../components/DictionaryArea";
 
 function Article() {
 
@@ -15,6 +16,10 @@ function Article() {
     const [isLoading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(0)
     const [sentence, setSentence] = useState(null)
+
+    const [clickedWord, setClickedWord] = useState(null)
+    const [ipa, setIpa] = useState(null)
+    const [dictionaryWords, setDictionaryWords] = useState(null)
 
     const [totalWords, setTotalWords] = useState(0)
     const [finishReading, setFinishReading] = useState(null)
@@ -38,6 +43,30 @@ function Article() {
         getArticle()
         // eslint-disable-next-line
     }, [article_id, article_title])
+
+    // ======================= fetch translation of the clicked word ==================================================
+    function handleWordClicked(word) {
+        const cleanWord = word
+            .trim()
+            .replace(/^[\p{P}\p{S}]+|[\p{P}\p{S}]+$/gu, "")
+            .toLowerCase();
+
+        setClickedWord(cleanWord)
+        api.get(`/word/${cleanWord}/`)
+            .then(res => {
+                const result = res.data
+                setIpa(result["ipa"])
+                setDictionaryWords(result.data)
+            })
+            .catch(error => {
+               if (error.response) {
+                // server responded with error status
+                console.log(cleanWord, error.response.data.error);
+              } else {
+                // network / CORS / other failure
+                console.log("network error", error.message);
+            }})
+    }
 
     // ======================== article -> paragraphs -> words =========================================================
     const articleWords = splitText(currentArticle?.content)
@@ -133,24 +162,31 @@ function Article() {
                 isLoading={isLoading}
                 divRef={divRef}
                 pages={pages}
+                handleWordClicked={handleWordClicked}
                 handlePrevPage={handlePrevPage}
                 handleNextPage={handleNextPage}
                 handleFinishReading={handleFinishReading}
                 sentence={sentence}
                 setSentence={setSentence}
             />
+            <DictionaryArea
+                ipa={ipa}
+                clickedWord={clickedWord}
+                dictionaryWords={dictionaryWords}
+            />
         </ArticleContainer>
     )
 }
  const ArticleContainer = styled.div`
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 424px;
+    //flex-direction: row;
    justify-content: center;
     align-items: stretch;
-    gap: 1px;
+    //gap: 1px;
     margin: 20px auto 0;
     box-sizing: border-box;
-    width: 100%;
+    //width: 100%;
     min-height: 450px;
     font-size: 20px;
     line-height: 1.6;
