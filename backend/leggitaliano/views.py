@@ -161,11 +161,18 @@ class DictionaryWordView(APIView):
 
     def get(self,  request, word):
         words = DictionaryWord.objects.filter(word__iexact=word)
-
         if not words.exists():
             return Response({"error": "Word not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = DictionaryWordSerializer(words, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = serializer.data
+        ipa = data[0]["ipa"]
+
+        formatted_data = {
+            "ipa": ipa,
+            "data": data
+        }
+        return Response(formatted_data, status=status.HTTP_200_OK)
 
 
 class DictionaryWordByIDView(APIView):
