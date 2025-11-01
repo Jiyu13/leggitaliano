@@ -41,4 +41,5 @@ class DictionaryAdmin(admin.ModelAdmin):
 @admin.register(DictionaryWord)
 class DictionaryWordAdmin(admin.ModelAdmin):
     list_display = ("id", "word", "word_type", "parent", "dictionary")
+    search_fields = ['word']
 
