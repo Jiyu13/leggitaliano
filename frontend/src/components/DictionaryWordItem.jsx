@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import DictionaryTranslationItems from "./DictionaryTranslationItems";
 
-function DictionaryWordItem({wordItem}) {
+function DictionaryWordItem({wordItem, setDictionaryWords}) {
+    // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
     const translations = wordItem["translations"]
     return (
@@ -14,8 +15,9 @@ function DictionaryWordItem({wordItem}) {
                     const split_t = t.split(/[;:]+/)
                     return (
                         <DictionaryTranslationItems
-                            key={index}
                             items={split_t}
+                            wordType={wordType}
+                            setDictionaryWords={setDictionaryWords}
                         />
                     )}
                 )}
