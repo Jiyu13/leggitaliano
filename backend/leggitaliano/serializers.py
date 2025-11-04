@@ -59,3 +59,9 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
     class Meta:
         model = DictionaryWord
         fields = "__all__"
+
+
+class SentenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sentence
+        fields = "__all__"

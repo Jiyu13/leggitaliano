@@ -2,8 +2,8 @@ import styled from "styled-components";
 import search_icon from "../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
 
-function DictionaryArea({ipa, clickedWord, dictionaryWords}) {
-
+function DictionaryArea({ipa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound}) {
+    // console.log("dictionaryWords", dictionaryWords)
 
     return (
         <DictionaryContainer className="dinctionary-area-container">
@@ -27,9 +27,18 @@ function DictionaryArea({ipa, clickedWord, dictionaryWords}) {
 
                 {dictionaryWords?.map((dw, index) =>
                     <DictionaryWordItem
-                        key={dw.index}
+                        key={index}
+                        clickedWord={clickedWord}
                         wordItem={dw}
+                        dictionaryWords={dictionaryWords}
+                        setDictionaryWords={setDictionaryWords}
                     />
+                )}
+
+                { wordNotFound !== null && clickedWord !== null && (
+                    <div>
+                        No results found for "{clickedWord}".
+                    </div>
                 )}
 
             </DictionarySection>

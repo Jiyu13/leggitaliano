@@ -1,10 +1,12 @@
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 
 from .models import *
@@ -193,3 +195,79 @@ class DictionaryWordByIDView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GetAllSentencesView(ListAPIView):
+    authentication_classes = (JWTAuthentication,)
+    queryset = Sentence.objects.all()
+    serializer_class = SentenceSerializer
+
+
+class CreateSentenceView(CreateAPIView):
+    """create sentence + remove the sentence from word translations"""
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+
+        word_id = kwargs["word_id"]
+        dict_word = DictionaryWord.objects.get(pk=word_id)
+        word = request.data.get('word')
+        word_type = request.data.get('word_type')
+        updated_translation = request.data.get('translation')
+        translation_index = request.data.get('translation_index')
+
+        sentence = request.data.get("sentence")
+        sentence_translation = request.data.get("sentence_translation")
+
+        # print("dict_word", type(dict_word.translations[translation_index]))
+        # print(f"updated_translation-{updated_translation}----{';'.join(updated_translation)}")
+        # print(f"translation_index-{translation_index}")
+
+        # 1) check if word exists before adding sentence + updating word
+        try:
+            dict_word = DictionaryWord.objects.select_for_update().get(pk=word_id)
+        except DictionaryWord.DoesNotExist:
+            raise NotFound("Word not found.")
+
+        # 2). add the sentence - using serializer (or model)
+        new_sentence_serializer = SentenceSerializer(data={
+            "word": word_id,  # If Sentence.word is a FK
+            "sentence": sentence,
+            "translation": sentence_translation,
+        })
+        new_sentence_serializer.is_valid(raise_exception=True)
+        new_sentence_serializer.save()
+        sentence_out = new_sentence_serializer.data
+
+        # 3_. remove sentence from word[translations]
+        # with passed in value updated_translation - word["translation"][index]
+        dict_word.translations[translation_index] = ';'.join(updated_translation)   # frontend split list by ";:"
+        dict_word.save(update_fields=["translations"])
+        word_out = DictionaryWordSerializer(dict_word).data
+
+        return Response({"sentence": sentence_out, "word": word_out}, status=status.HTTP_201_CREATED)
+
+
+class SentenceByIdView(APIView):
+    authentication_classes = (JWTAuthentication,)
+
+    def get(self, request, word_id, sentence_id):
+        sentence = Sentence.objects.get(pk=sentence_id)
+        if sentence:
+            serializer = SentenceSerializer(sentence)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            response = {"error": "Sentence not found"}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, word_id, sentence_id):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+        sentence = Sentence.objects.get(pk=sentence_id)
+        serializer = SentemceSerializer(sentence, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+

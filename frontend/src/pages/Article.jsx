@@ -20,6 +20,7 @@ function Article() {
     const [clickedWord, setClickedWord] = useState(null)
     const [ipa, setIpa] = useState(null)
     const [dictionaryWords, setDictionaryWords] = useState(null)
+    const [wordNotFound, setNotFound] = useState(null)
 
     const [totalWords, setTotalWords] = useState(0)
     const [finishReading, setFinishReading] = useState(null)
@@ -46,6 +47,11 @@ function Article() {
 
     // ======================= fetch translation of the clicked word ==================================================
     function handleWordClicked(word) {
+        setDictionaryWords(null)
+        setNotFound(null)
+        setClickedWord(null)
+        setIpa(null)
+
         const cleanWord = word
             .trim()
             .replace(/^[\p{P}\p{S}]+|[\p{P}\p{S}]+$/gu, "")
@@ -56,12 +62,13 @@ function Article() {
             .then(res => {
                 const result = res.data
                 setIpa(result["ipa"])
+                // console.log("result", result.data)
                 setDictionaryWords(result.data)
             })
             .catch(error => {
                if (error.response) {
                 // server responded with error status
-                console.log(cleanWord, error.response.data.error);
+               setNotFound(error.response.data.error);
               } else {
                 // network / CORS / other failure
                 console.log("network error", error.message);
@@ -173,11 +180,13 @@ function Article() {
                 ipa={ipa}
                 clickedWord={clickedWord}
                 dictionaryWords={dictionaryWords}
+                setDictionaryWords={setDictionaryWords}
+                wordNotFound={wordNotFound}
             />
         </ArticleContainer>
     )
 }
- const ArticleContainer = styled.div`
+const ArticleContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 424px;
     //flex-direction: row;

@@ -121,5 +121,13 @@ class DictionaryWord(models.Model):
         return f"{self.word} - {self.word_type.type}"
 
 
+class Sentence(models.Model):
+    """Store sentence examples from a word's translations"""
+    word = models.ForeignKey(DictionaryWord, on_delete=models.SET_NULL, related_name='sentences', null=True, blank=True)
+    sentence = models.TextField(blank=True)
+    translation = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.word} - {self.sentence}"
 
 
