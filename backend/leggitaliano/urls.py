@@ -37,7 +37,10 @@ urlpatterns = [
     path('word_types/', WordTypeView.as_view(), name='word_types'),
 
     path("word/<str:word>/", DictionaryWordView.as_view(), name="word"),
-    path("word/<int:word_id>/", DictionaryWordByIDView.as_view(), name="word_by_id")
+    path("word/<int:word_id>/", DictionaryWordByIDView.as_view(), name="word_by_id"),
 
+    path("sentences/", GetAllSentencesView.as_view(), name="all_sentences"),
+    path("sentence/add/<int:word_id>/", CreateSentenceView.as_view(), name="add_sentence"),
+    path("sentence/<int:word_id>/<int:sentence_id>/", SentenceByIdView.as_view(), name="sentence_by_id")
 ]
 
