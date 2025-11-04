@@ -20,11 +20,11 @@ function Article() {
     const [clickedWord, setClickedWord] = useState(null)
     const [ipa, setIpa] = useState(null)
     const [dictionaryWords, setDictionaryWords] = useState(null)
+    const [wordNotFound, setNotFound] = useState(null)
 
     const [totalWords, setTotalWords] = useState(0)
     const [finishReading, setFinishReading] = useState(null)
     const [lastClick, setLastClick] = useState(null)
-    const [wordNotFound, setNotFound] = useState(null)
 
 
     useEffect(() => {
@@ -62,7 +62,7 @@ function Article() {
             .then(res => {
                 const result = res.data
                 setIpa(result["ipa"])
-                // console.log("result", result)
+                // console.log("result", result.data)
                 setDictionaryWords(result.data)
             })
             .catch(error => {
