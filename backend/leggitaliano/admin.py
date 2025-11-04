@@ -43,3 +43,8 @@ class DictionaryWordAdmin(admin.ModelAdmin):
     list_display = ("id", "word", "word_type", "parent", "dictionary")
     search_fields = ['word']
 
+
+@admin.register(Sentence)
+class SentenceAdmin(admin.ModelAdmin):
+    list_display = ("id", "word", "sentence", "translation")
+    search_fields = ['word']
