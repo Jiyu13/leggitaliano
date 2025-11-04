@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import DictionaryTranslationItems from "./DictionaryTranslationItems";
 
-function DictionaryWordItem({wordItem, setDictionaryWords}) {
+function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictionaryWords}) {
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
     const translations = wordItem["translations"]
@@ -13,10 +13,16 @@ function DictionaryWordItem({wordItem, setDictionaryWords}) {
             <TranslationListContainer>
                 {translations?.map((t, index) => {
                     const split_t = t.split(/[;:]+/)
+                    console.log(index, t)
                     return (
                         <DictionaryTranslationItems
-                            items={split_t}
+                            key={index}
+                            wordId={wordItem.id}
+                            translationIndex={index}
+                            clickedWord={clickedWord}
+                            translationItems={split_t}
                             wordType={wordType}
+                            dictionaryWords={dictionaryWords}
                             setDictionaryWords={setDictionaryWords}
                         />
                     )}

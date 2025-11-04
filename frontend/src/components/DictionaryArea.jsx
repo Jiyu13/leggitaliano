@@ -27,8 +27,11 @@ function DictionaryArea({ipa, clickedWord, dictionaryWords, setDictionaryWords, 
 
                 {dictionaryWords?.map((dw, index) =>
                     <DictionaryWordItem
-                        key={dw.index}
+                        key={index}
+                        clickedWord={clickedWord}
                         wordItem={dw}
+                        dictionaryWords={dictionaryWords}
+                        setDictionaryWords={setDictionaryWords}
                     />
                 )}
 
