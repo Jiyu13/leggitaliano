@@ -22,12 +22,11 @@ function DictionaryTranslationItems({
         setTransItems(updatedItems)
     }
 
-    function handleDeleteTranslationItem(tran_item, index) {
-        const updatedTransItems = translationItems.filter((original_item, i) => index !== i)
+    function updateTranslationItem(updatedItems) {
         const data = {
             word_id: wordId,
             translation_index: translationIndex,
-            translation: updatedTransItems,
+            translation: updatedItems,
         }
         api.patch(`/word/update_translation/${wordId}/`, data)
            .then(res => {
@@ -41,6 +40,58 @@ function DictionaryTranslationItems({
               } else {// network / CORS / other failure
                 console.log("network error", error.message);
             }})
+    }
+
+
+    function handleUpdateTranslationItem(tran_item, index) {
+        if (transItems[index] === "") {
+            setTextareaError([index,"Cannot be empty."])
+        } else {
+            const updatedItems = transItems.map((original_item, i) => index === i ? tran_item: original_item)
+            updateTranslationItem(updatedItems)
+            // const data = {
+            //     word_id: wordId,
+            //     translation_index: translationIndex,
+            //     translation: updatedItems,
+            // }
+            // api.patch(`/word/update_translation/${wordId}/`, data)
+            //    .then(res => {
+            //        const result = res.data
+            //        const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
+            //        setDictionaryWords(updatedWords)
+            //     })
+            //     .catch(error => {
+            //        if (error.response) {// server responded with error status
+            //        console.log(error.response.data.error);
+            //       } else {// network / CORS / other failure
+            //         console.log("network error", error.message);
+            //     }})
+        }
+    }
+
+
+    function handleDeleteTranslationItem(tran_item, index) {
+        // exclude the removed target by checking the id
+        const updatedTransItems = translationItems.filter((original_item, i) => index !== i)
+        updateTranslationItem(updatedTransItems)
+
+        // const data = {
+        //     word_id: wordId,
+        //     translation_index: translationIndex,
+        //     translation: updatedTransItems,
+        // }
+        // api.patch(`/word/update_translation/${wordId}/`, data)
+        //    .then(res => {
+        //        const result = res.data
+        //        const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
+        //        setDictionaryWords(updatedWords)
+        //     })
+        //     .catch(error => {
+        //        if (error.response) {// server responded with error status
+        //        console.log(error.response.data.error);
+        //       } else {// network / CORS / other failure
+        //         console.log("network error", error.message);
+        //     }})
     }
 
     function handleMoveToSentences(index) {
@@ -95,6 +146,17 @@ function DictionaryTranslationItems({
                     )}
 
                     <div style={{display: "flex", gap:"0.5rem"}}>
+                        <FilledButton
+                            // disabled={transItems[index] === ""}
+                            style={{
+                                border: "1px solid #fff", marginTop: "8px",
+                                //cursor: transItems[index] === "" ? "no-drop" : "pointer",
+                            }}
+                            onClick={ () => handleUpdateTranslationItem(tran_item, index)}
+                        >
+                            update
+                        </FilledButton>
+
                         <FilledButton
                             // disabled={transItems[index] === ""}
                             style={{
