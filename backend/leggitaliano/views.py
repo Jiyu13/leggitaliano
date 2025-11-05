@@ -1,5 +1,6 @@
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -124,7 +125,7 @@ class ArticlesByUserView(APIView):
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Failed to create new content."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ArticlesByIDView(APIView):
@@ -266,7 +267,7 @@ class SentenceByIdView(APIView):
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
         sentence = Sentence.objects.get(pk=sentence_id)
-        serializer = SentemceSerializer(sentence, data=request.data, partial=True)
+        serializer = SentenceSerializer(sentence, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

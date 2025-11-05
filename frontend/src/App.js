@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import {ACCESS_TOKEN} from "./constants";
 import api from "./api";
 import Article from "./pages/Article";
+import ArticleCreate from "./pages/ArticleCreate";
 
 function Logout() {
   localStorage.clear()
@@ -106,6 +107,7 @@ function App() {
             <Route element={<ProtectedRoutes/>}>
                  <Route exact path="/" element={<Home />}/>
                  <Route exact path='/article/:article_title/:article_id' element={<Article />} />
+                 <Route exact path='/article/add' element={<ArticleCreate />} />
             </Route>
 
         </Routes>

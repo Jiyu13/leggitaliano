@@ -8,15 +8,17 @@ function ArticleList() {
     return (
         <ArticlesListContainer className="article-list-container">
             <ListWrapper className="aArticle-list-wrapper">
-                    {articles?.map(each =>
-                        <ArticleItemContainer className="article-item-container" key={each.id}>
-                             <Link href={`article/${each.title.replaceAll(" ", "-")}/${each.id}`} key={each.id}>
-                                <ArticleItem className="article-item">
-                                    {each.title}
-                                </ArticleItem>
-                              </Link>
-                        </ArticleItemContainer>
-                    )}
+                {articles?.map(each =>
+                    <ArticleItemContainer className="article-item-container" key={each.id}>
+                         <Link href={`article/${each.title.replaceAll(" ", "-")}/${each.id}`} key={each.id}>
+                            <ArticleItem className="article-item">
+                                {each.title}
+                            </ArticleItem>
+                          </Link>
+                    </ArticleItemContainer>
+                )}
+
+                {articles?.length === 0 && (<ArticleItemContainer>You don't have any articles.</ArticleItemContainer>)}
             </ListWrapper>
         </ArticlesListContainer>
     )
