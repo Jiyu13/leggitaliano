@@ -2,10 +2,9 @@ import styled from "styled-components";
 import {FilledButton, SubmitInputButton} from "../styles/buttonStyles";
 import search_icon from "../../src/assets/icons/search_icon.svg"
 import ArticleList from "../components/ArticleList";
+import {CustomLink, LoginLink} from "../styles/formStyles";
 
 function Home() {
-
-    function handleAddClick() {}
 
     return (
         <HomePageContainer>
@@ -17,9 +16,12 @@ function Home() {
                         defaultValue="Search..."
                     />
                 </SearchBar>
-                <AddButton onClick={handleAddClick()}>
-                    Add
-                </AddButton>
+                {/*<AddButton onClick={handleAddClick()}>*/}
+                {/*    Add*/}
+                {/*</AddButton>*/}
+                <AddArticleButtonLink href="/article/add">
+                        Add
+                </AddArticleButtonLink>
 
             </ExploreMenuContainer>
 
@@ -29,6 +31,23 @@ function Home() {
 
     );
 }
+const AddArticleButtonLink = styled(CustomLink)`
+    background-color: rgba(40,44,52, 1);
+    color: whitesmoke;
+    padding: 12px 24px;
+    border: none;
+    letter-spacing: 0.1rem;
+    cursor: pointer;
+    transition: .3s ease;
+    text-decoration: none;
+    border-radius: 8px;
+
+    &:hover {
+        cursor: pointer;
+        text-decoration: none;
+    }
+`
+
 const HomePageContainer = styled.div`
   height: 100vh;
   width: 100%;
@@ -54,6 +73,7 @@ const Img = styled.img`
 `
 const Input = styled.input`
   border: none;
+  padding: 12px 24px 12px 0;
   font-size: 1rem;
   background: none;
   &:hover {
