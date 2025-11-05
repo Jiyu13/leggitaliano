@@ -198,6 +198,22 @@ class DictionaryWordByIDView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class TranslationUpdateByWordIDView(APIView):
+    """Receive the updated translation_item of word[translations] , Return the target word by id"""
+    def patch(self, request, word_id):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+
+        updated_translation = request.data.get('translation')
+        translation_index = request.data.get('translation_index')
+
+        word = DictionaryWord.objects.get(pk=word_id)
+        word.translations[translation_index] = ';'.join(updated_translation)  # frontend split list by ";:"
+        word.save(update_fields=["translations"])
+        word_out = DictionaryWordSerializer(word).data
+        return Response(word_out, status=status.HTTP_200_OK)
+
+
 class GetAllSentencesView(ListAPIView):
     authentication_classes = (JWTAuthentication,)
     queryset = Sentence.objects.all()
