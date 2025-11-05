@@ -49,6 +49,17 @@ export const FormInput = styled.input`
   box-shadow: rgba(25, 4, 69, 0.05) 0px 3px 6px;
   border: 1px solid rgba(25, 4, 69, 0.15);
 `
+export const FormTextarea = styled.textarea`
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 10px 12px;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  box-shadow: rgba(25, 4, 69, 0.05) 0px 3px 6px;
+  border: 1px solid rgba(25, 4, 69, 0.15);
+  resize: none;
+`
 
 export const PasswordWrapper = styled.div`
   position: relative;
