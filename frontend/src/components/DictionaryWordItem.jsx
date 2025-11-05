@@ -13,7 +13,6 @@ function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictiona
             <TranslationListContainer>
                 {translations?.map((t, index) => {
                     const split_t = t.split(/[;:]+/)
-                    console.log(index, t)
                     return (
                         <DictionaryTranslationItems
                             key={index}
