@@ -45,7 +45,7 @@ function DictionaryTranslationItems({
 
     function handleUpdateTranslationItem(tran_item, index) {
         if (transItems[index] === "") {
-            setTextareaError([index,"Cannot be empty."])
+            setTextareaError([index,"Required."])
         } else {
             const updatedItems = transItems.map((original_item, i) => index === i ? tran_item: original_item)
             updateTranslationItem(updatedItems)
@@ -98,7 +98,7 @@ function DictionaryTranslationItems({
         setTextareaError(null)
 
         if (transItems[index] === "") {
-            setTextareaError([index,"Cannot be empty."])
+            setTextareaError([index,"Required."])
         } else {
             const targetItem = transItems.filter((ti, i) => index === i)
             const splitItem = targetItem[0].split(",")
@@ -139,6 +139,7 @@ function DictionaryTranslationItems({
                         value={tran_item}
                         index={index}
                         onChange={(e) => handleOnChange(e)}
+                        style={{border: textareaError ? "2px solid #e74c3c" : "2px solid #a9a9a9"}}
                     />
 
                     {textareaError !== null && textareaError[0] === index && (
@@ -192,6 +193,8 @@ const Input = styled.textarea`
   field-sizing: content;
   box-sizing: border-box;
   padding: 12px;
+  color: #ddd;
+  background: none;
 
   &:hover {
     outline: none;
