@@ -3,6 +3,7 @@ import {FilledButton} from "../styles/buttonStyles";
 import {useState, useEffect} from "react";
 import {RequiredWarning} from "../styles/formStyles";
 import api from "../api";
+import PopupModal from "./PopupModal";
 
 
 function DictionaryTranslationItems({
@@ -14,6 +15,8 @@ function DictionaryTranslationItems({
 
     const [transItems, setTransItems] = useState(translationItems)
     const [textareaError, setTextareaError] = useState(null)
+    const [isPopupOpen, setPopupOpen] = useState(false)
+    const [error, setError] = useState(null)
 
     function handleOnChange(e) {
         const name = e.target.name  // need to convert to "Int"
@@ -36,9 +39,12 @@ function DictionaryTranslationItems({
             })
             .catch(error => {
                if (error.response) {// server responded with error status
-               console.log(error.response.data.error);
+                setError(error.response.data.error);
+                setPopupOpen(true)
               } else {// network / CORS / other failure
-                console.log("network error", error.message);
+                console.log("network error", error.message)
+                setError(error.message);
+                setPopupOpen(true)
             }})
     }
 
@@ -49,23 +55,6 @@ function DictionaryTranslationItems({
         } else {
             const updatedItems = transItems.map((original_item, i) => index === i ? tran_item: original_item)
             updateTranslationItem(updatedItems)
-            // const data = {
-            //     word_id: wordId,
-            //     translation_index: translationIndex,
-            //     translation: updatedItems,
-            // }
-            // api.patch(`/word/update_translation/${wordId}/`, data)
-            //    .then(res => {
-            //        const result = res.data
-            //        const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
-            //        setDictionaryWords(updatedWords)
-            //     })
-            //     .catch(error => {
-            //        if (error.response) {// server responded with error status
-            //        console.log(error.response.data.error);
-            //       } else {// network / CORS / other failure
-            //         console.log("network error", error.message);
-            //     }})
         }
     }
 
@@ -74,24 +63,6 @@ function DictionaryTranslationItems({
         // exclude the removed target by checking the id
         const updatedTransItems = translationItems.filter((original_item, i) => index !== i)
         updateTranslationItem(updatedTransItems)
-
-        // const data = {
-        //     word_id: wordId,
-        //     translation_index: translationIndex,
-        //     translation: updatedTransItems,
-        // }
-        // api.patch(`/word/update_translation/${wordId}/`, data)
-        //    .then(res => {
-        //        const result = res.data
-        //        const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
-        //        setDictionaryWords(updatedWords)
-        //     })
-        //     .catch(error => {
-        //        if (error.response) {// server responded with error status
-        //        console.log(error.response.data.error);
-        //       } else {// network / CORS / other failure
-        //         console.log("network error", error.message);
-        //     }})
     }
 
     function handleMoveToSentences(index) {
@@ -123,14 +94,25 @@ function DictionaryTranslationItems({
                 })
                 .catch(error => {
                    if (error.response) {
-                   console.log(error.response.data.error);
+                   setError(error.response.data.error);
                   } else {
                     console.log("network error", error.message);
+                    setError("network error")
                 }})
         }
     }
     return (
         <>
+            {isPopupOpen && (
+                <PopupModal
+                    isOpen={isPopupOpen}
+                    title="Update failed"
+                    modalText={error}
+                    onClose={() => setPopupOpen(false)}
+                    handleNoClick={() => setPopupOpen(false)}
+                    handleConfirmClick={() => setPopupOpen(false)}
+                />
+            )}
             {transItems?.map((tran_item, index) => (
                 <TranslationItem key={index}>
                     <Input
