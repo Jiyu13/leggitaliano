@@ -88,7 +88,7 @@ function DictionaryTranslationForm({clickedWord}) {
                         <SelectBox
                             id={formData.word_type}
                             name="word_type"
-                            value={formData.word_type}
+                            value={formData.word_type || "" }
                             onChange={handleInputChange}
                         >
                             <OptionBox value="" disabled>Select word typet</OptionBox>
