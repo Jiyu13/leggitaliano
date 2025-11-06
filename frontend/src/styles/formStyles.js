@@ -115,7 +115,9 @@ export const SelectBox = styled.select`
 `
 
 export const OptionBox = styled.option`
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    color: #ddd;
+    background: none;
 `
 
 // ================= required ================================
