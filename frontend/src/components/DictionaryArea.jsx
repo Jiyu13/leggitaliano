@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import search_icon from "../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
+import DictionaryTranslationForm from "./DictionaryTranslationForm";
 
 function DictionaryArea({ipa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound}) {
     // console.log("dictionaryWords", dictionaryWords)
@@ -37,7 +38,10 @@ function DictionaryArea({ipa, clickedWord, dictionaryWords, setDictionaryWords, 
 
                 { wordNotFound !== null && clickedWord !== null && (
                     <div>
-                        No results found for "{clickedWord}".
+                        <div>No results found for "{clickedWord}".</div>
+                        <DictionaryTranslationForm
+                            clickedWord={clickedWord}
+                        />
                     </div>
                 )}
 
