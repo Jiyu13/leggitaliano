@@ -5,9 +5,10 @@ import {SubmitInputButton} from "../styles/buttonStyles";
 import {UserContext} from "../user-content/UserContent";
 import add_another_translation_icon from "../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
+import api from "../api";
 
 
-function DictionaryTranslationForm({clickedWord}) {
+function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
     const {wordTypes} = useContext(UserContext)
 
     const initialValue = {
@@ -15,10 +16,11 @@ function DictionaryTranslationForm({clickedWord}) {
         translations: [""],
         ipa: "",
         notes: [],
-        word_type: 0
+        word_type: null   // pass "string" to post request
     }
 
     const [formData, setFormData] = useState(initialValue)
+    const [wordTypeEmpty, setWordTypeEmpty] = useState(false)
 
     function handleInputChange(e) {
         const name = e.target.name
@@ -28,14 +30,40 @@ function DictionaryTranslationForm({clickedWord}) {
 
     function handleFormSubmit(e) {
         e.preventDefault()
-        const formObject = {
-            word: clickedWord,
-            translations: formData.translations,
-            notes: formData.notes,
-            ipa: formData.ipa,
-            word_type: formData.word_type
+        setWordTypeEmpty(false)
+
+        if (formData.word_type === "") {
+            setWordTypeEmpty(true)
+        } else {
+
+            const data = {
+                word: clickedWord,
+                translations: formData.translations,
+                notes: formData.notes,
+                ipa: formData.ipa,
+                word_type: formData.word_type
+            }
+
+            api.post(`/words/`, data)
+               .then(res => {
+                   const result = res.data
+                   console.log("add word result-------------", result)
+                   const ipa = result["ipa"]
+                   const data = result["data"]
+                    setIpa(ipa)
+                    setDictionaryWords(data)
+
+                    // const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
+                   // setDictionaryWords(updatedWords)
+                })
+                .catch(error => {
+                   if (error.response) {
+                   console.log(error.response.data.error);
+                  } else {
+                    console.log("network error", error.message);
+                }})
         }
-        console.log(formObject)
+
 
     }
 
@@ -56,7 +84,6 @@ function DictionaryTranslationForm({clickedWord}) {
         const updated = formData.translations.filter((tran, idx) => idx !== index)
         setFormData({...formData, translations: updated})
     }
-    console.log(formData)
 
     return (
         <NewWordContainer className="new-word-container">
@@ -90,12 +117,19 @@ function DictionaryTranslationForm({clickedWord}) {
                             name="word_type"
                             value={formData.word_type || "" }
                             onChange={handleInputChange}
+                            style={{
+                                color: "#ddd",
+                                background: "#222",
+                                borderRadius: "8px",
+                                border: wordTypeEmpty ? "2px solid #e74c3c" : "2px solid #a9a9a9"
+                            }}
+
                         >
-                            <OptionBox value="" disabled>Select word typet</OptionBox>
+                            <OptionBox value="" disabled>Select word type</OptionBox>
                             {wordTypes?.map((type, index) =>
                                 <OptionBox
                                     key={index}
-                                    value={type.id}
+                                    value={type.type}
                                 >
                                     {type.type}
                                 </OptionBox>
