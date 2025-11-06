@@ -42,6 +42,7 @@ function DictionaryArea({ipa, setIpa, clickedWord, dictionaryWords, setDictionar
                         <DictionaryTranslationForm
                             setIpa={setIpa}
                             clickedWord={clickedWord}
+                            setDictionaryWords={setDictionaryWords}
                         />
                     </div>
                 )}
