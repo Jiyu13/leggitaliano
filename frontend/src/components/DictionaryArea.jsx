@@ -3,7 +3,7 @@ import search_icon from "../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
 import DictionaryTranslationForm from "./DictionaryTranslationForm";
 
-function DictionaryArea({ipa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound}) {
+function DictionaryArea({ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound}) {
     // console.log("dictionaryWords", dictionaryWords)
 
     return (
@@ -40,6 +40,7 @@ function DictionaryArea({ipa, clickedWord, dictionaryWords, setDictionaryWords, 
                     <div>
                         <div>No results found for "{clickedWord}".</div>
                         <DictionaryTranslationForm
+                            setIpa={setIpa}
                             clickedWord={clickedWord}
                         />
                     </div>

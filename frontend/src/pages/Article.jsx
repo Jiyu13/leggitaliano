@@ -178,6 +178,7 @@ function Article() {
             />
             <DictionaryArea
                 ipa={ipa}
+                setIpa={setIpa}
                 clickedWord={clickedWord}
                 dictionaryWords={dictionaryWords}
                 setDictionaryWords={setDictionaryWords}
