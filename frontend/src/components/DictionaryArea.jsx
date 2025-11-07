@@ -2,49 +2,71 @@ import styled from "styled-components";
 import search_icon from "../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
 import DictionaryTranslationForm from "./DictionaryTranslationForm";
+import {FilledButton} from "../styles/buttonStyles";
+import {useState} from "react";
 
 function DictionaryArea({ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound}) {
     // console.log("dictionaryWords", dictionaryWords)
 
+    const [isShowForm, setShowForm] = useState(false)
+
     return (
         <DictionaryContainer className="dinctionary-area-container">
-            <SearchBarContainer>
-                <SearchBar>
-                    <Img alt="search icon" src={search_icon}/>
-                    <Input
-                        type="text"
-                        placeholder="Search..."
-                    />
-                </SearchBar>
-            </SearchBarContainer>
+            {/*<SearchBarContainer>*/}
+            {/*    <SearchBar>*/}
+            {/*        <Img alt="search icon" src={search_icon}/>*/}
+            {/*        <Input*/}
+            {/*            type="text"*/}
+            {/*            placeholder="Search..."*/}
+            {/*        />*/}
+            {/*    </SearchBar>*/}
+            {/*</SearchBarContainer>*/}
 
 
             <DictionarySection>
 
                 <HeadSectionContainer>
-                    <Word>{clickedWord}</Word>
-                    <Ipa>{ipa}</Ipa>
+                    <LeftSection>
+                        <Word>{clickedWord}</Word>
+                        <Ipa>{ipa}</Ipa>
+                    </LeftSection>
+                    <RightSection>
+                        <FilledButton
+                            style={{border: "2px solid #a9a9a9"}}
+                            onClick={() => setShowForm(!isShowForm)}
+                        >
+                            Add new meaning
+                        </FilledButton>
+                    </RightSection>
+
                 </HeadSectionContainer>
 
-                {dictionaryWords?.map((dw, index) =>
-                    <DictionaryWordItem
-                        key={index}
+                {isShowForm && (
+                    <DictionaryTranslationForm
+                        setIpa={setIpa}
                         clickedWord={clickedWord}
-                        wordItem={dw}
-                        dictionaryWords={dictionaryWords}
                         setDictionaryWords={setDictionaryWords}
                     />
                 )}
 
-                { wordNotFound !== null && clickedWord !== null && (
-                    <div>
+                {!isShowForm && (
+                    <>
+                        {dictionaryWords?.map((dw, index) =>
+                            <DictionaryWordItem
+                                key={index}
+                                clickedWord={clickedWord}
+                                wordItem={dw}
+                                dictionaryWords={dictionaryWords}
+                                setDictionaryWords={setDictionaryWords}
+                            />
+                        )}
+                    </>
+                )}
+
+                { wordNotFound !== null && clickedWord !== null && !isShowForm && (
+                    <NotFoundContainer>
                         <div>No results found for "{clickedWord}".</div>
-                        <DictionaryTranslationForm
-                            setIpa={setIpa}
-                            clickedWord={clickedWord}
-                            setDictionaryWords={setDictionaryWords}
-                        />
-                    </div>
+                    </NotFoundContainer>
                 )}
 
             </DictionarySection>
@@ -61,10 +83,21 @@ const Word = styled.div`
   font-weight: bolder;
   padding-right: 1rem;
 `
-
+const NotFoundContainer = styled.div`
+  margin-top: 3rem;
+`
+const LeftSection = styled.div`
+  display: flex;
+  align-items: center;
+`
+const RightSection = styled.div`
+  
+`
 const HeadSectionContainer = styled.div`
     display: flex;
     align-items: center;
+    justify-content: space-between;
+  margin-bottom: 1rem;
 `
 const DictionarySection = styled.div`
 `
