@@ -91,7 +91,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
 
             </NewWordContainerWrapper>
             <NewWordFormTitle>
-                New Word
+                New Meaning
             </NewWordFormTitle>
             <NewWordFormWrapper className="new-word-form-wrapper">
                 <NewWordForm onSubmit={handleFormSubmit} className="form">
