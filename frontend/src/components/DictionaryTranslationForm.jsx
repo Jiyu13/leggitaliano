@@ -16,7 +16,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
         translations: [""],
         ipa: "",
         notes: [],
-        word_type: null   // pass "string" to post request
+        word_type_id: null   // pass "string" to post request
     }
 
     const [formData, setFormData] = useState(initialValue)
@@ -41,7 +41,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
                 translations: formData.translations,
                 notes: formData.notes,
                 ipa: formData.ipa,
-                word_type: formData.word_type
+                word_type_id: formData.word_type
             }
 
             api.post(`/words/`, data)
@@ -51,7 +51,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
                    const ipa = result["ipa"]
                    const data = result["data"]
                     setIpa(ipa)
-                    setDictionaryWords(data)
+                    setDictionaryWords([data])
 
                     // const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
                    // setDictionaryWords(updatedWords)
@@ -113,7 +113,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
                     <FieldBox className="field-box" style={{padding: "1rem 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Word Type</FormLabel>
                         <SelectBox
-                            id={formData.word_type}
+                            id={formData.word_type_id}
                             name="word_type"
                             value={formData.word_type || "" }
                             onChange={handleInputChange}
@@ -129,7 +129,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
                             {wordTypes?.map((type, index) =>
                                 <OptionBox
                                     key={index}
-                                    value={type.type}
+                                    value={type.id}
                                 >
                                     {type.type}
                                 </OptionBox>
@@ -157,6 +157,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
                         {formData.translations.map((t, index) =>
                             <div style={{display: "flex"}}>
                                 <Textarea
+                                    key={index}
                                     className="form-input"
                                     type='text'
                                     name='translations'
