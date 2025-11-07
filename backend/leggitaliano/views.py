@@ -173,17 +173,17 @@ class DictionaryWordView(APIView):
     def post(self, request):
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+
         word = request.data.get('word')
-        word_type = request.data.get('word_type')
+        word_type_id = request.data.get('word_type_id')   # a string
         translations = request.data.get('translations')
         ipa = request.data.get('ipa')
         notes = request.data.get("notes")
 
-        type_db = get_object_or_404(WordType, type=word_type)
         new_word_serializer = DictionaryWordSerializer(data={
             "dictionary": 1,
             "word": word,  # If Sentence.word is a FK
-            "word_type": type_db.id,
+            "word_type_id": int(word_type_id),
             "translations": translations,
             "parent": None,
             "ipa": ipa,

@@ -1,5 +1,6 @@
 # convert model instances to JSON so that frontend can work with the received data
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from .models import *
 
@@ -54,12 +55,21 @@ class WordTypeSerializer(serializers.ModelSerializer):
 
 
 class DictionaryWordSerializer(serializers.ModelSerializer):
-    # show word_type.type instead of id in return data
-    word_type = serializers.CharField(source="word_type.type", allow_null=True)
+    # write with id, in the client requests
+    word_type_id = serializers.PrimaryKeyRelatedField(
+        source="word_type", queryset=WordType.objects.all(), write_only=True
+    )
+    # read as label,returns in the response
+    word_type = serializers.SlugRelatedField(read_only=True, slug_field="type")
 
     class Meta:
         model = DictionaryWord
-        fields = "__all__"
+        fields = (
+            "id", "dictionary", "parent",
+            "word_type_id",   # write-only
+            "word_type",      # read-only label
+            "word", "translations", "ipa", "notes",
+        )
 
 
 class SentenceSerializer(serializers.ModelSerializer):
