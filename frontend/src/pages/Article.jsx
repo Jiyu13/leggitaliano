@@ -58,7 +58,7 @@ function Article() {
             .toLowerCase();
 
         setClickedWord(cleanWord)
-        api.get(`/word/${cleanWord}/`)
+        api.get(`/word/word/${cleanWord}/`)
             .then(res => {
                 const result = res.data
                 setIpa(result["ipa"])
@@ -178,6 +178,7 @@ function Article() {
             />
             <DictionaryArea
                 ipa={ipa}
+                setIpa={setIpa}
                 clickedWord={clickedWord}
                 dictionaryWords={dictionaryWords}
                 setDictionaryWords={setDictionaryWords}

@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import NotFound
@@ -160,6 +161,43 @@ class WordTypeView(APIView):
 
 
 class DictionaryWordView(APIView):
+    authentication_classes = (JWTAuthentication,)
+
+    def get(self, request):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+        words = DictionaryWord.objects.all()
+        serializer = DictionaryWordSerializer(words, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+
+        word = request.data.get('word')
+        word_type_id = request.data.get('word_type_id')   # a string
+        translations = request.data.get('translations')
+        ipa = request.data.get('ipa')
+        notes = request.data.get("notes")
+
+        new_word_serializer = DictionaryWordSerializer(data={
+            "dictionary": 1,
+            "word": word,  # If Sentence.word is a FK
+            "word_type_id": int(word_type_id),
+            "translations": translations,
+            "parent": None,
+            "ipa": ipa,
+            "notes": notes,
+        })
+        if not new_word_serializer.is_valid():
+            return Response(new_word_serializer.errors, status=400)
+        obj = new_word_serializer.save()
+        new_word_out = DictionaryWordSerializer(obj).data
+
+        return Response({"data": new_word_out, "ipa": ipa}, status=status.HTTP_201_CREATED)
+
+
+class DictionaryWordByWordView(APIView):
     authentication_classes = (JWTAuthentication,)
 
     def get(self,  request, word):

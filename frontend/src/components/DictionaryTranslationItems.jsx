@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import {FilledButton} from "../styles/buttonStyles";
 import {useState, useEffect} from "react";
-import {RequiredWarning} from "../styles/formStyles";
+import {RequiredWarning, Textarea} from "../styles/formStyles";
 import api from "../api";
 import PopupModal from "./PopupModal";
 
@@ -115,7 +115,7 @@ function DictionaryTranslationItems({
             )}
             {transItems?.map((tran_item, index) => (
                 <TranslationItem key={index}>
-                    <Input
+                    <Textarea
                         type="text"
                         name={index}
                         value={tran_item}
@@ -166,25 +166,7 @@ function DictionaryTranslationItems({
         </>
     )
 }
-const Input = styled.textarea`
-  width: 100%;
-  font-size: 1rem;
-  border: none;
-  border-radius: 8px;
-  resize: none;
-  field-sizing: content;
-  box-sizing: border-box;
-  padding: 12px;
-  color: #ddd;
-  background: none;
 
-  &:hover {
-    outline: none;
-  }
-  &:focus {
-    outline: none;
-  }
-`
 const TranslationItem = styled.li`
   display: flex;
   flex-direction: column;

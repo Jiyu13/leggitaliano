@@ -61,6 +61,26 @@ export const FormTextarea = styled.textarea`
   resize: none;
 `
 
+export const Textarea = styled.textarea`
+  width: 100%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  resize: none;
+  field-sizing: content;
+  box-sizing: border-box;
+  padding: 12px;
+  color: #ddd;
+  background: none;
+
+  &:hover {
+    outline: none;
+  }
+  &:focus {
+    outline: none;
+  }
+`
+
 export const PasswordWrapper = styled.div`
   position: relative;
   //display: flex;
@@ -95,7 +115,9 @@ export const SelectBox = styled.select`
 `
 
 export const OptionBox = styled.option`
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    color: #ddd;
+    background: none;
 `
 
 // ================= required ================================
