@@ -8,13 +8,14 @@ import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 import api from "../api";
 
 
-function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
+function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, setShowNewMeaningForm}) {
     const {wordTypes} = useContext(UserContext)
 
     const initialValue = {
         word: clickedWord,
         translations: [""],
         ipa: "",
+        parent: "",
         notes: [],
         word_type_id: null   // pass "string" to post request
     }
@@ -40,6 +41,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
                 word: clickedWord,
                 translations: formData.translations,
                 notes: formData.notes,
+                parent: formData.parent,
                 ipa: formData.ipa,
                 word_type_id: formData.word_type
             }
@@ -50,9 +52,9 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
                    console.log("add word result-------------", result)
                    const ipa = result["ipa"]
                    const data = result["data"]
-                    setIpa(ipa)
-                    setDictionaryWords([data])
-
+                   setIpa(ipa)
+                   setDictionaryWords([data])
+                   setShowNewMeaningForm(false)
                     // const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
                    // setDictionaryWords(updatedWords)
                 })
@@ -145,6 +147,18 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords}) {
                             type="text"
                             name='ipa'
                             value={formData.ipa}
+                            onChange={handleInputChange}
+                            style={{border: "2px solid #a9a9a9"}}
+
+                        />
+                    </FieldBox>
+                    <FieldBox className="field-box">
+                        <FormLabel style={{color: "#ddd"}}>Parent</FormLabel>
+                        <Textarea
+                            className="form-input"
+                            type="text"
+                            name='parent'
+                            value={formData.parent}
                             onChange={handleInputChange}
                             style={{border: "2px solid #a9a9a9"}}
 
