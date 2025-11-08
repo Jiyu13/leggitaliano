@@ -44,6 +44,14 @@ function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictiona
 
             {isShowMeaning && (
                 <TranslationListContainer>
+
+                    <WordForms className="word_forms">
+                        Forms of "
+                            <span style={{fontWeight: "Extrabold"}}>{wordItem.parent}</span>
+                        ": {wordItem.notes}
+                    </WordForms>
+
+
                     {translations?.map((t, index) => {
                         const split_t = t.split(/[;:]+/)
                         return (
@@ -82,6 +90,9 @@ const WordItemContainer = styled.div`
 `
 const Img = styled.img`
   margin: 8px;
+`
+const WordForms = styled.div`
+  font-size: 1rem ;
 `
 
 export default DictionaryWordItem
