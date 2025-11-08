@@ -56,16 +56,19 @@ class WordTypeSerializer(serializers.ModelSerializer):
 
 class DictionaryWordSerializer(serializers.ModelSerializer):
     # write with id, in the client requests
-    word_type_id = serializers.PrimaryKeyRelatedField(
-        source="word_type", queryset=WordType.objects.all(), write_only=True
+    word_type_id = serializers.PrimaryKeyRelatedField(source="word_type", queryset=WordType.objects.all(), write_only=True)
+    parent_id = serializers.PrimaryKeyRelatedField(
+        source="parent", queryset=DictionaryWord.objects.all(), write_only=True, allow_null=True
     )
     # read as label,returns in the response
     word_type = serializers.SlugRelatedField(read_only=True, slug_field="type")
+    parent = serializers.SlugRelatedField(read_only=True, slug_field="word")
+
 
     class Meta:
         model = DictionaryWord
         fields = (
-            "id", "dictionary", "parent",
+            "id", "dictionary", "parent_id", "parent",
             "word_type_id",   # write-only
             "word_type",      # read-only label
             "word", "translations", "ipa", "notes",
