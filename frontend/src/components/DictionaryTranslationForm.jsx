@@ -53,7 +53,13 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                    const ipa = result["ipa"]
                    const data = result["data"]
                    setIpa(ipa)
-                   setDictionaryWords([data])
+                   setDictionaryWords(prev => {
+                       if (prev === null) {
+                           return [data]
+                       } else {
+                           return [...prev, data]
+                       }
+                   })
                    setShowNewMeaningForm(false)
                     // const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
                    // setDictionaryWords(updatedWords)
