@@ -120,6 +120,7 @@ function DictionaryTranslationItems({
                         name={index}
                         value={tran_item}
                         index={index}
+                        placeholder="Enter meanings / sentences here."
                         onChange={(e) => handleOnChange(e)}
                         style={{border: textareaError ? "2px solid #e74c3c" : "2px solid #a9a9a9"}}
                     />
