@@ -4,6 +4,7 @@ import {useState, useEffect} from "react";
 import {RequiredWarning, Textarea} from "../styles/formStyles";
 import api from "../api";
 import PopupModal from "./PopupModal";
+import ToastMessage from "./ToastMessage";
 
 
 function DictionaryTranslationItems({
@@ -17,6 +18,8 @@ function DictionaryTranslationItems({
     const [textareaError, setTextareaError] = useState(null)
     const [isPopupOpen, setPopupOpen] = useState(false)
     const [error, setError] = useState(null)
+    const [isShowToast, setShowToast] = useState(null)
+
 
     function handleOnChange(e) {
         const name = e.target.name  // need to convert to "Int"
@@ -26,6 +29,8 @@ function DictionaryTranslationItems({
     }
 
     function updateTranslationItem(updatedItems) {
+        setTextareaError(null)
+
         const data = {
             word_id: wordId,
             translation_index: translationIndex,
@@ -36,20 +41,39 @@ function DictionaryTranslationItems({
                const result = res.data
                const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
                setDictionaryWords(updatedWords)
+
+               setShowToast("Updated!")
+               setTimeout(function() {
+                    setShowToast(null)
+               }, 1000)
+
             })
             .catch(error => {
                if (error.response) {// server responded with error status
-                setError(error.response.data.error);
-                setPopupOpen(true)
+                    setError(error.response.data.error);
+                    setPopupOpen(true)
+
+                    setShowToast("Update failed.")
+                        setTimeout(function() {
+                        setShowToast(null)
+                    }, 1000)
+
               } else {// network / CORS / other failure
-                console.log("network error", error.message)
-                setError(error.message);
-                setPopupOpen(true)
+                   console.log("network error", error.message)
+                    setError(error.message);
+                    setPopupOpen(true)
+                    setShowToast("Update failed.")
+                    setTimeout(function() {
+                        setShowToast(null)
+                    }, 1000)
+
             }})
     }
 
 
     function handleUpdateTranslationItem(tran_item, index) {
+        setTextareaError(null)
+
         if (transItems[index] === "") {
             setTextareaError([index,"Required."])
         } else {
@@ -160,6 +184,9 @@ function DictionaryTranslationItems({
                         </FilledButton>
                     </div>
 
+                    {isShowToast !== null && index === 0 && (
+                        <ToastMessage message={isShowToast}/>
+                    )}
 
 
                 </TranslationItem>
