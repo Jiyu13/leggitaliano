@@ -43,7 +43,7 @@ class DictionaryWordAdmin(admin.ModelAdmin):
     list_display = ("id", "word", "word_type", "parent", "dictionary")
     autocomplete_fields = ['parent']
     search_fields = ['word']
-    readonly_fields = ['word',]
+    # readonly_fields = ['word',]
 
 
 @admin.register(Sentence)
