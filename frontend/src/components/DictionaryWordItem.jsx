@@ -5,7 +5,7 @@ import arrow_up_icon from "../assets/icons/arrow_up.svg";
 import {useState} from "react";
 
 
-function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictionaryWords}) {
+function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictionaryWords, setShowToast}) {
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
     const translations = wordItem["translations"]
@@ -45,11 +45,16 @@ function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictiona
             {isShowMeaning && (
                 <TranslationListContainer>
 
-                    <WordForms className="word_forms">
-                        Forms of "
-                            <span style={{fontWeight: "Extrabold"}}>{wordItem.parent}</span>
-                        ": {wordItem.notes}
-                    </WordForms>
+                    {wordItem.parent && (
+                        <WordForms className="word_forms">
+                            Forms of "
+                                <span style={{fontWeight: "bolder", textDecoration: "underline"}}>
+                                    {wordItem.parent}
+                                </span>
+                            ": {wordItem.notes}
+                        </WordForms>
+
+                    )}
 
 
                     {translations?.map((t, index) => {
