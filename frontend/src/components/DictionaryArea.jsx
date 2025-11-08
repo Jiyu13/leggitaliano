@@ -48,6 +48,7 @@ function DictionaryArea({
                         setIpa={setIpa}
                         clickedWord={clickedWord}
                         setDictionaryWords={setDictionaryWords}
+                        setShowNewMeaningForm={setShowNewMeaningForm}
                     />
                 )}
 
