@@ -96,7 +96,7 @@ function DictionaryTranslationItems({
             setTextareaError([index,"Required."])
         } else {
             const targetItem = transItems.filter((ti, i) => index === i)
-            const splitItem = targetItem[0].split(",")
+            const splitItem = targetItem[0].split("-")
             const targetSentence = splitItem[0]
             const sentenceTranslation = splitItem[1]
             const updatedItems = translationItems.filter((original_item, i) => index !== i)
