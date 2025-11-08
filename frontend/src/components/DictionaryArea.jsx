@@ -5,10 +5,12 @@ import DictionaryTranslationForm from "./DictionaryTranslationForm";
 import {FilledButton} from "../styles/buttonStyles";
 import {useState} from "react";
 
-function DictionaryArea({ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound}) {
+function DictionaryArea({
+    ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound,
+    setShowNewMeaningForm, isShowNewMeaningForm
+}) {
     // console.log("dictionaryWords", dictionaryWords)
 
-    const [isShowForm, setShowForm] = useState(false)
 
     return (
         <DictionaryContainer className="dinctionary-area-container">
@@ -33,7 +35,7 @@ function DictionaryArea({ipa, setIpa, clickedWord, dictionaryWords, setDictionar
                     <RightSection>
                         <FilledButton
                             style={{border: "2px solid #a9a9a9"}}
-                            onClick={() => setShowForm(!isShowForm)}
+                            onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
                         >
                             Add new meaning
                         </FilledButton>
@@ -41,7 +43,7 @@ function DictionaryArea({ipa, setIpa, clickedWord, dictionaryWords, setDictionar
 
                 </HeadSectionContainer>
 
-                {isShowForm && (
+                {isShowNewMeaningForm && (
                     <DictionaryTranslationForm
                         setIpa={setIpa}
                         clickedWord={clickedWord}
@@ -49,7 +51,7 @@ function DictionaryArea({ipa, setIpa, clickedWord, dictionaryWords, setDictionar
                     />
                 )}
 
-                {!isShowForm && (
+                {!isShowNewMeaningForm && (
                     <>
                         {dictionaryWords?.map((dw, index) =>
                             <DictionaryWordItem
@@ -63,7 +65,7 @@ function DictionaryArea({ipa, setIpa, clickedWord, dictionaryWords, setDictionar
                     </>
                 )}
 
-                { wordNotFound !== null && clickedWord !== null && !isShowForm && (
+                { wordNotFound !== null && clickedWord !== null && !isShowNewMeaningForm && (
                     <NotFoundContainer>
                         <div>No results found for "{clickedWord}".</div>
                     </NotFoundContainer>

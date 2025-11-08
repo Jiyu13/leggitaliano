@@ -26,6 +26,9 @@ function Article() {
     const [finishReading, setFinishReading] = useState(null)
     const [lastClick, setLastClick] = useState(null)
 
+    const [isShowNewMeaningForm, setShowNewMeaningForm] = useState(false)
+
+
 
     useEffect(() => {
         setLoading(true)
@@ -47,6 +50,7 @@ function Article() {
 
     // ======================= fetch translation of the clicked word ==================================================
     function handleWordClicked(word) {
+        setShowNewMeaningForm(false)
         setDictionaryWords(null)
         setNotFound(null)
         setClickedWord(null)
@@ -183,6 +187,8 @@ function Article() {
                 dictionaryWords={dictionaryWords}
                 setDictionaryWords={setDictionaryWords}
                 wordNotFound={wordNotFound}
+                isShowNewMeaningForm={isShowNewMeaningForm}
+                setShowNewMeaningForm={setShowNewMeaningForm}
             />
         </ArticleContainer>
     )
