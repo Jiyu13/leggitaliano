@@ -112,7 +112,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                     </FieldBox>
 
 
-                    <FieldBox className="field-box" style={{padding: "1rem 0"}}>
+                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Word Type</FormLabel>
                         <SelectBox
                             id={formData.word_type_id}
@@ -140,7 +140,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                         </SelectBox>
                     </FieldBox>
 
-                    <FieldBox className="field-box">
+                    <FieldBox className="field-box" style={{margin: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Ipa</FormLabel>
                         <Textarea
                             className="form-input"
@@ -152,7 +152,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
 
                         />
                     </FieldBox>
-                    <FieldBox className="field-box">
+                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Parent</FormLabel>
                         <Textarea
                             className="form-input"
@@ -165,7 +165,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                         />
                     </FieldBox>
 
-                    <FieldBox className="field-box">
+                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
 
                         {formData.translations.map((t, index) =>
@@ -202,7 +202,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
 
                     </FieldBox>
 
-                    <FieldBox className="field-box">
+                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
                         <Textarea
                             className="form-input"
@@ -229,7 +229,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                             value="Add"
                             // disabled={disabledButton}
                             style={{
-                                border: "2px solid #a9a9a9", marginTop: "8px"
+                                border: "2px solid #a9a9a9", marginTop: "1rem"
                                 // backgroundColor: disabledButton ? "rgba(40,44,52,.7)" : "rgba(40,44,52, 1)",
                                 // cursor: disabledButton ? "no-drop" : "pointer",
                             }}
