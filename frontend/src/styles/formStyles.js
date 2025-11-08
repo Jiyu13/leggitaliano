@@ -108,7 +108,7 @@ export const LoginLink = styled(CustomLink)`
 
 // ============== select & options ===========================
 export const SelectBox = styled.select`
-    margin-bottom: 1rem;
+    //margin-bottom: 1rem;
     padding: 12px 12px;
     border-width: 1px;
     font-size: 0.9rem;

@@ -171,21 +171,30 @@ class DictionaryWordView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        """Return a word with new type."""
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
         word = request.data.get('word')
         word_type_id = request.data.get('word_type_id')   # a string
         translations = request.data.get('translations')
+        parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
         notes = request.data.get("notes")
+
+        parent_word = DictionaryWord.objects.filter(
+            word__iexact=parent_string,
+            word_type=int(word_type_id)
+        )
+        # print("parent_word-----------------------", parent_string, parent_word)
+        parent_word_id = parent_word[0].id if parent_word.exists() else None
 
         new_word_serializer = DictionaryWordSerializer(data={
             "dictionary": 1,
             "word": word,  # If Sentence.word is a FK
             "word_type_id": int(word_type_id),
             "translations": translations,
-            "parent": None,
+            "parent_id": parent_word_id,
             "ipa": ipa,
             "notes": notes,
         })
