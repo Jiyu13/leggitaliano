@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import search_icon from "../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
-import DictionaryTranslationForm from "./DictionaryTranslationForm";
+import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
 import {FilledButton} from "../styles/buttonStyles";
 import {useState} from "react";
 
@@ -56,7 +56,7 @@ function DictionaryArea({
                 <hr/>
 
                 {isShowNewMeaningForm && (
-                    <DictionaryTranslationForm
+                    <DictionaryWordNewMeaningForm
                         setIpa={setIpa}
                         clickedWord={clickedWord}
                         setDictionaryWords={setDictionaryWords}
