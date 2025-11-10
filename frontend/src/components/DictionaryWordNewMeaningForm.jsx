@@ -8,7 +8,7 @@ import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 import api from "../api";
 
 
-function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, setShowNewMeaningForm}) {
+function DictionaryWordNewMeaningForm({clickedWord, setIpa, setDictionaryWords, setShowNewMeaningForm}) {
     const {wordTypes} = useContext(UserContext)
 
     const initialValue = {
@@ -61,8 +61,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                        }
                    })
                    setShowNewMeaningForm(false)
-                    // const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
-                   // setDictionaryWords(updatedWords)
+
                 })
                 .catch(error => {
                    if (error.response) {
@@ -84,11 +83,11 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
         });
     }
 
-    function handleAddButtonClick() {
+    function handleAddTranslationButtonClick() {
         setFormData({...formData, translations: [...formData.translations, ""]})
     }
 
-    function handleRemoveButtonClick(index) {
+    function handleRemoveTranslationButtonClick(index) {
         const updated = formData.translations.filter((tran, idx) => idx !== index)
         setFormData({...formData, translations: updated})
     }
@@ -191,13 +190,13 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                                     <AddTranslationIconImg
                                         alt="add another translation icon"
                                         src={add_another_translation_icon}
-                                        onClick={handleAddButtonClick}
+                                        onClick={handleAddTranslationButtonClick}
                                     />
                                     :
                                     <AddTranslationIconImg
                                         alt="remove this translation icon"
                                         src={remove_this_translation_icon}
-                                        onClick={() => handleRemoveButtonClick(index)}
+                                        onClick={() => handleRemoveTranslationButtonClick(index)}
                                     />
                                 }
 
@@ -248,7 +247,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
         </NewWordContainer>
     )
 }
-const AddTranslationIconImg = styled.img`
+export const AddTranslationIconImg = styled.img`
   margin: 8px;
   width: 28px;
   height: 28px;
@@ -262,25 +261,25 @@ const AddTranslationIconImg = styled.img`
   //}
   
 `
-const NewWordForm = styled.form``
-const NewWordFormWrapper = styled.div`
+export  const NewWordForm = styled.form``
+export  const NewWordFormWrapper = styled.div`
   padding: 0 1rem 1rem;
   //background-color: #ffffcc;
 `
-const NewWordFormTitle = styled.div`
+export  const NewWordFormTitle = styled.div`
   text-align: center;
   color: #ddd;
   padding: 1rem 1rem 0;
   //background-color: #5b80b2;
 `
 
-const NewWordContainerWrapper = styled.div`
+export const NewWordContainerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
 `
 
-const NewWordContainer = styled.div`
+export const NewWordContainer = styled.div`
   background-color: #222;
   display: block;
   border-radius: 16px;
@@ -290,4 +289,4 @@ const NewWordContainer = styled.div`
   padding-bottom: 2rem;
 `
 
-export default DictionaryTranslationForm
+export default DictionaryWordNewMeaningForm
