@@ -28,20 +28,32 @@ function DictionaryArea({
             <DictionarySection>
 
                 <HeadSectionContainer>
-                    <LeftSection>
+                    {/*<LeftSection>*/}
                         <Word>{clickedWord}</Word>
                         <Ipa>{ipa}</Ipa>
-                    </LeftSection>
-                    <RightSection>
-                        <FilledButton
-                            style={{border: "2px solid #a9a9a9"}}
-                            onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
-                        >
-                            Add new meaning
-                        </FilledButton>
-                    </RightSection>
+                    {/*</LeftSection>*/}
+                    {/*<RightSection>*/}
+
+                    {/*</RightSection>*/}
 
                 </HeadSectionContainer>
+                <div>
+                    {/*<FilledButton*/}
+                    {/*    style={{border: "2px solid #a9a9a9"}}*/}
+                    {/*    onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}*/}
+                    {/*>*/}
+                    {/*    Edit*/}
+                    {/*</FilledButton>*/}
+
+                    <FilledButton
+                        style={{border: "2px solid #a9a9a9"}}
+                        onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
+                    >
+                        Add new meaning
+                    </FilledButton>
+                </div>
+
+                <hr/>
 
                 {isShowNewMeaningForm && (
                     <DictionaryTranslationForm
@@ -99,7 +111,7 @@ const RightSection = styled.div`
 const HeadSectionContainer = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    //justify-content: space-between;
   margin-bottom: 1rem;
 `
 const DictionarySection = styled.div`
