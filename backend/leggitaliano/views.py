@@ -171,7 +171,7 @@ class DictionaryWordView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        """Return a word with new type."""
+        """Accept word_type id as string, Return a word with new type."""
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -244,6 +244,13 @@ class DictionaryWordByIDView(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def delete(self, request, word_id):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+        word = DictionaryWord.objects.get(pk=word_id)
+        print(word)
+        word.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class TranslationUpdateByWordIDView(APIView):
     """Receive the updated translation_item of word[translations] , Return the target word by id"""
