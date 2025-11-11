@@ -238,8 +238,32 @@ class DictionaryWordByIDView(APIView):
     def patch(self, request, word_id):
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+
+        word_type = request.data.get('word_type')  # a string of type.type
+        translations = request.data.get('translations')
+        parent_string = request.data.get('parent')
+        ipa = request.data.get('ipa')
+        notes = request.data.get("notes")
+
         word = DictionaryWord.objects.get(pk=word_id)
-        serializer = DictionaryWordSerializer(word, data=request.data, partial=True)
+
+        word_type = WordType.objects.get(type=word_type)
+        parent_word = DictionaryWord.objects.filter(
+            word__iexact=parent_string,
+            word_type=word_type.id
+        )
+        parent_word_id = parent_word[0].id if parent_word.exists() else None
+        updated = {
+            "dictionary": 1,
+            "word": word.word,  # If Sentence.word is a FK
+            "word_type_id": word_type.id,
+            "translations": translations,
+            "parent_id": parent_word_id,
+            "ipa": ipa,
+            "notes": notes,
+        }
+
+        serializer = DictionaryWordSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -251,6 +275,7 @@ class DictionaryWordByIDView(APIView):
         print(word)
         word.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class TranslationUpdateByWordIDView(APIView):
     """Receive the updated translation_item of word[translations] , Return the target word by id"""
