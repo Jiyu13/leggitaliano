@@ -40,10 +40,15 @@ class DictionaryAdmin(admin.ModelAdmin):
 
 @admin.register(DictionaryWord)
 class DictionaryWordAdmin(admin.ModelAdmin):
-    list_display = ("id", "word", "word_type", "parent", "dictionary")
+    list_display = ("id", "word", "formatted_word_type", "parent", "dictionary")
     autocomplete_fields = ['parent']
-    search_fields = ['word']
+    search_fields = ['word', "formatted_word_type", "parent__word"]
     # readonly_fields = ['word',]
+
+    @admin.display(description="Word Type")
+    def formatted_word_type(self, obj):
+        # adjust based on actual fields on your WordType model
+        return f"{obj.word_type.type} - {obj.word_type.cn}"
 
 
 @admin.register(Sentence)
