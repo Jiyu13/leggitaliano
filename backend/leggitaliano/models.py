@@ -87,7 +87,7 @@ class WordType(models.Model):
     cn = models.CharField(max_length=255, null=True)
 
     def __str__(self):
-        return self.type
+        return f"{self.type} - {self.cn}"
 
 
 class Language(models.Model):
