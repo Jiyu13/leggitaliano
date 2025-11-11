@@ -16,15 +16,22 @@ function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictiona
     const translations = wordItem["translations"]
 
     const [isShowMeaning, setShowMeaning] = useState(true)
+    const [isShowEditForm, setShowEditForm] = useState(false)
 
     function handleToggleShowMeaning() {
         setShowMeaning(!isShowMeaning)
+        setShowEditForm(false)
     }
 
+    function handleEditWordClick() {
+        setShowMeaning(false)
+        setShowEditForm(!isShowEditForm)
+    }
 
     function handleDeleteWordItemByType() {
         setShowMeaning(false)
-        api.delete(`/word/id/${wordItem.id}`)
+        setShowEditForm(false)
+        api.delete(`/word/id/${wordItem.id}/`)
                .then(res => {
                    const updatedWords = dictionaryWords?.filter(dw => {
                        return dw.id !== wordItem.id
@@ -68,7 +75,12 @@ function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictiona
                     )}
                 </div>
                 <div style={{display: "flex", alignItems: "center"}}>
+                     <Img
+                        alt="edit icon"
+                        src={edit_icon}
+                        onClick={handleEditWordClick}
 
+                    />
                     <Img
                         alt="delete icon"
                         src={delete_icon}
@@ -111,6 +123,15 @@ function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictiona
                         )}
                     )}
                 </TranslationListContainer>
+            )}
+
+            {isShowEditForm && (
+                <DictionaryWordEditForm
+                    word={wordItem}
+                    dictionaryWords={dictionaryWords}
+                    setDictionaryWords={setDictionaryWords}
+                    setShowEditForm={setShowEditForm}
+                />
             )}
 
 
