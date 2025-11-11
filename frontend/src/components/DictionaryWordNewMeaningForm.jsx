@@ -17,7 +17,7 @@ function DictionaryWordNewMeaningForm({clickedWord, setIpa, setDictionaryWords, 
         ipa: "",
         parent: "",
         notes: [],
-        word_type_id: null   // pass "string" to post request
+        word_type_id: null   // pass "string" id to post request
     }
 
     const [formData, setFormData] = useState(initialValue)
