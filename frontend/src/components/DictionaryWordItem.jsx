@@ -11,7 +11,7 @@ import api from "../api";
 
 
 function DictionaryWordItem({
-    clickedWord, wordItem, dictionaryWords,
+    clickedWord, wordItem, wordItemId, dictionaryWords, setClickedWordId,clickedWordItemId,
     setDictionaryWords,setShowToast,  isShowEditForm, setShowEditForm
 }) {
     // console.log("wordItem", wordItem)
@@ -19,7 +19,7 @@ function DictionaryWordItem({
     const translations = wordItem["translations"]
 
     const [isShowMeaning, setShowMeaning] = useState(true)
-    // const [isShowEditForm, setShowEditForm] = useState(false)
+    // const [clickedWordItemid, setClickedWordId] = useState(wordItemId)
 
     function handleToggleShowMeaning() {
         setShowMeaning(!isShowMeaning)
@@ -29,6 +29,7 @@ function DictionaryWordItem({
     function handleEditWordClick() {
         setShowMeaning(false)
         setShowEditForm(!isShowEditForm)
+        setClickedWordId(wordItemId)
     }
 
     function handleDeleteWordItemByType() {
@@ -128,7 +129,7 @@ function DictionaryWordItem({
                 </TranslationListContainer>
             )}
 
-            {isShowEditForm && (
+            {isShowEditForm && wordItem.id == clickedWordItemId && (
                 <DictionaryWordEditForm
                     word={wordItem}
                     dictionaryWords={dictionaryWords}

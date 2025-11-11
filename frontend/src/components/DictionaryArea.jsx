@@ -12,7 +12,7 @@ function DictionaryArea({
     // console.log("dictionaryWords", dictionaryWords)
 
     const [isShowEditForm, setShowEditForm] = useState(false)
-
+    const [clickedWordItemId, setClickedWordId] = useState(null)
 
 
     return (
@@ -76,10 +76,13 @@ function DictionaryArea({
                                 key={index}
                                 clickedWord={clickedWord}
                                 wordItem={dw}
+                                wordItemId={dw.id}
                                 dictionaryWords={dictionaryWords}
                                 setDictionaryWords={setDictionaryWords}
                                 isShowEditForm={isShowEditForm}
                                 setShowEditForm={setShowEditForm}
+                                setClickedWordId={setClickedWordId}
+                                clickedWordItemId={clickedWordItemId}
                             />
                         )}
                     </>
