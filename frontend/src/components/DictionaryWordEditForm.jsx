@@ -4,6 +4,8 @@ import {UserContext} from "../user-content/UserContent";
 import {SubmitInputButton} from "../styles/buttonStyles";
 import styled from "styled-components";
 import api from "../api";
+import add_another_translation_icon from "../assets/icons/add_24dp.svg";
+import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 
 function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditForm}) {
 
@@ -34,7 +36,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         api.patch(`/word/id/${word.id}/`, formData)
                .then(res => {
                    const result = res.data
-                   console.log(result)
+
                    const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
                    setDictionaryWords(updatedWords)
                    setShowEditForm(false)
@@ -47,6 +49,24 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                     console.log("network error", error.message);
                 }})
 
+    }
+
+    function handleTranslationChange(e, index) {
+        const value = e.target.value
+        setFormData(prev => {
+            const next = [...prev.translations];
+            next[index] = value;
+            return { ...prev, translations: next };
+        });
+    }
+
+    function handleAddTranslationButtonClick() {
+        setFormData({...formData, translations: [...formData.translations, ""]})
+    }
+
+    function handleRemoveTranslationButtonClick(index) {
+        const updated = formData.translations.filter((tran, idx) => idx !== index)
+        setFormData({...formData, translations: updated})
     }
     return (
         <NewWordContainer className="edit-word-container">
@@ -129,16 +149,33 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
 
                         {formData.translations.map((t, index) =>
-                            <Textarea
-                                key={index}
-                                className="form-input"
-                                type='text'
-                                name='translations'
-                                value={t}
-                                onChange={(e) => {}}
-                                style={{border: "2px solid #a9a9a9"}}
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <Textarea
+                                    key={index}
+                                    className="form-input"
+                                    type='text'
+                                    name='translations'
+                                    value={t}
+                                    onChange={(e) => handleTranslationChange(e, index)}
+                                    style={{border: "2px solid #a9a9a9"}}
 
-                            />
+                                />
+
+                                {index === formData?.translations.length - 1 ?
+
+                                    <AddTranslationIconImg
+                                        alt="add another translation icon"
+                                        src={add_another_translation_icon}
+                                        onClick={handleAddTranslationButtonClick}
+                                    />
+                                    :
+                                    <AddTranslationIconImg
+                                        alt="remove this translation icon"
+                                        src={remove_this_translation_icon}
+                                        onClick={() => handleRemoveTranslationButtonClick(index)}
+                                    />
+                                }
+                            </div>
 
                         )}
 
