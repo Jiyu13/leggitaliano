@@ -7,8 +7,12 @@ import add_another_translation_icon from "../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 import api from "../api";
 
+        // setShowEditForm(!isShowEditForm)
 
-function DictionaryWordNewMeaningForm({clickedWord, setIpa, setDictionaryWords, setShowNewMeaningForm}) {
+function DictionaryWordNewMeaningForm({
+      clickedWord, setIpa, setDictionaryWords,
+      setShowNewMeaningForm, isShowEditForm, setShowEditForm
+}) {
     const {wordTypes} = useContext(UserContext)
 
     const initialValue = {
@@ -32,6 +36,7 @@ function DictionaryWordNewMeaningForm({clickedWord, setIpa, setDictionaryWords, 
     function handleFormSubmit(e) {
         e.preventDefault()
         setWordTypeEmpty(false)
+        setShowEditForm(false)
 
         if (formData.word_type === "") {
             setWordTypeEmpty(true)
