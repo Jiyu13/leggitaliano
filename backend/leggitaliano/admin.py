@@ -42,7 +42,7 @@ class DictionaryAdmin(admin.ModelAdmin):
 class DictionaryWordAdmin(admin.ModelAdmin):
     list_display = ("id", "word", "formatted_word_type", "parent", "dictionary")
     autocomplete_fields = ['parent']
-    search_fields = ['word', "formatted_word_type", "parent__word"]
+    search_fields = ['word', "word_type__type", "parent__word"]
     # readonly_fields = ['word',]
 
     @admin.display(description="Word Type")
