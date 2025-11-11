@@ -83,6 +83,8 @@ class Verb(models.Model):
 
 class WordType(models.Model):
     type = models.CharField(max_length=255, null=True)
+    full_name = models.CharField(max_length=255, null=True)
+    cn = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.type
