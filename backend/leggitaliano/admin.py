@@ -25,7 +25,7 @@ class VerbAdmin(admin.ModelAdmin):
 
 @admin.register(WordType)
 class WordTypeAdmin(admin.ModelAdmin):
-    list_display = ("id", "type")
+    list_display = ("id", "type", "full_name", "cn")
 
 
 @admin.register(Language)
