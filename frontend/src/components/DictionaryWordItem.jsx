@@ -10,13 +10,16 @@ import DictionaryWordEditForm from "./DictionaryWordEditForm";
 import api from "../api";
 
 
-function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictionaryWords, setShowToast}) {
+function DictionaryWordItem({
+    clickedWord, wordItem, dictionaryWords,
+    setDictionaryWords,setShowToast,  isShowEditForm, setShowEditForm
+}) {
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
     const translations = wordItem["translations"]
 
     const [isShowMeaning, setShowMeaning] = useState(true)
-    const [isShowEditForm, setShowEditForm] = useState(false)
+    // const [isShowEditForm, setShowEditForm] = useState(false)
 
     function handleToggleShowMeaning() {
         setShowMeaning(!isShowMeaning)

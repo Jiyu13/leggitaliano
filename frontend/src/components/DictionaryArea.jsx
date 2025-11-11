@@ -11,6 +11,9 @@ function DictionaryArea({
 }) {
     // console.log("dictionaryWords", dictionaryWords)
 
+    const [isShowEditForm, setShowEditForm] = useState(false)
+
+
 
     return (
         <DictionaryContainer className="dinctionary-area-container">
@@ -61,6 +64,8 @@ function DictionaryArea({
                         clickedWord={clickedWord}
                         setDictionaryWords={setDictionaryWords}
                         setShowNewMeaningForm={setShowNewMeaningForm}
+                        isShowEditForm={isShowEditForm}
+                        setShowEditForm={setShowEditForm}
                     />
                 )}
 
@@ -73,6 +78,8 @@ function DictionaryArea({
                                 wordItem={dw}
                                 dictionaryWords={dictionaryWords}
                                 setDictionaryWords={setDictionaryWords}
+                                isShowEditForm={isShowEditForm}
+                                setShowEditForm={setShowEditForm}
                             />
                         )}
                     </>
