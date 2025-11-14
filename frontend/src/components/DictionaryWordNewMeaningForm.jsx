@@ -45,7 +45,7 @@ function DictionaryWordNewMeaningForm({
             const data = {
                 word: clickedWord,
                 translations: formData.translations,
-                notes: formData.notes,
+                notes: formData.notes.length === 0 ? formData.notes : formData.notes.split(";"),
                 parent: formData.parent,
                 ipa: formData.ipa,
                 word_type_id: formData.word_type

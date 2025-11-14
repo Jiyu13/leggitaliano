@@ -180,14 +180,16 @@ class DictionaryWordView(APIView):
         translations = request.data.get('translations')
         parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
-        notes = request.data.get("notes")
-
+        notes = request.data.get("notes")   # a list []
         parent_word = DictionaryWord.objects.filter(
             word__iexact=parent_string,
             word_type=int(word_type_id)
         )
         # print("parent_word-----------------------", parent_string, parent_word)
         parent_word_id = parent_word[0].id if parent_word.exists() else None
+
+        if parent_word:
+            notes.append(list(parent_word[0].notes))
 
         new_word_serializer = DictionaryWordSerializer(data={
             "dictionary": 1,
