@@ -187,6 +187,7 @@ function Article() {
                 dictionaryWords={dictionaryWords}
                 setDictionaryWords={setDictionaryWords}
                 wordNotFound={wordNotFound}
+                setNotFound={setNotFound}
                 isShowNewMeaningForm={isShowNewMeaningForm}
                 setShowNewMeaningForm={setShowNewMeaningForm}
             />

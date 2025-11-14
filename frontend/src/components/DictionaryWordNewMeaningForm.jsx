@@ -10,7 +10,7 @@ import api from "../api";
         // setShowEditForm(!isShowEditForm)
 
 function DictionaryWordNewMeaningForm({
-      clickedWord, setIpa, setDictionaryWords,
+      clickedWord, setIpa, setDictionaryWords, setNotFound,
       setShowNewMeaningForm, isShowEditForm, setShowEditForm
 }) {
     const {wordTypes} = useContext(UserContext)
@@ -66,7 +66,7 @@ function DictionaryWordNewMeaningForm({
                        }
                    })
                    setShowNewMeaningForm(false)
-
+                   setNotFound(null)
                 })
                 .catch(error => {
                    if (error.response) {
@@ -179,7 +179,7 @@ function DictionaryWordNewMeaningForm({
                         <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
 
                         {formData.translations.map((t, index) =>
-                            <div style={{display: "flex"}}>
+                            <div style={{display: "flex", alignItems: "center"}}>
                                 <Textarea
                                     key={index}
                                     className="form-input"

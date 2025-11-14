@@ -6,7 +6,7 @@ import {FilledButton} from "../styles/buttonStyles";
 import {useState} from "react";
 
 function DictionaryArea({
-    ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound,
+    ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
     setShowNewMeaningForm, isShowNewMeaningForm
 }) {
     // console.log("dictionaryWords", dictionaryWords)
@@ -66,6 +66,7 @@ function DictionaryArea({
                         setShowNewMeaningForm={setShowNewMeaningForm}
                         isShowEditForm={isShowEditForm}
                         setShowEditForm={setShowEditForm}
+                        setNotFound={setNotFound}
                     />
                 )}
 
