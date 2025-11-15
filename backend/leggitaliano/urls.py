@@ -36,8 +36,8 @@ urlpatterns = [
 
     path('word_types/', WordTypeView.as_view(), name='word_types'),
 
-    path("words/", DictionaryWordView.as_view(), name="words"),
-    path("word/word/<str:word>/", DictionaryWordByWordView.as_view(), name="word"),
+    path("words/", DictionaryWordView.as_view(), name="words"),                           # new word form
+    path("word/word/<str:word>/", DictionaryWordByWordView.as_view(), name="word"),       # click word
     path("word/id/<int:word_id>/", DictionaryWordByIDView.as_view(), name="word_by_id"),  # Edit form
     path("word/update_translation/<int:word_id>/",                                        # Edit translations
          TranslationUpdateByWordIDView.as_view(),
