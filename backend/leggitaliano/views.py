@@ -262,7 +262,7 @@ class DictionaryWordByIDView(APIView):
             "translations": translations,
             "parent_id": parent_word_id,
             "ipa": ipa,
-            "notes": notes.split("\n"),
+            "notes": notes,
         }
 
         serializer = DictionaryWordEditSerializer(word, data=updated, partial=True)
