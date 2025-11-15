@@ -54,7 +54,7 @@ class WordTypeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class DictionaryWordGetSerializer(serializers.ModelSerializer):
+class DictionaryWordSerializer(serializers.ModelSerializer):
     # write with id, in the client requests
     word_type_id = serializers.PrimaryKeyRelatedField(source="word_type", queryset=WordType.objects.all(), write_only=True)
     parent_id = serializers.PrimaryKeyRelatedField(

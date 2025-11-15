@@ -216,7 +216,7 @@ class DictionaryWordByWordView(APIView):
         if not words.exists():
             return Response({"error": "Word not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = DictionaryWordGetSerializer(words, many=True)
+        serializer = DictionaryWordSerializer(words, many=True)
         data = serializer.data
         ipa = data[0]["ipa"]
 
