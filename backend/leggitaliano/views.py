@@ -198,7 +198,7 @@ class DictionaryWordView(APIView):
             "translations": translations,
             "parent_id": parent_word_id,
             "ipa": ipa,
-            "notes": notes,
+            "notes": notes.split("\n"),
         })
         if not new_word_serializer.is_valid():
             return Response(new_word_serializer.errors, status=400)
@@ -216,7 +216,7 @@ class DictionaryWordByWordView(APIView):
         if not words.exists():
             return Response({"error": "Word not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = DictionaryWordSerializer(words, many=True)
+        serializer = DictionaryWordGetSerializer(words, many=True)
         data = serializer.data
         ipa = data[0]["ipa"]
 
@@ -228,6 +228,7 @@ class DictionaryWordByWordView(APIView):
 
 
 class DictionaryWordByIDView(APIView):
+    """Edit word form"""
     def get(self, request, word_id):
         word = DictionaryWord.objects.get(pk=word_id)
         if word:
@@ -256,16 +257,15 @@ class DictionaryWordByIDView(APIView):
         )
         parent_word_id = parent_word[0].id if parent_word.exists() else None
         updated = {
-            "dictionary": 1,
             "word": word.word,  # If Sentence.word is a FK
             "word_type_id": word_type.id,
             "translations": translations,
             "parent_id": parent_word_id,
             "ipa": ipa,
-            "notes": notes,
+            "notes": notes.split("\n"),
         }
 
-        serializer = DictionaryWordSerializer(word, data=updated, partial=True)
+        serializer = DictionaryWordEditSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
