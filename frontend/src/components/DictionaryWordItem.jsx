@@ -5,7 +5,7 @@ import arrow_up_icon from "../assets/icons/arrow_up.svg";
 import edit_icon from "../assets/icons/edit_24dp.svg"
 import delete_icon from "../assets/icons/delete_24dp.svg"
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import DictionaryWordEditForm from "./DictionaryWordEditForm";
 import api from "../api";
 
@@ -17,6 +17,7 @@ function DictionaryWordItem({
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
     const translations = wordItem["translations"]
+    const notes = wordItem["notes"]
 
     const [isShowMeaning, setShowMeaning] = useState(true)
     // const [clickedWordItemid, setClickedWordId] = useState(wordItemId)
@@ -100,21 +101,19 @@ function DictionaryWordItem({
                 <TranslationListContainer>
 
                     <WordForms className="word_forms">
-                        Forms
-
-                        {wordItem.parent ?
+                        {wordItem.parent && (
                             <>
-                                &nbsp;of "
+                                Forms of "
                                 <span style={{fontWeight: "bolder", textDecoration: "underline"}}>
                                     {wordItem.parent}
                                 </span>
                                 ":
                             </>
-                            :
-                            <>: &nbsp;</>
-                        }
+                        )}
 
-                        {wordItem.notes}
+                        {notes.map((note, index) => (
+                            <div>{note}</div>
+                        ))}
                     </WordForms>
 
 
