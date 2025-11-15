@@ -198,7 +198,7 @@ class DictionaryWordView(APIView):
             "translations": translations,
             "parent_id": parent_word_id,
             "ipa": ipa,
-            "notes": notes.split("\n"),
+            "notes": notes,
         })
         if not new_word_serializer.is_valid():
             return Response(new_word_serializer.errors, status=400)
@@ -228,7 +228,6 @@ class DictionaryWordByWordView(APIView):
 
 
 class DictionaryWordByIDView(APIView):
-    """Edit word form"""
     def get(self, request, word_id):
         word = DictionaryWord.objects.get(pk=word_id)
         if word:
@@ -239,6 +238,7 @@ class DictionaryWordByIDView(APIView):
             return Response(response)
 
     def patch(self, request, word_id):
+        """ Edit word form """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 

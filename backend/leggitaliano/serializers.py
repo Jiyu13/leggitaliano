@@ -55,6 +55,7 @@ class WordTypeSerializer(serializers.ModelSerializer):
 
 
 class DictionaryWordSerializer(serializers.ModelSerializer):
+    """Get words, Post word, Get word by word, Get word by id, Update translation by id"""
     # write with id, in the client requests
     word_type_id = serializers.PrimaryKeyRelatedField(source="word_type", queryset=WordType.objects.all(), write_only=True)
     parent_id = serializers.PrimaryKeyRelatedField(
@@ -90,6 +91,7 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
 
 
 class DictionaryWordEditSerializer(serializers.ModelSerializer):
+    """Update word by id"""
     word_type_id = serializers.PrimaryKeyRelatedField(source="word_type", queryset=WordType.objects.all(), write_only=True)
     parent_id = serializers.PrimaryKeyRelatedField(
         source="parent", queryset=DictionaryWord.objects.all(), write_only=True, allow_null=True
