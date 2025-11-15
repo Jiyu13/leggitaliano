@@ -64,6 +64,7 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
     word_type = serializers.SlugRelatedField(read_only=True, slug_field="type")
     parent = serializers.SlugRelatedField(read_only=True, slug_field="word")
 
+    translations = serializers.SerializerMethodField()
 
     class Meta:
         model = DictionaryWord
@@ -73,6 +74,13 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
             "word_type",      # read-only label
             "word", "translations", "ipa", "notes",
         )
+
+    def get_translations(self, obj):
+        """ check if word has a parent, if so, show the parent translations """
+        # # if not, show its own translations
+        if obj.parent:
+            return obj.parent.translations
+        return obj.translations
 
 
 class SentenceSerializer(serializers.ModelSerializer):
