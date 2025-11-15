@@ -99,16 +99,23 @@ function DictionaryWordItem({
             {isShowMeaning && (
                 <TranslationListContainer>
 
-                    {wordItem.parent && (
-                        <WordForms className="word_forms">
-                            Forms of "
+                    <WordForms className="word_forms">
+                        Forms
+
+                        {wordItem.parent ?
+                            <>
+                                &nbsp;of "
                                 <span style={{fontWeight: "bolder", textDecoration: "underline"}}>
                                     {wordItem.parent}
                                 </span>
-                            ": {wordItem.notes}
-                        </WordForms>
+                                ":
+                            </>
+                            :
+                            <>: &nbsp;</>
+                        }
 
-                    )}
+                        {wordItem.notes}
+                    </WordForms>
 
 
                     {translations?.map((t, index) => {
