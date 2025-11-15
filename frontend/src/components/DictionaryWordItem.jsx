@@ -2,59 +2,119 @@ import styled from "styled-components";
 import DictionaryTranslationItems from "./DictionaryTranslationItems";
 import arrow_down_icon from "../assets/icons/arrow_down.svg";
 import arrow_up_icon from "../assets/icons/arrow_up.svg";
-import {useState} from "react";
+import edit_icon from "../assets/icons/edit_24dp.svg"
+import delete_icon from "../assets/icons/delete_24dp.svg"
+
+import {useEffect, useState} from "react";
+import DictionaryWordEditForm from "./DictionaryWordEditForm";
+import api from "../api";
 
 
-function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictionaryWords, setShowToast}) {
+function DictionaryWordItem({
+    clickedWord, wordItem, wordItemId, dictionaryWords, setClickedWordId,clickedWordItemId,
+    setDictionaryWords,setShowToast,  isShowEditForm, setShowEditForm
+}) {
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
     const translations = wordItem["translations"]
+    const notes = wordItem["notes"]
 
     const [isShowMeaning, setShowMeaning] = useState(true)
+    // const [clickedWordItemid, setClickedWordId] = useState(wordItemId)
 
     function handleToggleShowMeaning() {
         setShowMeaning(!isShowMeaning)
+        setShowEditForm(false)
+    }
+
+    function handleEditWordClick() {
+        setShowMeaning(false)
+        setShowEditForm(!isShowEditForm)
+        setClickedWordId(wordItemId)
+    }
+
+    function handleDeleteWordItemByType() {
+        setShowMeaning(false)
+        setShowEditForm(false)
+        api.delete(`/word/id/${wordItem.id}/`)
+               .then(res => {
+                   const updatedWords = dictionaryWords?.filter(dw => {
+                       return dw.id !== wordItem.id
+                   })
+                   setDictionaryWords(updatedWords)
+                   // setShowNewMeaningForm(false)
+
+                })
+                .catch(error => {
+                   if (error.response) {
+                   console.log(error.response.data.error);
+                  } else {
+                    console.log("network error", error.message);
+                }})
+
     }
 
     return (
         <WordItemContainer className="word-item-container">
 
             <div style={{display: "flex", justifyContent: "space-between"}}>
-                <WordType>{wordType}</WordType>
-                {isShowMeaning && (
-                    <Img
-                        alt="close meaning  icon"
-                        src={arrow_up_icon}
-                        onClick={handleToggleShowMeaning}
+                <div style={{display: "flex", alignItems: "center"}}>
+                    <WordType>{wordType}</WordType>
+                    {isShowMeaning && (
+                        <Img
+                            alt="close meaning icon"
+                            src={arrow_up_icon}
+                            onClick={handleToggleShowMeaning}
+
+                        />
+                    )}
+
+
+                    {!isShowMeaning && (
+                        <Img
+                            alt="show meaning icon"
+                            src={arrow_down_icon}
+                            onClick={handleToggleShowMeaning}
+                        />
+
+                    )}
+                </div>
+                <div style={{display: "flex", alignItems: "center"}}>
+                     <Img
+                        alt="edit icon"
+                        src={edit_icon}
+                        onClick={handleEditWordClick}
 
                     />
-                )}
-
-
-                {!isShowMeaning && (
                     <Img
-                        alt="search icon"
-                        src={arrow_down_icon}
-                        onClick={handleToggleShowMeaning}
-                    />
+                        alt="delete icon"
+                        src={delete_icon}
+                        onClick={handleDeleteWordItemByType}
 
-                )}
+                    />
+                </div>
+
 
             </div>
 
             {isShowMeaning && (
                 <TranslationListContainer>
 
-                    {wordItem.parent && (
-                        <WordForms className="word_forms">
-                            Forms of "
+                    <WordForms className="word_forms">
+                        {wordItem.parent && (
+                            <>
+                                Forms of "
                                 <span style={{fontWeight: "bolder", textDecoration: "underline"}}>
                                     {wordItem.parent}
                                 </span>
-                            ": {wordItem.notes}
-                        </WordForms>
+                                ":
+                            </>
+                        )}
 
-                    )}
+                        {notes.map((note, index) => (
+                            <div>{note}</div>
+                        ))}
+                    </WordForms>
 
 
                     {translations?.map((t, index) => {
@@ -73,6 +133,15 @@ function DictionaryWordItem({clickedWord, wordItem, dictionaryWords, setDictiona
                         )}
                     )}
                 </TranslationListContainer>
+            )}
+
+            {isShowEditForm && wordItem.id == clickedWordItemId && (
+                <DictionaryWordEditForm
+                    word={wordItem}
+                    dictionaryWords={dictionaryWords}
+                    setDictionaryWords={setDictionaryWords}
+                    setShowEditForm={setShowEditForm}
+                />
             )}
 
 
@@ -95,6 +164,11 @@ const WordItemContainer = styled.div`
 `
 const Img = styled.img`
   margin: 8px;
+  border-radius: 8px;
+  width: 24px;
+  &:hover {
+    background-color: #ddd;
+  }
 `
 const WordForms = styled.div`
   font-size: 1rem ;

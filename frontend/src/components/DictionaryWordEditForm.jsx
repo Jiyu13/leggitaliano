@@ -1,68 +1,46 @@
 import {FieldBox, FormButtonWrapper, FormLabel, OptionBox, SelectBox, Textarea} from "../styles/formStyles";
 import {useContext, useState} from "react";
-import styled from "styled-components";
-import {SubmitInputButton} from "../styles/buttonStyles";
 import {UserContext} from "../user-content/UserContent";
+import {SubmitInputButton} from "../styles/buttonStyles";
+import styled from "styled-components";
+import api from "../api";
 import add_another_translation_icon from "../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
-import api from "../api";
 
+function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditForm}) {
 
-function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, setShowNewMeaningForm}) {
-    const {wordTypes} = useContext(UserContext)
+    const {wordTypes, } = useContext(UserContext)
 
     const initialValue = {
-        word: clickedWord,
-        translations: [""],
-        ipa: "",
-        parent: "",
-        notes: [],
-        word_type_id: null   // pass "string" to post request
+        id: word.id,
+        word: word.word,
+        translations: word.translations,
+        ipa: word.ipa,
+        parent: word.parent || "",
+        notes: word.notes,
+        word_type: word.word_type   // pass "string" type to post request
     }
 
     const [formData, setFormData] = useState(initialValue)
     const [wordTypeEmpty, setWordTypeEmpty] = useState(false)
 
-    function handleInputChange(e) {
+    function handleInputChange(e){
         const name = e.target.name
         const value = e.target.value
         setFormData({...formData, [name]:value})
     }
-
-    function handleFormSubmit(e) {
+    function handleSubmitEditForm(e) {
         e.preventDefault()
         setWordTypeEmpty(false)
-
-        if (formData.word_type === "") {
-            setWordTypeEmpty(true)
-        } else {
-
-            const data = {
-                word: clickedWord,
-                translations: formData.translations,
-                notes: formData.notes,
-                parent: formData.parent,
-                ipa: formData.ipa,
-                word_type_id: formData.word_type
-            }
-
-            api.post(`/words/`, data)
+        console.log(formData)
+        api.patch(`/word/id/${word.id}/`, formData)
                .then(res => {
                    const result = res.data
-                   console.log("add word result-------------", result)
-                   const ipa = result["ipa"]
-                   const data = result["data"]
-                   setIpa(ipa)
-                   setDictionaryWords(prev => {
-                       if (prev === null) {
-                           return [data]
-                       } else {
-                           return [...prev, data]
-                       }
-                   })
-                   setShowNewMeaningForm(false)
-                    // const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
-                   // setDictionaryWords(updatedWords)
+
+                   const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
+                   setDictionaryWords(updatedWords)
+                   setShowEditForm(false)
+
                 })
                 .catch(error => {
                    if (error.response) {
@@ -70,8 +48,6 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                   } else {
                     console.log("network error", error.message);
                 }})
-        }
-
 
     }
 
@@ -84,25 +60,24 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
         });
     }
 
-    function handleAddButtonClick() {
+    function handleAddTranslationButtonClick() {
         setFormData({...formData, translations: [...formData.translations, ""]})
     }
 
-    function handleRemoveButtonClick(index) {
+    function handleRemoveTranslationButtonClick(index) {
         const updated = formData.translations.filter((tran, idx) => idx !== index)
         setFormData({...formData, translations: updated})
     }
-
     return (
-        <NewWordContainer className="new-word-container">
+        <NewWordContainer className="edit-word-container">
             <NewWordContainerWrapper>
 
             </NewWordContainerWrapper>
             <NewWordFormTitle>
-                New Meaning
+                Edit Meaning
             </NewWordFormTitle>
-            <NewWordFormWrapper className="new-word-form-wrapper">
-                <NewWordForm onSubmit={handleFormSubmit} className="form">
+            <NewWordFormWrapper className="edit-word-form-wrapper">
+                <NewWordForm onSubmit={handleSubmitEditForm} className="form">
 
                     <FieldBox className="field-box">
                         <FormLabel style={{color: "#ddd"}}>Word</FormLabel>
@@ -111,7 +86,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                             type="text"
                             name='word'
                             defaultValue={formData.word}
-                            // onChange={handleInputChange}
+                            disabled={true}
                             style={{border: "2px solid #a9a9a9"}}
 
                         />
@@ -121,23 +96,22 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                     <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Word Type</FormLabel>
                         <SelectBox
-                            id={formData.word_type_id}
+                            id={formData.word_type}
                             name="word_type"
-                            value={formData.word_type || "" }
+                            value={formData.word_type}
                             onChange={handleInputChange}
                             style={{
                                 color: "#ddd",
                                 background: "#222",
                                 borderRadius: "8px",
-                                border: wordTypeEmpty ? "2px solid #e74c3c" : "2px solid #a9a9a9"
+                                // border: wordTypeEmpty ? "2px solid #e74c3c" : "2px solid #a9a9a9"
                             }}
 
                         >
-                            <OptionBox value="" disabled>Select word type</OptionBox>
                             {wordTypes?.map((type, index) =>
                                 <OptionBox
                                     key={index}
-                                    value={type.id}
+                                    value={type.type}
                                 >
                                     {type.type}
                                 </OptionBox>
@@ -175,7 +149,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                         <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
 
                         {formData.translations.map((t, index) =>
-                            <div style={{display: "flex"}}>
+                            <div style={{display: "flex", alignItems: "center"}}>
                                 <Textarea
                                     key={index}
                                     className="form-input"
@@ -186,23 +160,23 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                                     style={{border: "2px solid #a9a9a9"}}
 
                                 />
+
                                 {index === formData?.translations.length - 1 ?
 
                                     <AddTranslationIconImg
                                         alt="add another translation icon"
                                         src={add_another_translation_icon}
-                                        onClick={handleAddButtonClick}
+                                        onClick={handleAddTranslationButtonClick}
                                     />
                                     :
                                     <AddTranslationIconImg
                                         alt="remove this translation icon"
                                         src={remove_this_translation_icon}
-                                        onClick={() => handleRemoveButtonClick(index)}
+                                        onClick={() => handleRemoveTranslationButtonClick(index)}
                                     />
                                 }
-
-
                             </div>
+
                         )}
 
 
@@ -221,18 +195,10 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
                         />
                     </FieldBox>
 
-
-
-                    {/*{loginError && (*/}
-                    {/*    <FormErrorContainer style={{marginTop: "1rem"}}>*/}
-                    {/*        <li>{loginError}</li>*/}
-                    {/*     </FormErrorContainer>*/}
-                    {/*)}*/}
-
                     <FormButtonWrapper>
                         <SubmitInputButton
                             type="submit"
-                            value="Add"
+                            value="Edit"
                             // disabled={disabledButton}
                             style={{
                                 border: "2px solid #a9a9a9", marginTop: "1rem"
@@ -248,7 +214,7 @@ function DictionaryTranslationForm({clickedWord, setIpa, setDictionaryWords, set
         </NewWordContainer>
     )
 }
-const AddTranslationIconImg = styled.img`
+export const AddTranslationIconImg = styled.img`
   margin: 8px;
   width: 28px;
   height: 28px;
@@ -262,25 +228,25 @@ const AddTranslationIconImg = styled.img`
   //}
   
 `
-const NewWordForm = styled.form``
-const NewWordFormWrapper = styled.div`
+export  const NewWordForm = styled.form``
+export  const NewWordFormWrapper = styled.div`
   padding: 0 1rem 1rem;
   //background-color: #ffffcc;
 `
-const NewWordFormTitle = styled.div`
+export  const NewWordFormTitle = styled.div`
   text-align: center;
   color: #ddd;
   padding: 1rem 1rem 0;
   //background-color: #5b80b2;
 `
 
-const NewWordContainerWrapper = styled.div`
+export const NewWordContainerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
 `
 
-const NewWordContainer = styled.div`
+export const NewWordContainer = styled.div`
   background-color: #222;
   display: block;
   border-radius: 16px;
@@ -290,4 +256,4 @@ const NewWordContainer = styled.div`
   padding-bottom: 2rem;
 `
 
-export default DictionaryTranslationForm
+export default DictionaryWordEditForm

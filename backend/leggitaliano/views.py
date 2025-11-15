@@ -171,7 +171,7 @@ class DictionaryWordView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        """Return a word with new type."""
+        """Accept word_type id as string, Return a word with new type."""
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -180,14 +180,16 @@ class DictionaryWordView(APIView):
         translations = request.data.get('translations')
         parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
-        notes = request.data.get("notes")
-
+        notes = request.data.get("notes")   # a list []
         parent_word = DictionaryWord.objects.filter(
             word__iexact=parent_string,
             word_type=int(word_type_id)
         )
         # print("parent_word-----------------------", parent_string, parent_word)
         parent_word_id = parent_word[0].id if parent_word.exists() else None
+
+        if parent_word:
+            notes.append(list(parent_word[0].notes))
 
         new_word_serializer = DictionaryWordSerializer(data={
             "dictionary": 1,
@@ -236,13 +238,45 @@ class DictionaryWordByIDView(APIView):
             return Response(response)
 
     def patch(self, request, word_id):
+        """ Edit word form """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+
+        word_type = request.data.get('word_type')  # a string of type.type
+        translations = request.data.get('translations')
+        parent_string = request.data.get('parent')
+        ipa = request.data.get('ipa')
+        notes = request.data.get("notes")
+
         word = DictionaryWord.objects.get(pk=word_id)
-        serializer = DictionaryWordSerializer(word, data=request.data, partial=True)
+
+        word_type = WordType.objects.get(type=word_type)
+        parent_word = DictionaryWord.objects.filter(
+            word__iexact=parent_string,
+            word_type=word_type.id
+        )
+        parent_word_id = parent_word[0].id if parent_word.exists() else None
+        updated = {
+            "word": word.word,  # If Sentence.word is a FK
+            "word_type_id": word_type.id,
+            "translations": translations,
+            "parent_id": parent_word_id,
+            "ipa": ipa,
+            "notes": notes,
+        }
+
+        serializer = DictionaryWordEditSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, word_id):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+        word = DictionaryWord.objects.get(pk=word_id)
+        print(word)
+        word.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TranslationUpdateByWordIDView(APIView):

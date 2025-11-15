@@ -1,15 +1,18 @@
 import styled from "styled-components";
 import search_icon from "../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
-import DictionaryTranslationForm from "./DictionaryTranslationForm";
+import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
 import {FilledButton} from "../styles/buttonStyles";
 import {useState} from "react";
 
 function DictionaryArea({
-    ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound,
+    ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
     setShowNewMeaningForm, isShowNewMeaningForm
 }) {
     // console.log("dictionaryWords", dictionaryWords)
+
+    const [isShowEditForm, setShowEditForm] = useState(false)
+    const [clickedWordItemId, setClickedWordId] = useState(null)
 
 
     return (
@@ -56,11 +59,14 @@ function DictionaryArea({
                 <hr/>
 
                 {isShowNewMeaningForm && (
-                    <DictionaryTranslationForm
+                    <DictionaryWordNewMeaningForm
                         setIpa={setIpa}
                         clickedWord={clickedWord}
                         setDictionaryWords={setDictionaryWords}
                         setShowNewMeaningForm={setShowNewMeaningForm}
+                        isShowEditForm={isShowEditForm}
+                        setShowEditForm={setShowEditForm}
+                        setNotFound={setNotFound}
                     />
                 )}
 
@@ -71,8 +77,13 @@ function DictionaryArea({
                                 key={index}
                                 clickedWord={clickedWord}
                                 wordItem={dw}
+                                wordItemId={dw.id}
                                 dictionaryWords={dictionaryWords}
                                 setDictionaryWords={setDictionaryWords}
+                                isShowEditForm={isShowEditForm}
+                                setShowEditForm={setShowEditForm}
+                                setClickedWordId={setClickedWordId}
+                                clickedWordItemId={clickedWordItemId}
                             />
                         )}
                     </>
