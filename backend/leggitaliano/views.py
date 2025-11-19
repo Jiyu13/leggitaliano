@@ -217,7 +217,7 @@ class DictionaryWordByWordView(APIView):
     authentication_classes = (JWTAuthentication,)
 
     def get(self,  request, word):
-        words = DictionaryWord.objects.filter(word__iexact=word)
+        words = DictionaryWord.objects.filter(word__iexact=word).order_by("word_type__type")
         if not words.exists():
             return Response({"error": "Word not found."}, status=status.HTTP_404_NOT_FOUND)
 
