@@ -29,7 +29,10 @@ function DictionaryWordNewMeaningForm({
 
     function handleInputChange(e) {
         const name = e.target.name
-        const value = e.target.value
+        let value = e.target.value
+        if (name === "notes") {// if doesn't contain ';', will be an array with 1 item
+            value = value.split(";")
+        }
         setFormData({...formData, [name]:value})
     }
 
@@ -37,7 +40,6 @@ function DictionaryWordNewMeaningForm({
         e.preventDefault()
         setWordTypeEmpty(false)
         setShowEditForm(false)
-
         if (formData.word_type === "") {
             setWordTypeEmpty(true)
         } else {
@@ -45,7 +47,7 @@ function DictionaryWordNewMeaningForm({
             const data = {
                 word: clickedWord,
                 translations: formData.translations,
-                notes: formData.notes.length === 0 ? formData.notes : formData.notes.split(";"),
+                notes: formData.notes,
                 parent: formData.parent,
                 ipa: formData.ipa,
                 word_type_id: formData.word_type

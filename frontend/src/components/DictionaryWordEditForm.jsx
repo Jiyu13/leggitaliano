@@ -26,7 +26,10 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
     function handleInputChange(e){
         const name = e.target.name
-        const value = e.target.value
+        let value = e.target.value
+        if (name === "notes") {// if doesn't contain ';', will be an array with 1 item
+            value = value.split(";")
+        }
         setFormData({...formData, [name]:value})
     }
     function handleSubmitEditForm(e) {
@@ -36,7 +39,6 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         api.patch(`/word/id/${word.id}/`, formData)
                .then(res => {
                    const result = res.data
-
                    const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
                    setDictionaryWords(updatedWords)
                    setShowEditForm(false)
