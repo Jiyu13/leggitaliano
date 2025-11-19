@@ -58,15 +58,15 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
     """Get words, Post word, Get word by word, Get word by id, Update translation by id"""
     # write with id, in the client requests
     word_type_id = serializers.PrimaryKeyRelatedField(source="word_type", queryset=WordType.objects.all(), write_only=True)
-    parent_id = serializers.PrimaryKeyRelatedField(
-        source="parent", queryset=DictionaryWord.objects.all(), write_only=True, allow_null=True
-    )
+    parent_id = serializers.PrimaryKeyRelatedField( source="parent", queryset=DictionaryWord.objects.all(), write_only=True, allow_null=True)
     # read as label,returns in the response
     word_type = serializers.SlugRelatedField(read_only=True, slug_field="type")
     parent = serializers.SlugRelatedField(read_only=True, slug_field="word")
 
-    translations = serializers.SerializerMethodField()
-    notes = serializers.SerializerMethodField()
+    # translations = serializers.SerializerMethodField()
+    # notes = serializers.SerializerMethodField()
+    translations = serializers.JSONField(required=False)
+    notes = serializers.JSONField(required=False)
 
     class Meta:
         model = DictionaryWord
@@ -76,18 +76,37 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
             "word_type",      # read-only label
         )
 
-    def get_translations(self, obj):
-        """ check if word has a parent, if so, show the parent translations """
-        # # if not, show its own translations
-        if obj.parent:
-            return obj.parent.translations
-        return obj.translations
+    def to_representation(self, instance):
+        """
+            On read: if this word has empty translations / notes and a parent,
+            fall back to the parent's translations / notes.
+            DB stores only the child's own data; inheritance is virtual.
+        """
+        data = super().to_representation(instance)
 
-    def get_notes(self, obj):
-        """ check if word has a parent, if so, show the parent translations if not, show its own translations"""
-        if obj.parent:
-            return obj.parent.notes
-        return obj.notes
+        # Normalize types to something predictable
+        translations = data.get("translations")
+        notes = data.get("notes")
+
+        # If child has no translations and has a parent, inherit from parent
+        if (not translations) and instance.parent:
+            data["translations"] = instance.parent.translations
+        if (not notes) and instance.parent:
+            data["notes"] = instance.parent.notes
+        return data
+
+    # def get_translations(self, obj):
+    #     """ check if word has a parent, if so, show the parent translations """
+    #     # # if not, show its own translations
+    #     if obj.parent:
+    #         return obj.parent.translations
+    #     return obj.translations
+    #
+    # def get_notes(self, obj):
+    #     """ check if word has a parent, if so, show the parent translations if not, show its own translations"""
+    #     if obj.parent:
+    #         return obj.parent.notes
+    #     return obj.notes
 
 
 class DictionaryWordEditSerializer(serializers.ModelSerializer):

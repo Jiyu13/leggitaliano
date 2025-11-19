@@ -155,7 +155,7 @@ class WordTypeView(APIView):
     def get(self, request):
         # if not request.user.is_staff:
         #     return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
-        types = WordType.objects.all()
+        types = WordType.objects.all().order_by('type')
         serializer = WordTypeSerializer(types, many=True)
         return Response(serializer.data)
 
@@ -181,21 +181,26 @@ class DictionaryWordView(APIView):
         parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
         notes = request.data.get("notes")   # a list []
-        parent_word = DictionaryWord.objects.filter(
-            word__iexact=parent_string,
-            word_type=int(word_type_id)
-        )
-        # print("parent_word-----------------------", parent_string, parent_word)
-        parent_word_id = parent_word[0].id if parent_word.exists() else None
 
+        parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=int(word_type_id)).first()
+        # print("parent_word-----------------------", parent_string, parent_word)
+        parent_word_id = parent_word.id if parent_word else None
+
+        # if parent_word:
+        #     notes.append(list(parent_word.notes))
+
+        # if parent exists, DON'T copy its translation into child
+        # Let the child be blank and inherit at read time
         if parent_word:
-            notes.append(list(parent_word[0].notes))
+            translations_to_save = []
+        else:
+            translations_to_save = translations or []
 
         new_word_serializer = DictionaryWordSerializer(data={
             "dictionary": 1,
             "word": word,  # If Sentence.word is a FK
             "word_type_id": int(word_type_id),
-            "translations": translations,
+            "translations": translations_to_save,
             "parent_id": parent_word_id,
             "ipa": ipa,
             "notes": notes,
@@ -212,7 +217,7 @@ class DictionaryWordByWordView(APIView):
     authentication_classes = (JWTAuthentication,)
 
     def get(self,  request, word):
-        words = DictionaryWord.objects.filter(word__iexact=word)
+        words = DictionaryWord.objects.filter(word__iexact=word).order_by("word_type__type")
         if not words.exists():
             return Response({"error": "Word not found."}, status=status.HTTP_404_NOT_FOUND)
 
