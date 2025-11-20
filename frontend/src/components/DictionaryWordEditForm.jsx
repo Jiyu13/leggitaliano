@@ -35,8 +35,14 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     function handleSubmitEditForm(e) {
         e.preventDefault()
         setWordTypeEmpty(false)
-        console.log(formData)
-        api.patch(`/word/id/${word.id}/`, formData)
+
+        const payload = word.parent !== null ?
+            {id: word.id, word: formData.word, ipa: formData.ipa, notes: formData.notes, word_type: formData.word_type}
+            :
+            formData
+        console.log(payload)
+
+        api.patch(`/word/id/${word.id}/`, payload)
                .then(res => {
                    const result = res.data
                    const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
@@ -147,7 +153,8 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         />
                     </FieldBox>
 
-                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
+                    {(word.parent === null) && (
+                        <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
 
                         {formData.translations.map((t, index) =>
@@ -183,6 +190,8 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
 
                     </FieldBox>
+                    )}
+
 
                     <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
