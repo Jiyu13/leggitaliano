@@ -247,30 +247,45 @@ class DictionaryWordByIDView(APIView):
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
-        word_type = request.data.get('word_type')  # a string of type.type
-        translations = request.data.get('translations')
+        word_type_string = request.data.get('word_type')  # a string of type.type
         parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
+        translations = request.data.get('translations')
         notes = request.data.get("notes")
 
         word = DictionaryWord.objects.get(pk=word_id)
+        word_type = WordType.objects.get(type=word_type_string)
 
-        word_type = WordType.objects.get(type=word_type)
-        parent_word = DictionaryWord.objects.filter(
-            word__iexact=parent_string,
-            word_type=word_type.id
-        )
-        parent_word_id = parent_word[0].id if parent_word.exists() else None
-        updated = {
-            "word": word.word,  # If Sentence.word is a FK
-            "word_type_id": word_type.id,
-            "translations": translations,
-            "parent_id": parent_word_id,
-            "ipa": ipa,
-            "notes": notes,
-        }
-
-        serializer = DictionaryWordEditSerializer(word, data=updated, partial=True)
+        # 1. if word has parent
+        if word.parent:
+            if word.parent.notes:
+                # if parent has notes, leave word notes be to inherit notes from parent
+                updated = {
+                    "word": word.word,  # If Sentence.word is a FK
+                    "word_type_id": word_type.id,
+                    "parent_id": word.parent.id,
+                    "ipa": ipa,
+                }
+            else:
+                # if parent has no notes, use the passed in data "notes"
+                updated = {
+                    "word": word.word,  # If Sentence.word is a FK
+                    "word_type_id": word_type.id,
+                    "parent_id": word.parent.id,
+                    "ipa": ipa,
+                    "notes": notes
+                }
+        else:
+            parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
+            updated = {
+                "word": word.word,  # If Sentence.word is a FK
+                "word_type_id": word_type.id,
+                "parent_id": parent_word.id if parent_word else None,
+                "ipa": ipa,
+                "translations": translations,
+                "notes": notes,
+            }
+        serializer = DictionaryWordSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
