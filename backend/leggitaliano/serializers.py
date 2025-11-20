@@ -112,9 +112,7 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
 class DictionaryWordEditSerializer(serializers.ModelSerializer):
     """Update word by id"""
     word_type_id = serializers.PrimaryKeyRelatedField(source="word_type", queryset=WordType.objects.all(), write_only=True)
-    parent_id = serializers.PrimaryKeyRelatedField(
-        source="parent", queryset=DictionaryWord.objects.all(), write_only=True, allow_null=True
-    )
+    parent_id = serializers.PrimaryKeyRelatedField( source="parent", queryset=DictionaryWord.objects.all(), write_only=True, allow_null=True)
     # read as label,returns in the response
     word_type = serializers.SlugRelatedField(read_only=True, slug_field="type")
     parent = serializers.SlugRelatedField(read_only=True, slug_field="word")
