@@ -18,7 +18,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         ipa: word.ipa,
         parent: word.parent || "",
         notes: word.notes,
-        word_type: word.word_type   // pass "string" type to post request
+        word_type: word.word_type   // pass "string" type name to post request
     }
 
     const [formData, setFormData] = useState(initialValue)
