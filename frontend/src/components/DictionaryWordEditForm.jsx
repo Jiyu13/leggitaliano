@@ -40,7 +40,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
             {id: word.id, word: formData.word, ipa: formData.ipa, notes: formData.notes, word_type: formData.word_type}
             :
             formData
-        console.log(payload)
+        // console.log(payload)
 
         api.patch(`/word/id/${word.id}/`, payload)
                .then(res => {
