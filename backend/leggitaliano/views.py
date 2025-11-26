@@ -266,9 +266,8 @@ class DictionaryWordByIDView(APIView):
 
         # 1. ------------------------- if parent word exists------------------------------------------------------------
         if parent_word:
-            print("len(notes_string) != 0", notes_string, len(notes_string) != 0)
             # 2. if word IS a verb
-            if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68]:
+            if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
                 if len(notes_string) != 0:
                     # 3. notes_String is not empty, add verb conjugation based on the notes[0] value -- verb tense
                     verb = Verb.objects.filter(infinitive=word.parent.word).first()
