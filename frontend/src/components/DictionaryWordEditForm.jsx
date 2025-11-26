@@ -18,7 +18,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         ipa: word.ipa,
         parent: word.parent || "",
         notes: word.notes,
-        word_type: word.word_type   // pass "string" type to post request
+        word_type: word.word_type   // pass "string" type name to post request
     }
 
     const [formData, setFormData] = useState(initialValue)
@@ -27,8 +27,15 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     function handleInputChange(e){
         const name = e.target.name
         let value = e.target.value
-        if (name === "notes") {// if doesn't contain ';', will be an array with 1 item
-            value = value.split(";")
+        console.log(value[0] !== "")
+
+        if (name === "notes" ) {
+            if (value[0] !== "") {
+                // if doesn't contain ';', will be an array with 1 item
+                value = value.split(", ")
+            } else {
+                value = []
+            }
         }
         setFormData({...formData, [name]:value})
     }
@@ -37,10 +44,10 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         setWordTypeEmpty(false)
 
         const payload = word.parent !== null ?
-            {id: word.id, word: formData.word, ipa: formData.ipa, notes: formData.notes, word_type: formData.word_type}
+            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, notes: formData.notes, word_type: formData.word_type}
             :
             formData
-        console.log(payload)
+        // console.log(payload)
 
         api.patch(`/word/id/${word.id}/`, payload)
                .then(res => {

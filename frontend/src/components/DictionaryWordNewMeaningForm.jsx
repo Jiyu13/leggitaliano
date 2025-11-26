@@ -31,7 +31,7 @@ function DictionaryWordNewMeaningForm({
         const name = e.target.name
         let value = e.target.value
         if (name === "notes") {// if doesn't contain ';', will be an array with 1 item
-            value = value.split(";")
+            value = value.split(", ")
         }
         setFormData({...formData, [name]:value})
     }
@@ -176,6 +176,22 @@ function DictionaryWordNewMeaningForm({
 
                         />
                     </FieldBox>
+
+                    {/*{formaData.word_type }*/}
+                    {/*<FieldBox className="field-box" style={{padding: "1rem 0 0"}}>*/}
+                    {/*    <FormLabel style={{color: "#ddd"}}>Parent</FormLabel>*/}
+                    {/*    <Textarea*/}
+                    {/*        className="form-input"*/}
+                    {/*        type="text"*/}
+                    {/*        name='Conjunction'*/}
+                    {/*        value={formData.parent}*/}
+                    {/*        onChange={handleInputChange}*/}
+                    {/*        style={{border: "2px solid #a9a9a9"}}*/}
+
+                    {/*    />*/}
+                    {/*</FieldBox>*/}
+
+
 
                     <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>

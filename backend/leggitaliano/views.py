@@ -180,23 +180,27 @@ class DictionaryWordView(APIView):
         translations = request.data.get('translations')
         parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
-        notes = request.data.get("notes")   # a list []
+        notes_string = request.data.get("notes")   # a list with single item[]
 
         parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=int(word_type_id)).first()
-        # print("parent_word-----------------------", parent_string, parent_word)
         parent_word_id = parent_word.id if parent_word else None
+        # print("parent_word-----------------------", parent_string, parent_word)
+        # ======================================== check if a word has a parent and is a verb ==========================
+        if parent_word and int(word_type_id) in [9, 12, 62, 63, 64, 65, 66, 67, 68]:
+            verb = Verb.objects.filter(infinitive=parent_word.word).first()
+            notes = getattr(verb, notes_string[0], None)   # need to make string into a list
+        else:
+            notes = notes_string
 
-        # if parent_word:
-        #     notes.append(list(parent_word.notes))
-
+        # ============================================  On Write  ================================================="""
         # if parent exists, DON'T copy its translation into child
         # Let the child be blank and inherit at read time
         if parent_word:
             translations_to_save = []
         else:
             translations_to_save = translations or []
-
-        new_word_serializer = DictionaryWordSerializer(data={
+        # =========================================================================================================="""
+        data = {
             "dictionary": 1,
             "word": word,  # If Sentence.word is a FK
             "word_type_id": int(word_type_id),
@@ -204,7 +208,9 @@ class DictionaryWordView(APIView):
             "parent_id": parent_word_id,
             "ipa": ipa,
             "notes": notes,
-        })
+        }
+
+        new_word_serializer = DictionaryWordSerializer(data=data)
         if not new_word_serializer.is_valid():
             return Response(new_word_serializer.errors, status=400)
         obj = new_word_serializer.save()
@@ -251,39 +257,68 @@ class DictionaryWordByIDView(APIView):
         parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
         translations = request.data.get('translations')
-        notes = request.data.get("notes")
+        notes_string = request.data.get("notes")    # one string item in a list??
 
         word = DictionaryWord.objects.get(pk=word_id)
         word_type = WordType.objects.get(type=word_type_string)
 
-        # 1. if word has parent
-        if word.parent:
-            if word.parent.notes:
-                # if parent has notes, leave word notes be to inherit notes from parent
-                updated = {
-                    "word": word.word,  # If Sentence.word is a FK
-                    "word_type_id": word_type.id,
-                    "parent_id": word.parent.id,
-                    "ipa": ipa,
-                }
+        parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
+
+        # 1. ------------------------- if parent word exists------------------------------------------------------------
+        if parent_word:
+            # 2. if word IS a verb
+            if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
+                if len(notes_string) != 0:
+                    # 3. notes_String is not empty, add verb conjugation based on the notes[0] value -- verb tense
+                    verb = Verb.objects.filter(infinitive=word.parent.word).first()
+                    verb_conjugation = getattr(verb, notes_string[0], None)
+                    verb_tense = notes_string[0].replace("_", " ")
+                    verb_conjugation.insert(0, verb_tense)
+                    updated = {
+                        "word": word.word,
+                        "word_type_id": word_type.id,
+                        "parent_id": parent_word.id,
+                        "ipa": ipa,
+                        "notes": verb_conjugation
+                    }
+                else:
+                    # 4. notes_String = []
+                    updated = {
+                        "word": word.word,
+                        "word_type_id": word_type.id,
+                        "parent_id": parent_word.id,
+                        "ipa": ipa,
+                        "notes": []
+                    }
+
             else:
-                # if parent has no notes, use the passed in data "notes"
-                updated = {
-                    "word": word.word,  # If Sentence.word is a FK
-                    "word_type_id": word_type.id,
-                    "parent_id": word.parent.id,
-                    "ipa": ipa,
-                    "notes": notes
-                }
+                # 5. if word is NOT a verb, notes_string is usually empty or inherits from parent word
+                if len(notes_string) != 0:
+                    updated = {
+                        "word": word.word,
+                        "word_type_id": word_type.id,
+                        "parent_id": parent_word.id,
+                        "ipa": ipa,
+                        "notes": notes_string
+                    }
+                else:
+                    # 6. inherit notes from parent
+                    updated = {
+                        "word": word.word,  # If Sentence.word is a FK
+                        "word_type_id": word_type.id,
+                        "parent_id": parent_word.id,
+                        "ipa": ipa,
+                    }
         else:
-            parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
+            # 6. set parent word None if parent word does not exist
+            # parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
             updated = {
-                "word": word.word,  # If Sentence.word is a FK
+                "word": word.word,
                 "word_type_id": word_type.id,
-                "parent_id": parent_word.id if parent_word else None,
+                "parent_id": None,
                 "ipa": ipa,
                 "translations": translations,
-                "notes": notes,
+                "notes": notes_string[0].split(", ") if len(notes_string) != 0 else notes_string,
             }
         serializer = DictionaryWordSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)

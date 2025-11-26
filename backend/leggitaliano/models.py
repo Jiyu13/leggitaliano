@@ -65,17 +65,17 @@ class Article(models.Model):
 class Verb(models.Model):
     infinitive = models.CharField(max_length=255)
     translation = models.CharField(max_length=255, null=True, blank=True)
-    presente = models.CharField(max_length=255, null=True, blank=True)
-    perfetto = models.CharField(max_length=255, null=True, blank=True)
-    gerundio = models.CharField(max_length=255, null=True, blank=True)
-    imperfetto = models.CharField(max_length=255, null=True, blank=True)
-    passato_remoto = models.CharField(max_length=255, null=True, blank=True)
-    futuro = models.CharField(max_length=255, null=True, blank=True)
-    congiuntivo_presente = models.CharField(max_length=255, null=True, blank=True)
-    congiuntivo_imperfetto = models.CharField(max_length=255, null=True, blank=True)
-    condizionale = models.CharField(max_length=255, null=True, blank=True)
-    imperativo = models.CharField(max_length=255, null=True, blank=True)
-    values = models.CharField(max_length=255, null=True, blank=True)
+    presente = models.JSONField(max_length=255, null=True, blank=True)
+    perfetto = models.JSONField(max_length=255, null=True, blank=True)
+    gerundio = models.JSONField(max_length=255, null=True, blank=True)
+    imperfetto = models.JSONField(max_length=255, null=True, blank=True)
+    passato_remoto = models.JSONField(max_length=255, null=True, blank=True)
+    futuro = models.JSONField(max_length=255, null=True, blank=True)
+    congiuntivo_presente = models.JSONField(max_length=255, null=True, blank=True)
+    congiuntivo_imperfetto = models.JSONField(max_length=255, null=True, blank=True)
+    condizionale = models.JSONField(max_length=255, null=True, blank=True)
+    imperativo = models.JSONField(max_length=255, null=True, blank=True)
+    values = models.JSONField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.infinitive
