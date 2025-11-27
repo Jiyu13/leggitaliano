@@ -1,7 +1,7 @@
 import ArticleWord from "./ArticleWord";
 import styled from "styled-components";
 
-export default function ArticleParagraph({words, handleWordClicked, setSentence, setWordExistError}) {
+export default function ArticleParagraph({words, paragraphIndex, setClickedWordIndex, clickedWordIndex, handleWordClicked, setSentence, setWordExistError}) {
 
     // build the sentence from the clicked word
     function handleGetSentence(value, index) {
@@ -35,6 +35,9 @@ export default function ArticleParagraph({words, handleWordClicked, setSentence,
                         key={index} 
                         word={word} 
                         index={index}
+                        paragraphIndex={paragraphIndex}
+                        setClickedWordIndex={setClickedWordIndex}
+                        clickedWordIndex={clickedWordIndex}
                         handleWordClicked={handleWordClicked}
                         handleGetSentence={handleGetSentence}
                         setWordExistError={setWordExistError}

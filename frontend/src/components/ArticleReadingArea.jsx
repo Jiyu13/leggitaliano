@@ -5,7 +5,7 @@ import ArticleParagraph from "./ArticleParagraph";
 
 
 function ArticleReadingArea({
-    paragraphs, isLoading, divRef, pages, handleWordClicked, sentence, setSentence,
+    paragraphs, isLoading, divRef, pages, setClickedWordIndex, clickedWordIndex, handleWordClicked, sentence, setSentence,
    currentPage, handlePrevPage, handleNextPage, handleFinishReading,
 }) {
     return (
@@ -28,6 +28,9 @@ function ArticleReadingArea({
                         <ArticleParagraph
                             key={index}
                             words={p.split(" ")}
+                            paragraphIndex={index}
+                            setClickedWordIndex={setClickedWordIndex}
+                            clickedWordIndex={clickedWordIndex}
                             handleWordClicked={handleWordClicked}
                             // updateDictionaryWord={updateDictionaryWord}
                             // setWordExistError={setWordExistError}

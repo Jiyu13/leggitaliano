@@ -18,6 +18,8 @@ function Article() {
     const [sentence, setSentence] = useState(null)
 
     const [clickedWord, setClickedWord] = useState(null)
+    const [clickedWordIndex, setClickedWordIndex] = useState(null)
+
     const [ipa, setIpa] = useState(null)
     const [dictionaryWords, setDictionaryWords] = useState(null)
     const [wordNotFound, setNotFound] = useState(null)
@@ -173,6 +175,8 @@ function Article() {
                 isLoading={isLoading}
                 divRef={divRef}
                 pages={pages}
+                setClickedWordIndex={setClickedWordIndex}
+                clickedWordIndex={clickedWordIndex}
                 handleWordClicked={handleWordClicked}
                 handlePrevPage={handlePrevPage}
                 handleNextPage={handleNextPage}
