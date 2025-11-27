@@ -19,6 +19,7 @@ function DictionaryTranslationItems({
     const [isPopupOpen, setPopupOpen] = useState(false)
     const [error, setError] = useState(null)
     const [isShowToast, setShowToast] = useState(null)
+    const [targetTranslationId, setTargetTransId] = useState(null)
 
 
     function handleOnChange(e) {
@@ -28,7 +29,7 @@ function DictionaryTranslationItems({
         setTransItems(updatedItems)
     }
 
-    function updateTranslationItem(updatedItems) {
+    function updateTranslationItem(updatedItems, index, msg) {
         setTextareaError(null)
 
         const data = {
@@ -41,8 +42,8 @@ function DictionaryTranslationItems({
                const result = res.data
                const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
                setDictionaryWords(updatedWords)
-
-               setShowToast("Updated!")
+               setTargetTransId(index)
+               setShowToast(msg)
                setTimeout(function() {
                     setShowToast(null)
                }, 1000)
@@ -78,7 +79,7 @@ function DictionaryTranslationItems({
             setTextareaError([index,"Required."])
         } else {
             const updatedItems = transItems.map((original_item, i) => index === i ? tran_item: original_item)
-            updateTranslationItem(updatedItems)
+            updateTranslationItem(updatedItems, index, "Updated!")
         }
     }
 
@@ -86,7 +87,7 @@ function DictionaryTranslationItems({
     function handleDeleteTranslationItem(tran_item, index) {
         // exclude the removed target by checking the id
         const updatedTransItems = translationItems.filter((original_item, i) => index !== i)
-        updateTranslationItem(updatedTransItems)
+        updateTranslationItem(updatedTransItems, index, "Deleted!")
     }
 
     function handleMoveToSentences(index) {
@@ -184,7 +185,7 @@ function DictionaryTranslationItems({
                         </FilledButton>
                     </div>
 
-                    {isShowToast !== null && index === 0 && (
+                    {isShowToast !== null && targetTranslationId === index &&(
                         <ToastMessage message={isShowToast}/>
                     )}
 
