@@ -112,7 +112,7 @@ function DictionaryWordItem({
                         )}
 
                         {notes.map((note, index) => (
-                            <div>{note}</div>
+                            <div key={index}>{note}</div>
                         ))}
                     </WordForms>
 
