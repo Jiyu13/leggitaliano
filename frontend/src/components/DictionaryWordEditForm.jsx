@@ -29,14 +29,14 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         let value = e.target.value
         console.log(value[0] !== "")
 
-        if (name === "notes" ) {
-            if (value[0] !== "") {
-                // if doesn't contain ';', will be an array with 1 item
-                value = value.split(", ")
-            } else {
-                value = []
-            }
-        }
+        // if (name === "notes" ) {
+        //     if (value[0] !== "") {
+        //         // if doesn't contain ';', will be an array with 1 item
+        //         value = value.split(";")
+        //     } else {
+        //         value = []
+        //     }
+        // }
         setFormData({...formData, [name]:value})
     }
     function handleSubmitEditForm(e) {
