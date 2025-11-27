@@ -21,7 +21,8 @@ export default function ArticleWord({
     
     
     // const match = vocabularies?.filter((v) => v.hawaiian_clean.toLowerCase() === word_clean)[0]
-    let styling = "rgba(112, 161, 255, 0.5)"
+    let activeStyling = "rgba(112, 161, 255, 0.5)"
+    const unactiveStyling = "rgba(112, 161, 255, 0.2"
     // if (match) {
     //     // & word_clean!==""
     //     switch(match.status) {
@@ -50,7 +51,7 @@ export default function ArticleWord({
     return (
         <WordContainer
             onClick={handleClick}
-            style={{backgroundColor: isActive ? styling : "transparent"}}
+            style={{backgroundColor: isActive ? activeStyling : unactiveStyling}}
         >
             {word}
         </WordContainer>
