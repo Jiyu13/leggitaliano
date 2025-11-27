@@ -3,14 +3,18 @@ import styled from "styled-components"
 import {UserContext} from "../user-content/UserContent";
 
 
-export default function ArticleWord({ word, index, handleWordClicked, handleGetSentence, setWordExistError }) {
-    // const {vocabularies} = useContext(UserContext)
+export default function ArticleWord({
+    word, index, paragraphIndex, clickedWordIndex, setClickedWordIndex,
+    handleWordClicked, handleGetSentence, setWordExistError
+}) {
+
 
     function handleClick(e) {
             // setWordExistError(null)
             const value = e.target.innerHTML
             handleWordClicked(value)
             handleGetSentence(value, index)
+            setClickedWordIndex([paragraphIndex, index])
     }
 
     const word_clean = word.toLowerCase().replace("'", "ʻ")      // replace all that's not [a-zā-ūʻ]
@@ -38,33 +42,18 @@ export default function ArticleWord({ word, index, handleWordClicked, handleGetS
     //     }
     // }
 
-    let disableClick = false
-    if (word === "") {
-        styling = ""
-        disableClick = true
-    }
-
+     const isActive =
+        clickedWordIndex &&
+        clickedWordIndex[0] === paragraphIndex &&
+        clickedWordIndex[1] === index;
 
     return (
-        
-        <>
-            {disableClick ? 
-                <DisableWordContainer>
-                    {word}
-                </DisableWordContainer>
-                
-
-                :
-
-                <WordContainer onClick={handleClick} style={{backgroundColor: styling}}>
-                    {word}
-                </WordContainer>
-            }
-        </>
-
-        
-
-        
+        <WordContainer
+            onClick={handleClick}
+            style={{backgroundColor: isActive ? styling : "transparent"}}
+        >
+            {word}
+        </WordContainer>
     )
 }
 
