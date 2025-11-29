@@ -30,9 +30,9 @@ function DictionaryWordNewMeaningForm({
     function handleInputChange(e) {
         const name = e.target.name
         let value = e.target.value
-        if (name === "notes") {// if doesn't contain ';', will be an array with 1 item
-            value = value.split(", ")
-        }
+        // if (name === "notes") {// if doesn't contain ';', will be an array with 1 item
+            // value = value.split(", ")
+        // }
         setFormData({...formData, [name]:value})
     }
 

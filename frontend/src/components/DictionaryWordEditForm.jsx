@@ -25,10 +25,9 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     const [wordTypeEmpty, setWordTypeEmpty] = useState(false)
 
     function handleInputChange(e){
+        // formData.notes is a string , converted to list in the backend
         const name = e.target.name
         let value = e.target.value
-        console.log(value[0] !== "")
-
         // if (name === "notes" ) {
         //     if (value[0] !== "") {
         //         // if doesn't contain ';', will be an array with 1 item
