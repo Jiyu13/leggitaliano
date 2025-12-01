@@ -20,7 +20,7 @@ function DictionaryWordNewMeaningForm({
         translations: [""],
         ipa: "",
         parent: "",
-        notes: [],
+        notes: null,
         word_type_id: null   // pass "string" id to post request
     }
 
