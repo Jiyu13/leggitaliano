@@ -180,19 +180,23 @@ class DictionaryWordView(APIView):
         translations = request.data.get('translations')
         parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
-        notes_string = request.data.get("notes")   # a list with single item[]
-
+        notes_string = request.data.get("notes")   # a string, need to be separated by "; " | null
         parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=int(word_type_id)).first()
         parent_word_id = parent_word.id if parent_word else None
         # print("parent_word-----------------------", parent_string, parent_word)
-        # ======================================== check if a word has a parent and is a verb ==========================
+
+        # =============== For "notes" field ------ check if a word has a parent and is a verb ==========================
         if parent_word and int(word_type_id) in [9, 12, 62, 63, 64, 65, 66, 67, 68]:
             verb = Verb.objects.filter(infinitive=parent_word.word).first()
-            notes = getattr(verb, notes_string[0], None)   # need to make string into a list
+            if verb is None:
+                # if parent_word.word doesn't exist in Verb.objects
+                notes = notes_string.split("; ") if isinstance(notes_string, str) else []
+            else:
+                notes = getattr(verb, notes_string, None)   # need to make string into a list
         else:
-            notes = notes_string
+            notes = notes_string.split("; ") if isinstance(notes_string, str) else []
 
-        # ============================================  On Write  ================================================="""
+        # ================ For "translations" field ------  On Write  ==================================================
         # if parent exists, DON'T copy its translation into child
         # Let the child be blank and inherit at read time
         if parent_word:
@@ -209,7 +213,7 @@ class DictionaryWordView(APIView):
             "ipa": ipa,
             "notes": notes,
         }
-
+        # print(data)
         new_word_serializer = DictionaryWordSerializer(data=data)
         if not new_word_serializer.is_valid():
             return Response(new_word_serializer.errors, status=400)
@@ -257,7 +261,7 @@ class DictionaryWordByIDView(APIView):
         parent_string = request.data.get('parent')
         ipa = request.data.get('ipa')
         translations = request.data.get('translations')
-        notes_string = request.data.get("notes")    # one string item in a list??
+        notes_string = request.data.get("notes")    # a list
 
         word = DictionaryWord.objects.get(pk=word_id)
         word_type = WordType.objects.get(type=word_type_string)
@@ -299,7 +303,7 @@ class DictionaryWordByIDView(APIView):
                         "word_type_id": word_type.id,
                         "parent_id": parent_word.id,
                         "ipa": ipa,
-                        "notes": notes_string
+                        "notes": notes_string.split("; ") if isinstance(notes_string, str) else notes_string
                     }
                 else:
                     # 6. inherit notes from parent
@@ -318,8 +322,10 @@ class DictionaryWordByIDView(APIView):
                 "parent_id": None,
                 "ipa": ipa,
                 "translations": translations,
-                "notes": notes_string[0].split(", ") if len(notes_string) != 0 else notes_string,
+                "notes": notes_string #.split("; ") if isinstance(notes_string, str) else notes_string
+                #notes_string[0].split(", ") if len(notes_string) != 0 else notes_string,
             }
+        # print(updated)
         serializer = DictionaryWordSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
