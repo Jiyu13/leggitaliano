@@ -19,7 +19,7 @@ function DictionaryWordItem({
     const translations = wordItem["translations"]
     const notes = wordItem["notes"]
 
-    const [isShowMeaning, setShowMeaning] = useState(true)
+    const [isShowMeaning, setShowMeaning] = useState(false)
     // const [clickedWordItemid, setClickedWordId] = useState(wordItemId)
 
     function handleToggleShowMeaning() {
