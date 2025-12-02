@@ -54,7 +54,6 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                    const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
                    setDictionaryWords(updatedWords)
                    setShowEditForm(false)
-
                 })
                 .catch(error => {
                    if (error.response) {
@@ -82,6 +81,26 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         const updated = formData.translations.filter((tran, idx) => idx !== index)
         setFormData({...formData, translations: updated})
     }
+
+    function handleNoteChange(e, index) {
+        const value = e.target.value
+        setFormData(prev => {
+            const next = [...prev.notes];
+            next[index] = value;
+            return { ...prev, notes: next };
+        });
+    }
+
+    function handleAddNoteClick() {
+        setFormData({...formData, notes: [...formData.notes, ""]})
+    }
+
+    function handleRemoveNoteClick(index) {
+        const updated = formData.notes.filter((note, idx) => idx !== index)
+        setFormData({...formData, notes: updated})
+
+    }
+
     return (
         <NewWordContainer className="edit-word-container">
             <NewWordContainerWrapper>
@@ -201,15 +220,45 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
                     <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
-                        <Textarea
-                            className="form-input"
-                            type="text"
-                            name='notes'
-                            value={formData.notes}
-                            onChange={handleInputChange}
-                            style={{border: "2px solid #a9a9a9"}}
+                        {formData.notes.map((note, index) =>
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <Textarea
+                                    key={index}
+                                    className="form-input"
+                                    type='text'
+                                    name='notes'
+                                    value={note}
+                                    onChange={(e) => handleNoteChange(e, index)}
+                                    style={{border: "2px solid #a9a9a9"}}
 
-                        />
+                                />
+                                {index === formData?.notes.length - 1 ?
+
+                                    <AddTranslationIconImg
+                                        alt="add another note icon"
+                                        src={add_another_translation_icon}
+                                        onClick={handleAddNoteClick}
+                                    />
+                                    :
+                                    <AddTranslationIconImg
+                                        alt="remove this note icon"
+                                        src={remove_this_translation_icon}
+                                        onClick={() => handleRemoveNoteClick(index)}
+                                    />
+                                }
+
+
+                            </div>
+                        )}
+
+                    {/*    <Textarea*/}
+                    {/*        className="form-input"*/}
+                    {/*        type="text"*/}
+                    {/*        name='notes'*/}
+                    {/*        value={formData.notes}*/}
+                    {/*        onChange={handleInputChange}*/}
+                    {/*        style={{border: "2px solid #a9a9a9"}}*/}
+                    {/*    />*/}
                     </FieldBox>
 
                     <FormButtonWrapper>
