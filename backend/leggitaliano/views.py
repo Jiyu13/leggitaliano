@@ -303,7 +303,7 @@ class DictionaryWordByIDView(APIView):
                         "word_type_id": word_type.id,
                         "parent_id": parent_word.id,
                         "ipa": ipa,
-                        "notes": notes_string.split("; ") if isinstance(notes_string, str) else notes_string
+                        "notes": notes_string  #.split("; ") if isinstance(notes_string, str) else notes_string
                     }
                 else:
                     # 6. inherit notes from parent
