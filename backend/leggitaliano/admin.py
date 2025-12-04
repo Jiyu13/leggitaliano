@@ -18,8 +18,8 @@ class ArticleAdmin(admin.ModelAdmin):
 @admin.register(Verb)
 class VerbAdmin(admin.ModelAdmin):
     list_display = (
-        "id", "infinitive", 'translation', 'presente', 'perfetto', "gerundio", "imperfetto", "passato_remoto",
-        'futuro', 'congiuntivo_presente', 'congiuntivo_imperfetto', 'condizionale', 'imperativo', 'values'
+        "id", "infinitive", 'translation', "gerundio","participio_presente", "participio_passato", 'indicativo_presente', 'perfetto', "indicativo_imperfetto", "indicativo_passato_remoto",
+        'indicativo_futuro', 'congiuntivo_presente', 'congiuntivo_imperfetto', 'condizionale', 'imperativo', 'values'
     )
     search_fields = ['=infinitive']
 
