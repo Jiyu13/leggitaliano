@@ -194,6 +194,7 @@ class DictionaryWordView(APIView):
             else:
                 notes = getattr(verb, notes_string, None)   # need to make string into a list
         else:
+            # ================ verb is a parent / non-verb word ========================================================
             notes = notes_string.split("; ") if isinstance(notes_string, str) else []
 
         # ================ For "translations" field ------  On Write  ==================================================
