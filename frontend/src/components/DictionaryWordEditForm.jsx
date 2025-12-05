@@ -41,11 +41,12 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     function handleSubmitEditForm(e) {
         e.preventDefault()
         setWordTypeEmpty(false)
-
+        const notes_payload = formData.notes.length === 1 && formData.notes[0] === "" ? [] : formData.notes
         const payload = word.parent !== null ?
-            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, notes: formData.notes, word_type: formData.word_type}
+            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, notes: notes_payload, word_type: formData.word_type}
             :
-            formData
+            {...formData, notes: notes_payload}
+
         // console.log(payload)
 
         api.patch(`/word/id/${word.id}/`, payload)
@@ -220,36 +221,60 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
                     <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
-                        {formData.notes.map((note, index) =>
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <Textarea
-                                    key={index}
-                                    className="form-input"
-                                    type='text'
-                                    name='notes'
-                                    value={note}
-                                    onChange={(e) => handleNoteChange(e, index)}
-                                    style={{border: "2px solid #a9a9a9"}}
+                        {formData.notes.length !== 0 ? (
+                            formData.notes.map((note, index) =>
+                                <div style={{display: "flex", alignItems: "center"}}>
+                                    <Textarea
+                                        key={index}
+                                        className="form-input"
+                                        type='text'
+                                        name='notes'
+                                        value={note}
+                                        onChange={(e) => handleNoteChange(e, index)}
+                                        style={{border: "2px solid #a9a9a9"}}
 
-                                />
-                                {index === formData?.notes.length - 1 ?
+                                    />
+                                    {index === formData?.notes.length - 1 ?
+
+                                        <AddTranslationIconImg
+                                            alt="add another note icon"
+                                            src={add_another_translation_icon}
+                                            onClick={handleAddNoteClick}
+                                        />
+                                        :
+                                        <AddTranslationIconImg
+                                            alt="remove this note icon"
+                                            src={remove_this_translation_icon}
+                                            onClick={() => handleRemoveNoteClick(index)}
+                                        />
+                                    }
+
+
+                                </div>
+                            ))
+                            :
+                            (
+                                <div style={{display: "flex", alignItems: "center"}}>
+                                    <Textarea
+                                        className="form-input"
+                                        type='text'
+                                        name='notes'
+                                        value=""
+                                        onChange={(e) => handleNoteChange(e, 0)}
+                                        style={{border: "2px solid #a9a9a9"}}
+
+                                    />
 
                                     <AddTranslationIconImg
                                         alt="add another note icon"
                                         src={add_another_translation_icon}
                                         onClick={handleAddNoteClick}
                                     />
-                                    :
-                                    <AddTranslationIconImg
-                                        alt="remove this note icon"
-                                        src={remove_this_translation_icon}
-                                        onClick={() => handleRemoveNoteClick(index)}
-                                    />
-                                }
+                                </div>
+                            )
 
+                        }
 
-                            </div>
-                        )}
 
                     {/*    <Textarea*/}
                     {/*        className="form-input"*/}
