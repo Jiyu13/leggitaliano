@@ -8,13 +8,14 @@ import add_another_translation_icon from "../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 
 function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditForm}) {
-
+    console.log(word.translations)
     const {wordTypes, } = useContext(UserContext)
 
     const initialValue = {
         id: word.id,
         word: word.word,
         translations: word.translations,
+        reset_translations: null,
         ipa: word.ipa,
         parent: word.parent || "",
         notes: word.notes,
@@ -28,24 +29,18 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         // formData.notes is a string , converted to list in the backend
         const name = e.target.name
         let value = e.target.value
-        // if (name === "notes" ) {
-        //     if (value[0] !== "") {
-        //         // if doesn't contain ';', will be an array with 1 item
-        //         value = value.split(";")
-        //     } else {
-        //         value = []
-        //     }
-        // }
         setFormData({...formData, [name]:value})
     }
     function handleSubmitEditForm(e) {
         e.preventDefault()
         setWordTypeEmpty(false)
         const notes_payload = formData.notes.length === 1 && formData.notes[0] === "" ? [] : formData.notes
-        const payload = word.parent !== null ?
+        const payload = word.parent !== null && !formData.reset_translations ?
+            // inherit parent translations + not pass in reset_translations / translations into the payload
             {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, notes: notes_payload, word_type: formData.word_type}
             :
-            {...formData, notes: notes_payload}
+            // no parent / doesn't inherit parent's translation + pass in translations field with reset_translations as value
+            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, translations: formData.reset_translations, notes: notes_payload, word_type: formData.word_type}
 
         // console.log(payload)
 
@@ -179,43 +174,41 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         />
                     </FieldBox>
 
-                    {(word.parent === null) && (
+                    {(word.parent === null ) && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
-                        <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
+                            <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
 
-                        {formData.translations.map((t, index) =>
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <Textarea
-                                    key={index}
-                                    className="form-input"
-                                    type='text'
-                                    name='translations'
-                                    value={t}
-                                    onChange={(e) => handleTranslationChange(e, index)}
-                                    style={{border: "2px solid #a9a9a9"}}
+                            {formData.translations.map((t, index) =>
+                                <div style={{display: "flex", alignItems: "center"}}>
+                                    <Textarea
+                                        key={index}
+                                        className="form-input"
+                                        type='text'
+                                        name='translations'
+                                        value={t}
+                                        onChange={(e) => handleTranslationChange(e, index)}
+                                        style={{border: "2px solid #a9a9a9"}}
 
-                                />
-
-                                {index === formData?.translations.length - 1 ?
-
-                                    <AddTranslationIconImg
-                                        alt="add another translation icon"
-                                        src={add_another_translation_icon}
-                                        onClick={handleAddTranslationButtonClick}
                                     />
-                                    :
-                                    <AddTranslationIconImg
-                                        alt="remove this translation icon"
-                                        src={remove_this_translation_icon}
-                                        onClick={() => handleRemoveTranslationButtonClick(index)}
-                                    />
-                                }
-                            </div>
 
-                        )}
+                                    {index === formData?.translations.length - 1 ?
 
+                                        <AddTranslationIconImg
+                                            alt="add another translation icon"
+                                            src={add_another_translation_icon}
+                                            onClick={handleAddTranslationButtonClick}
+                                        />
+                                        :
+                                        <AddTranslationIconImg
+                                            alt="remove this translation icon"
+                                            src={remove_this_translation_icon}
+                                            onClick={() => handleRemoveTranslationButtonClick(index)}
+                                        />
+                                    }
+                                </div>
 
-                    </FieldBox>
+                            )}
+                        </FieldBox>
                     )}
 
 
