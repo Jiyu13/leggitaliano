@@ -269,6 +269,13 @@ class DictionaryWordByIDView(APIView):
 
         parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
 
+        updated = {
+            "word": word.word,
+            "word_type_id": word_type.id,
+            "parent_id": parent_word.id,
+            "ipa": ipa,
+        }
+
         # 1. ------------------------- if parent word exists------------------------------------------------------------
         if parent_word:
             # 2. if word IS a verb
@@ -279,54 +286,20 @@ class DictionaryWordByIDView(APIView):
                     verb_conjugation = getattr(verb, notes_string[0], None)
                     verb_tense = notes_string[0].replace("_", " ")
                     verb_conjugation.insert(0, verb_tense)
-                    updated = {
-                        "word": word.word,
-                        "word_type_id": word_type.id,
-                        "parent_id": parent_word.id,
-                        "ipa": ipa,
-                        "notes": verb_conjugation
-                    }
-                else:
-                    # 4. notes_String = []
-                    updated = {
-                        "word": word.word,
-                        "word_type_id": word_type.id,
-                        "parent_id": parent_word.id,
-                        "ipa": ipa,
-                        "notes": []
-                    }
+                    updated["notes"] = verb_conjugation
+                else:  # 4. notes_String = []
+                    updated["notes"] = []
 
-            else:
-                # 5. if word is NOT a verb, notes_string is usually empty or inherits from parent word
+            else:  # 5. if word is NOT a verb, notes_string is usually empty or inherits from parent word
                 if len(notes_string) != 0:
-                    updated = {
-                        "word": word.word,
-                        "word_type_id": word_type.id,
-                        "parent_id": parent_word.id,
-                        "ipa": ipa,
-                        "notes": notes_string  #.split("; ") if isinstance(notes_string, str) else notes_string
-                    }
-                else:
-                    # 6. inherit notes from parent
-                    updated = {
-                        "word": word.word,  # If Sentence.word is a FK
-                        "word_type_id": word_type.id,
-                        "parent_id": parent_word.id,
-                        "ipa": ipa,
-                    }
-        else:
-            # 6. set parent word None if parent word does not exist
-            # parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
-            updated = {
-                "word": word.word,
-                "word_type_id": word_type.id,
-                "parent_id": None,
-                "ipa": ipa,
-                "translations": translations,
-                "notes": notes_string #.split("; ") if isinstance(notes_string, str) else notes_string
-                #notes_string[0].split(", ") if len(notes_string) != 0 else notes_string,
-            }
-        # print(updated)
+                    updated["notes"] = notes_string  #.split("; ") if isinstance(notes_string, str) else notes_string
+
+        else:  # 6. set parent word None if parent word does not exist
+            updated["parent_id"] = None
+            updated["notes"] = notes_string
+
+        if translations:
+            updated["translations"] = translations.split("; ")
         serializer = DictionaryWordSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
