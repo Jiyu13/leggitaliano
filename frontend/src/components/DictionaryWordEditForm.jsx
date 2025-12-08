@@ -8,7 +8,7 @@ import add_another_translation_icon from "../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 
 function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditForm}) {
-    console.log(word.translations)
+    // console.log(word)
     const {wordTypes, } = useContext(UserContext)
 
     const initialValue = {
@@ -23,7 +23,6 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     }
 
     const [formData, setFormData] = useState(initialValue)
-    const [wordTypeEmpty, setWordTypeEmpty] = useState(false)
 
     function handleInputChange(e){
         // formData.notes is a string , converted to list in the backend
@@ -33,7 +32,6 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     }
     function handleSubmitEditForm(e) {
         e.preventDefault()
-        setWordTypeEmpty(false)
         const notes_payload = formData.notes.length === 1 && formData.notes[0] === "" ? [] : formData.notes
         const payload = word.parent !== null && !formData.reset_translations ?
             // inherit parent translations + not pass in reset_translations / translations into the payload
@@ -174,7 +172,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         />
                     </FieldBox>
 
-                    {(word.parent === null ) && (
+                    {(word.is_inherit_translations === false ) && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
 
