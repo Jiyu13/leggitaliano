@@ -41,7 +41,7 @@ class DictionaryAdmin(admin.ModelAdmin):
 
 @admin.register(DictionaryWord)
 class DictionaryWordAdmin(admin.ModelAdmin):
-    list_display = ("id", "word", "formatted_word_type", "parent", "dictionary")
+    list_display = ("id", "word", "formatted_word_type", "parent", "dictionary", "is_inherit_translations")
     autocomplete_fields = ['parent']
     search_fields = ['=word', "=word_type__type", "=parent__word"]
     # readonly_fields = ['word',]
