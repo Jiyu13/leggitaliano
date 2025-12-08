@@ -294,12 +294,18 @@ class DictionaryWordByIDView(APIView):
                 if len(notes_string) != 0:
                     updated["notes"] = notes_string  #.split("; ") if isinstance(notes_string, str) else notes_string
 
-        else:  # 6. set parent word None if parent word does not exist
+            if translations:
+                updated["translations"] = translations.split("; ")
+            else:
+                updated["is_inherit_translations"] = True
+
+        else:  # 6. set parent word None if parent word does not exist, set translations if exists
             updated["parent_id"] = None
             updated["notes"] = notes_string
+            if translations:
+                updated["translations"] = translations
 
-        if translations:
-            updated["translations"] = translations.split("; ")
+        # print(updated)
         serializer = DictionaryWordSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
