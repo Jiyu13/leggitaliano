@@ -260,6 +260,7 @@ class DictionaryWordByIDView(APIView):
 
     def patch(self, request, word_id):
         """ Edit word form """
+        """ notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...] """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -286,12 +287,18 @@ class DictionaryWordByIDView(APIView):
             # 2. if word IS a verb
             if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
                 if len(notes_string) != 0:
-                    # 3. notes_String is not empty, add verb conjugation based on the notes[0] value -- verb tense
-                    verb = Verb.objects.filter(infinitive=word.parent.word).first()
-                    verb_conjugation = getattr(verb, notes_string[0], None)
-                    verb_tense = notes_string[0].replace("_", " ")
-                    verb_conjugation.insert(0, verb_tense)
-                    updated["notes"] = verb_conjugation
+                    updated_notes = []
+                    for note in notes_string:
+                        split_note = note.split(", ")
+                        tense = split_note[0]
+                        # 3. notes_String is not empty, add verb conjugation based on the notes[0] value--verb tense
+                        verb = Verb.objects.filter(infinitive=word.parent.word).first()
+                        verb_tense = tense.replace(" ", "_")
+                        verb_conjugation = getattr(verb, verb_tense, None)
+                        verb_conjugation.insert(0, tense)
+                        formatted_note = ", ".join(verb_conjugation)
+                        updated_notes.append(formatted_note)
+                    updated["notes"] = updated_notes
                 else:  # 4. notes_String = []
                     updated["notes"] = []
 
