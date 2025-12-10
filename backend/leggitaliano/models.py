@@ -122,6 +122,7 @@ class DictionaryWord(models.Model):
     # JSONField to keep the data a list (models.TextField(blank=True) -> make data a string)
     ipa = models.CharField(max_length=255, blank=True)
     notes = models.JSONField(default=list, blank=True)
+    is_inherit_notes = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.word} - {self.word_type.type}"
