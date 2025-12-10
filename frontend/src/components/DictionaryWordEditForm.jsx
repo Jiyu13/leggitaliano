@@ -7,7 +7,7 @@ import api from "../api";
 import add_another_translation_icon from "../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 
-const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
+export const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
 
 function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditForm}) {
     // console.log(word)
@@ -18,36 +18,20 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         word: word.word,
         translations: word.translations,
         is_inherit_translations: word.is_inherit_translations,
-        reset_translations: null,
         ipa: word.ipa,
         parent: word.parent || "",
         notes: word.notes,
+        is_inherit_notes: word.is_inherit_notes,
         word_type: word.word_type   // pass "string" type name to post request
     }
 
     const [formData, setFormData] = useState(initialValue)
 
-    function handleInputChange(e){
-        // formData.notes is a string , converted to list in the backend
-        const name = e.target.name
-        let value
-        if (name === "is_inherit_translations") {
-            value = e.target.value === "True"
-        } else {
-            value = e.target.value
-        }
-        setFormData({...formData, [name]:value})
-    }
     function handleSubmitEditForm(e) {
         e.preventDefault()
-        const notes_payload = formData.notes.map((note, index) =>  note.trim()).filter(note => note !== "");
-        const payload = word.parent !== null && formData.is_inherit_translations?
-            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, notes: notes_payload, word_type: formData.word_type, is_inherit_translations: formData.is_inherit_translations}
-            :
-            // no parent / doesn't inherit parent's translation + pass in translations field with reset_translations as value
-            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, translations: formData.translations, notes: notes_payload, word_type: formData.word_type, is_inherit_translations: formData.is_inherit_translations}
-
-        // console.log(payload)
+        const translations_payload = formData.is_inherit_translations ? [] : formData.translations
+        const notes_payload = formData.is_inherit_notes ? [] : formData.notes.map((note, index) =>  note.trim()).filter(note => note !== "");
+        const payload = {...formData, "translations": translations_payload, "notes": notes_payload}
 
         api.patch(`/word/id/${word.id}/`, payload)
                .then(res => {
@@ -63,6 +47,18 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                     console.log("network error", error.message);
                 }})
 
+    }
+
+    function handleInputChange(e){
+        // formData.notes is a string , converted to list in the backend
+        const name = e.target.name
+        let value
+        if (name === "is_inherit_translations" || name === "is_inherit_notes") {
+            value = e.target.value === "True"
+        } else {
+            value = e.target.value
+        }
+        setFormData({...formData, [name]:value})
     }
 
     function handleTranslationChange(e, index) {
@@ -87,10 +83,8 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         const value = e.target.value
         setFormData(prev => {
             const next = [...prev.notes];
-            if (value.trim() !== "") {
-                next[index] = value;
-                return { ...prev, notes: next };
-            }
+            next[index] = value;
+            return { ...prev, notes: next };
         });
     }
 
@@ -181,131 +175,168 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         />
                     </FieldBox>
 
-                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
-                        <FormLabel style={{color: "#ddd"}}>Is inherit?</FormLabel>
-                        <SelectBox
-                            id={formData.is_inherit_translations}
-                            name="is_inherit_translations"
-                            value={formData.is_inherit_translations === false ? "False" : "True"}
-                            onChange={handleInputChange}
-                            style={{color: "#ddd", background: "#222", borderRadius: "8px", border: "2px solid #a9a9a9"}}
-                        >
-                            {IS_INHERIT?.map((each, index) =>
-                                <OptionBox
-                                    key={index}
-                                    value={each.is_inherit}
-                                >
-                                    {each.is_inherit}
-                                </OptionBox>
-                            )}
+                    {formData.parent && (
+                        <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
+                            <FormLabel style={{color: "#ddd"}}>Is inherit translations?</FormLabel>
+                            <SelectBox
+                                id={formData.is_inherit_translations}
+                                name="is_inherit_translations"
+                                value={formData.is_inherit_translations === false ? "False" : "True"}
+                                onChange={handleInputChange}
+                                style={{color: "#ddd", background: "#222", borderRadius: "8px", border: "2px solid #a9a9a9"}}
+                            >
+                                {IS_INHERIT?.map((each, index) =>
+                                    <OptionBox
+                                        key={index}
+                                        value={each.is_inherit}
+                                    >
+                                        {each.is_inherit}
+                                    </OptionBox>
+                                )}
 
-                        </SelectBox>
-                    </FieldBox>
+                            </SelectBox>
+                        </FieldBox>
+                    )}
 
-                    {(word.is_inherit_translations === false ) && (
+                    {formData.is_inherit_translations === false  && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
+                            {formData.translations.length !== 0 ? (
 
-                            {formData.translations.map((t, index) =>
-                                <div style={{display: "flex", alignItems: "center"}}>
-                                    <Textarea
-                                        key={index}
-                                        className="form-input"
-                                        type='text'
-                                        name='translations'
-                                        value={t}
-                                        onChange={(e) => handleTranslationChange(e, index)}
-                                        style={{border: "2px solid #a9a9a9"}}
+                                formData.translations.map((t, index) =>
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <Textarea
+                                            key={index}
+                                            className="form-input"
+                                            type='text'
+                                            name='translations'
+                                            value={t}
+                                            onChange={(e) => handleTranslationChange(e, index)}
+                                            style={{border: "2px solid #a9a9a9"}}
 
-                                    />
+                                        />
 
-                                    {index === formData?.translations.length - 1 ?
+                                        {index === formData?.translations.length - 1 ?
+
+                                            <AddTranslationIconImg
+                                                alt="add another translation icon"
+                                                src={add_another_translation_icon}
+                                                onClick={handleAddTranslationButtonClick}
+                                            />
+                                            :
+                                            <AddTranslationIconImg
+                                                alt="remove this translation icon"
+                                                src={remove_this_translation_icon}
+                                                onClick={() => handleRemoveTranslationButtonClick(index)}
+                                            />
+                                        }
+                                    </div>
+                                ))
+                                :
+                                (
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <Textarea
+                                            className="form-input"
+                                            type='text'
+                                            name='translations'
+                                            value=""
+                                            onChange={(e) => handleTranslationChange(e, 0)}
+                                            style={{border: "2px solid #a9a9a9"}}
+
+                                        />
 
                                         <AddTranslationIconImg
                                             alt="add another translation icon"
                                             src={add_another_translation_icon}
                                             onClick={handleAddTranslationButtonClick}
                                         />
-                                        :
-                                        <AddTranslationIconImg
-                                            alt="remove this translation icon"
-                                            src={remove_this_translation_icon}
-                                            onClick={() => handleRemoveTranslationButtonClick(index)}
-                                        />
-                                    }
-                                </div>
-
-                            )}
+                                    </div>
+                                )
+                            }
                         </FieldBox>
                     )}
 
-
-                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
-                        <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
-                        {formData.notes.length !== 0 ? (
-                            formData.notes.map((note, index) =>
-                                <div style={{display: "flex", alignItems: "center"}}>
-                                    <Textarea
+                    {formData.parent && (
+                        <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
+                            <FormLabel style={{color: "#ddd"}}>Is inherit notes?</FormLabel>
+                            <SelectBox
+                                id={formData.is_inherit_notes}
+                                name="is_inherit_notes"
+                                value={formData.is_inherit_notes === false ? "False" : "True"}
+                                onChange={handleInputChange}
+                                style={{color: "#ddd", background: "#222", borderRadius: "8px", border: "2px solid #a9a9a9"}}
+                            >
+                                {IS_INHERIT?.map((each, index) =>
+                                    <OptionBox
                                         key={index}
-                                        className="form-input"
-                                        type='text'
-                                        name='notes'
-                                        value={note}
-                                        onChange={(e) => handleNoteChange(e, index)}
-                                        style={{border: "2px solid #a9a9a9"}}
+                                        value={each.is_inherit}
+                                    >
+                                        {each.is_inherit}
+                                    </OptionBox>
+                                )}
 
-                                    />
-                                    {index === formData?.notes.length - 1 ?
+                            </SelectBox>
+                        </FieldBox>
+                    )}
+
+                    {formData.is_inherit_notes === false && (
+                        <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
+                            <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
+                            {formData.notes.length !== 0 ? (
+                                formData.notes.map((note, index) =>
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <Textarea
+                                            key={index}
+                                            className="form-input"
+                                            type='text'
+                                            name='notes'
+                                            value={note}
+                                            onChange={(e) => handleNoteChange(e, index)}
+                                            style={{border: "2px solid #a9a9a9"}}
+
+                                        />
+                                        {index === formData?.notes.length - 1 ?
+
+                                            <AddTranslationIconImg
+                                                alt="add another note icon"
+                                                src={add_another_translation_icon}
+                                                onClick={handleAddNoteClick}
+                                            />
+                                            :
+                                            <AddTranslationIconImg
+                                                alt="remove this note icon"
+                                                src={remove_this_translation_icon}
+                                                onClick={() => handleRemoveNoteClick(index)}
+                                            />
+                                        }
+
+
+                                    </div>
+                                ))
+                                :
+                                (
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <Textarea
+                                            className="form-input"
+                                            type='text'
+                                            name='notes'
+                                            value=""
+                                            onChange={(e) => handleNoteChange(e, 0)}
+                                            style={{border: "2px solid #a9a9a9"}}
+
+                                        />
 
                                         <AddTranslationIconImg
                                             alt="add another note icon"
                                             src={add_another_translation_icon}
                                             onClick={handleAddNoteClick}
                                         />
-                                        :
-                                        <AddTranslationIconImg
-                                            alt="remove this note icon"
-                                            src={remove_this_translation_icon}
-                                            onClick={() => handleRemoveNoteClick(index)}
-                                        />
-                                    }
+                                    </div>
+                                )
+                            }
+                        </FieldBox>
+                    )}
 
-
-                                </div>
-                            ))
-                            :
-                            (
-                                <div style={{display: "flex", alignItems: "center"}}>
-                                    <Textarea
-                                        className="form-input"
-                                        type='text'
-                                        name='notes'
-                                        value=""
-                                        onChange={(e) => handleNoteChange(e, 0)}
-                                        style={{border: "2px solid #a9a9a9"}}
-
-                                    />
-
-                                    <AddTranslationIconImg
-                                        alt="add another note icon"
-                                        src={add_another_translation_icon}
-                                        onClick={handleAddNoteClick}
-                                    />
-                                </div>
-                            )
-
-                        }
-
-
-                    {/*    <Textarea*/}
-                    {/*        className="form-input"*/}
-                    {/*        type="text"*/}
-                    {/*        name='notes'*/}
-                    {/*        value={formData.notes}*/}
-                    {/*        onChange={handleInputChange}*/}
-                    {/*        style={{border: "2px solid #a9a9a9"}}*/}
-                    {/*    />*/}
-                    </FieldBox>
 
                     <FormButtonWrapper>
                         <SubmitInputButton
