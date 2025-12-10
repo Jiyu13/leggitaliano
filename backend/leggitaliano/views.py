@@ -200,16 +200,21 @@ class DictionaryWordView(APIView):
         # ================ For "translations" field ------  On Write  ==================================================
         # if parent exists, DON'T copy its translation into child
         # Let the child be blank and inherit at read time
-        if parent_word:
+        is_translation_empty = len(translations) == 1 and translations[0] == ""
+        if parent_word and is_translation_empty:
             translations_to_save = []
+            is_inherit_translations = True
         else:
-            translations_to_save = translations or []
+            translations_to_save = translations
+            is_inherit_translations = False
+
         # =========================================================================================================="""
         data = {
             "dictionary": 1,
             "word": word,  # If Sentence.word is a FK
             "word_type_id": int(word_type_id),
             "translations": translations_to_save,
+            "is_inherit_translations ": is_inherit_translations,
             "parent_id": parent_word_id,
             "ipa": ipa,
             "notes": notes,
@@ -255,6 +260,7 @@ class DictionaryWordByIDView(APIView):
 
     def patch(self, request, word_id):
         """ Edit word form """
+        """ notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...] """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -272,34 +278,51 @@ class DictionaryWordByIDView(APIView):
         updated = {
             "word": word.word,
             "word_type_id": word_type.id,
-            "parent_id": parent_word.id,
             "ipa": ipa,
         }
 
         # 1. ------------------------- if parent word exists------------------------------------------------------------
         if parent_word:
+            updated["parent_id"] = parent_word.id
             # 2. if word IS a verb
             if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
                 if len(notes_string) != 0:
-                    # 3. notes_String is not empty, add verb conjugation based on the notes[0] value -- verb tense
-                    verb = Verb.objects.filter(infinitive=word.parent.word).first()
-                    verb_conjugation = getattr(verb, notes_string[0], None)
-                    verb_tense = notes_string[0].replace("_", " ")
-                    verb_conjugation.insert(0, verb_tense)
-                    updated["notes"] = verb_conjugation
+                    updated_notes = []
+                    for note in notes_string:
+                        split_note = note.split(", ")
+                        tense = split_note[0]
+                        # 3. notes_String is not empty, add verb conjugation based on the notes[0] value--verb tense
+                        verb = Verb.objects.filter(infinitive=word.parent.word).first()
+                        verb_tense = tense.replace(" ", "_")
+                        verb_conjugation = getattr(verb, verb_tense, None)
+                        verb_conjugation.insert(0, tense)
+                        formatted_note = ", ".join(verb_conjugation)
+                        updated_notes.append(formatted_note)
+                    updated["notes"] = updated_notes
                 else:  # 4. notes_String = []
                     updated["notes"] = []
 
             else:  # 5. if word is NOT a verb, notes_string is usually empty or inherits from parent word
                 if len(notes_string) != 0:
                     updated["notes"] = notes_string  #.split("; ") if isinstance(notes_string, str) else notes_string
+                else:
+                    updated["notes"] = []
+            if not translations:
+                updated["translations"] = []
+                updated["is_inherit_translations"] = True
+            else:
+                updated["translations"] = translations
+                updated["is_inherit_translations"] = False
 
-        else:  # 6. set parent word None if parent word does not exist
+        # 6. ------------ set parent word None if parent word does not exist, set translations if exists ---------------
+        else:
             updated["parent_id"] = None
             updated["notes"] = notes_string
+            if translations:
+                updated["translations"] = translations
+            updated["is_inherit_translations"] = False
 
-        if translations:
-            updated["translations"] = translations.split("; ")
+        # print(updated)
         serializer = DictionaryWordSerializer(word, data=updated, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()

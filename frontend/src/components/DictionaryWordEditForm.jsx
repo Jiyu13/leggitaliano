@@ -7,14 +7,17 @@ import api from "../api";
 import add_another_translation_icon from "../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 
+const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
+
 function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditForm}) {
-    console.log(word.translations)
+    // console.log(word)
     const {wordTypes, } = useContext(UserContext)
 
     const initialValue = {
         id: word.id,
         word: word.word,
         translations: word.translations,
+        is_inherit_translations: word.is_inherit_translations,
         reset_translations: null,
         ipa: word.ipa,
         parent: word.parent || "",
@@ -23,24 +26,26 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     }
 
     const [formData, setFormData] = useState(initialValue)
-    const [wordTypeEmpty, setWordTypeEmpty] = useState(false)
 
     function handleInputChange(e){
         // formData.notes is a string , converted to list in the backend
         const name = e.target.name
-        let value = e.target.value
+        let value
+        if (name === "is_inherit_translations") {
+            value = e.target.value === "True"
+        } else {
+            value = e.target.value
+        }
         setFormData({...formData, [name]:value})
     }
     function handleSubmitEditForm(e) {
         e.preventDefault()
-        setWordTypeEmpty(false)
-        const notes_payload = formData.notes.length === 1 && formData.notes[0] === "" ? [] : formData.notes
-        const payload = word.parent !== null && !formData.reset_translations ?
-            // inherit parent translations + not pass in reset_translations / translations into the payload
-            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, notes: notes_payload, word_type: formData.word_type}
+        const notes_payload = formData.notes.map((note, index) =>  note.trim()).filter(note => note !== "");
+        const payload = word.parent !== null && formData.is_inherit_translations?
+            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, notes: notes_payload, word_type: formData.word_type, is_inherit_translations: formData.is_inherit_translations}
             :
             // no parent / doesn't inherit parent's translation + pass in translations field with reset_translations as value
-            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, translations: formData.reset_translations, notes: notes_payload, word_type: formData.word_type}
+            {id: word.id, word: formData.word, parent: formData.parent,ipa: formData.ipa, translations: formData.translations, notes: notes_payload, word_type: formData.word_type, is_inherit_translations: formData.is_inherit_translations}
 
         // console.log(payload)
 
@@ -82,8 +87,10 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         const value = e.target.value
         setFormData(prev => {
             const next = [...prev.notes];
-            next[index] = value;
-            return { ...prev, notes: next };
+            if (value.trim() !== "") {
+                next[index] = value;
+                return { ...prev, notes: next };
+            }
         });
     }
 
@@ -174,7 +181,28 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         />
                     </FieldBox>
 
-                    {(word.parent === null ) && (
+                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
+                        <FormLabel style={{color: "#ddd"}}>Is inherit?</FormLabel>
+                        <SelectBox
+                            id={formData.is_inherit_translations}
+                            name="is_inherit_translations"
+                            value={formData.is_inherit_translations === false ? "False" : "True"}
+                            onChange={handleInputChange}
+                            style={{color: "#ddd", background: "#222", borderRadius: "8px", border: "2px solid #a9a9a9"}}
+                        >
+                            {IS_INHERIT?.map((each, index) =>
+                                <OptionBox
+                                    key={index}
+                                    value={each.is_inherit}
+                                >
+                                    {each.is_inherit}
+                                </OptionBox>
+                            )}
+
+                        </SelectBox>
+                    </FieldBox>
+
+                    {(word.is_inherit_translations === false ) && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
 
