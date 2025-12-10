@@ -259,71 +259,43 @@ class DictionaryWordByIDView(APIView):
             return Response(response)
 
     def patch(self, request, word_id):
-        """ Edit word form """
-        """ notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...] """
+        """ Edit word form ,
+            Receive complete data object from request,
+            notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...]
+        """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
-        word_type_string = request.data.get('word_type')  # a string of type.type
-        parent_string = request.data.get('parent')
-        ipa = request.data.get('ipa')
-        translations = request.data.get('translations')
-        notes_string = request.data.get("notes")    # a list
+        data = request.data
+        word_type_string = data['word_type']  # a string of type.type
+        parent_string = data['parent']
+        ipa = data['ipa']
+        translations = data['translations']
+        notes_string = data["notes"]    # a
+        is_inherit_translations = data['is_inherit_translations']
+        is_inherit_notes = data['is_inherit_notes']
 
         word = DictionaryWord.objects.get(pk=word_id)
         word_type = WordType.objects.get(type=word_type_string)
-
         parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
 
-        updated = {
-            "word": word.word,
-            "word_type_id": word_type.id,
-            "ipa": ipa,
-        }
-
-        # 1. ------------------------- if parent word exists------------------------------------------------------------
         if parent_word:
-            updated["parent_id"] = parent_word.id
-            # 2. if word IS a verb
-            if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
-                if len(notes_string) != 0:
-                    updated_notes = []
-                    for note in notes_string:
-                        split_note = note.split(", ")
-                        tense = split_note[0]
-                        # 3. notes_String is not empty, add verb conjugation based on the notes[0] value--verb tense
-                        verb = Verb.objects.filter(infinitive=word.parent.word).first()
-                        verb_tense = tense.replace(" ", "_")
-                        verb_conjugation = getattr(verb, verb_tense, None)
-                        verb_conjugation.insert(0, tense)
-                        formatted_note = ", ".join(verb_conjugation)
-                        updated_notes.append(formatted_note)
-                    updated["notes"] = updated_notes
-                else:  # 4. notes_String = []
-                    updated["notes"] = []
-
-            else:  # 5. if word is NOT a verb, notes_string is usually empty or inherits from parent word
-                if len(notes_string) != 0:
-                    updated["notes"] = notes_string  #.split("; ") if isinstance(notes_string, str) else notes_string
-                else:
-                    updated["notes"] = []
-            if not translations:
-                updated["translations"] = []
-                updated["is_inherit_translations"] = True
-            else:
-                updated["translations"] = translations
-                updated["is_inherit_translations"] = False
-
-        # 6. ------------ set parent word None if parent word does not exist, set translations if exists ---------------
-        else:
-            updated["parent_id"] = None
-            updated["notes"] = notes_string
-            if translations:
-                updated["translations"] = translations
-            updated["is_inherit_translations"] = False
-
-        # print(updated)
-        serializer = DictionaryWordSerializer(word, data=updated, partial=True)
+            if is_inherit_notes is False:
+                if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
+                    if len(notes_string) != 0:
+                        updated_notes = []
+                        for note in notes_string:
+                            split_note = note.split(", ")
+                            tense = split_note[0]
+                            verb = Verb.objects.filter(infinitive=word.parent.word).first()
+                            verb_tense = tense.replace(" ", "_")
+                            verb_conjugation = getattr(verb, verb_tense, None)
+                            verb_conjugation.insert(0, tense)
+                            formatted_note = ", ".join(verb_conjugation)
+                            updated_notes.append(formatted_note)
+                        data["notes"] = updated_notes
+        # print(data)
+        serializer = DictionaryWordSerializer(word, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
