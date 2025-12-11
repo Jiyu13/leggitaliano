@@ -72,7 +72,7 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
         model = DictionaryWord
         fields = (
             "id", "dictionary", "parent_id", "parent", "word", "translations", "ipa", "notes",
-            "is_inherit_translations",
+            "is_inherit_translations", "is_inherit_notes",
             "word_type_id",   # write-only
             "word_type",      # read-only label
         )
