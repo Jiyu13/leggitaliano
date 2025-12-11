@@ -171,55 +171,44 @@ class DictionaryWordView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        """Accept word_type id as string, Return a word with new type."""
+        """
+        Accept word_type id as string, Return a word with new type.
+        notes -> string, is separated by "; ", "note1.1, note1.2, ...; note2.1, note 2.2, ..."
+        """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
-        word = request.data.get('word')
-        word_type_id = request.data.get('word_type_id')   # a string
-        translations = request.data.get('translations')
-        parent_string = request.data.get('parent')
-        ipa = request.data.get('ipa')
-        notes_string = request.data.get("notes")   # a string, need to be separated by "; " | null
-        parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=int(word_type_id)).first()
-        parent_word_id = parent_word.id if parent_word else None
-        # print("parent_word-----------------------", parent_string, parent_word)
+        data = request.data
+        word_type_id = int(data['word_type_id'])  # a string of id number
+        parent_string = data['parent']
+        ipa = data['ipa']
+        translations = data['translations']
+        notes_list = data["notes"] # a string
+        is_inherit_translations = data['is_inherit_translations']
+        is_inherit_notes = data['is_inherit_notes']   # a string, need to be separated by "; " | null
 
-        # =============== For "notes" field ------ check if a word has a parent and is a verb ==========================
-        if parent_word and int(word_type_id) in [9, 12, 62, 63, 64, 65, 66, 67, 68]:
-            verb = Verb.objects.filter(infinitive=parent_word.word).first()
-            if verb is None:
-                # if parent_word.word doesn't exist in Verb.objects
-                notes = notes_string.split("; ") if isinstance(notes_string, str) else []
-            else:
-                notes = getattr(verb, notes_string, None)   # need to make string into a list
+        parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type_id).first()
+        if parent_word:
+            if is_inherit_notes is False:
+                if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
+                    if len(notes_list) != 0:
+                        updated_notes = []
+                        for tense in notes_list:
+                            verb = Verb.objects.filter(infinitive=parent_word.word).first()
+                            verb_tense = tense.replace(" ", "_")
+                            verb_conjugation = getattr(verb, verb_tense, None)
+                            verb_conjugation.insert(0, tense)
+                            formatted_note = ", ".join(verb_conjugation)
+                            updated_notes.append(formatted_note)
+                        data["notes"] = updated_notes
+            data["notes"] = []
         else:
-            # ================ verb is a parent / non-verb word ========================================================
-            notes = notes_string.split("; ") if isinstance(notes_string, str) else []
+            data["notes"] = notes_list
 
-        # ================ For "translations" field ------  On Write  ==================================================
-        # if parent exists, DON'T copy its translation into child
-        # Let the child be blank and inherit at read time
-        is_translation_empty = len(translations) == 1 and translations[0] == ""
-        if parent_word and is_translation_empty:
-            translations_to_save = []
-            is_inherit_translations = True
-        else:
-            translations_to_save = translations
-            is_inherit_translations = False
-
-        # =========================================================================================================="""
-        data = {
-            "dictionary": 1,
-            "word": word,  # If Sentence.word is a FK
-            "word_type_id": int(word_type_id),
-            "translations": translations_to_save,
-            "is_inherit_translations ": is_inherit_translations,
-            "parent_id": parent_word_id,
-            "ipa": ipa,
-            "notes": notes,
-        }
-        # print(data)
+        data["dictionary"] = 1
+        data["word_type_id"] = word_type_id
+        data["parent_id"] = parent_word.id
+        # print("data", data)
         new_word_serializer = DictionaryWordSerializer(data=data)
         if not new_word_serializer.is_valid():
             return Response(new_word_serializer.errors, status=400)
@@ -227,7 +216,6 @@ class DictionaryWordView(APIView):
         new_word_out = DictionaryWordSerializer(obj).data
 
         return Response({"data": new_word_out, "ipa": ipa}, status=status.HTTP_201_CREATED)
-
 
 class DictionaryWordByWordView(APIView):
     authentication_classes = (JWTAuthentication,)
