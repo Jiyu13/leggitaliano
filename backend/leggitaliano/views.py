@@ -307,8 +307,19 @@ class TranslationUpdateByWordIDView(APIView):
         translation_index = request.data.get('translation_index')
 
         word = DictionaryWord.objects.get(pk=word_id)
-        word.translations[translation_index] = ';'.join(updated_translation)  # frontend split list by ";:"
-        word.save(update_fields=["translations"])
+        if word.parent:
+            parent_word = DictionaryWord.objects.get(pk=word.parent.id)
+            parent_word.translations[translation_index] = ';'.join(updated_translation)  # frontend split list by ";:"
+            parent_word.save(update_fields=["translations"])
+
+            # re-fetch child with fresh parent to avoid stale relation
+            word = DictionaryWord.objects.select_related("parent").get(pk=word_id)
+            # or ---- Clear relation cache and refresh parent
+            # word.parent.refresh_from_db(fields=["translations"])
+
+        else:
+            word.translations[translation_index] = ';'.join(updated_translation)  # frontend split list by ";:"
+            word.save(update_fields=["translations"])
         word_out = DictionaryWordSerializer(word).data
         return Response(word_out, status=status.HTTP_200_OK)
 

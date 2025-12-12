@@ -7,14 +7,14 @@ import PopupModal from "./PopupModal";
 import ToastMessage from "./ToastMessage";
 
 
-function DictionaryTranslationItems({
-    translationItems, wordId, translationIndex,
+function DictionaryTranslationItem({
+    translationItem, wordId, translationIndex,
     clickedWord, wordType, dictionaryWords, setDictionaryWords
 }) {
+    // translationItem = ["1....", "s1 -- t1", "s2 -- t2", ...],
+    // it is one of the translations of each word -> word.translations = ["1...", "2...", ...]
 
-    useEffect(() => {setTransItems(translationItems)}, [dictionaryWords])
-
-    const [transItems, setTransItems] = useState(translationItems)
+    const [transItem, setTransItem] = useState(translationItem)
     const [textareaError, setTextareaError] = useState(null)
     const [isPopupOpen, setPopupOpen] = useState(false)
     const [error, setError] = useState(null)
@@ -25,17 +25,17 @@ function DictionaryTranslationItems({
     function handleOnChange(e) {
         const name = e.target.name  // need to convert to "Int"
         const value = e.target.value
-        const updatedItems = transItems.map((t, index) => (index === parseInt(name) ? value : t) )
-        setTransItems(updatedItems)
+        const updatedItems = transItem.map((t, index) => (index === parseInt(name) ? value : t) )
+        setTransItem(updatedItems)
     }
 
-    function updateTranslationItem(updatedItems, index, msg) {
+    function updateTranslationItem(updatedItem, index, msg) {
         setTextareaError(null)
 
         const data = {
             word_id: wordId,
             translation_index: translationIndex,
-            translation: updatedItems,
+            translation: updatedItem,
         }
         api.patch(`/word/update_translation/${wordId}/`, data)
            .then(res => {
@@ -75,32 +75,32 @@ function DictionaryTranslationItems({
     function handleUpdateTranslationItem(tran_item, index) {
         setTextareaError(null)
 
-        if (transItems[index] === "") {
+        if (transItem[index] === "") {
             setTextareaError([index,"Required."])
         } else {
-            const updatedItems = transItems.map((original_item, i) => index === i ? tran_item: original_item)
-            updateTranslationItem(updatedItems, index, "Updated!")
+            const updatedItem = transItem.map((original_item, i) => index === i ? tran_item: original_item)
+            updateTranslationItem(updatedItem, index, "Updated!")
         }
     }
 
 
     function handleDeleteTranslationItem(tran_item, index) {
         // exclude the removed target by checking the id
-        const updatedTransItems = translationItems.filter((original_item, i) => index !== i)
-        updateTranslationItem(updatedTransItems, index, "Deleted!")
+        const updatedTransItem = translationItem.filter((original_item, i) => index !== i)
+        updateTranslationItem(updatedTransItem, index, "Deleted!")
     }
 
     function handleMoveToSentences(index) {
         setTextareaError(null)
 
-        if (transItems[index] === "") {
+        if (transItem[index] === "") {
             setTextareaError([index,"Required."])
         } else {
-            const targetItem = transItems.filter((ti, i) => index === i)
+            const targetItem = transItem.filter((ti, i) => index === i)
             const splitItem = targetItem[0].split("--")
             const targetSentence = splitItem[0]
             const sentenceTranslation = splitItem[1]
-            const updatedItems = translationItems.filter((original_item, i) => index !== i)
+            const updatedItems = translationItem.filter((original_item, i) => index !== i)
 
             const data = {
                 word: clickedWord,
@@ -138,7 +138,7 @@ function DictionaryTranslationItems({
                     handleConfirmClick={() => setPopupOpen(false)}
                 />
             )}
-            {transItems?.map((tran_item, index) => (
+            {transItem?.map((tran_item, index) => (
                 <TranslationItem key={index}>
                     <Textarea
                         type="text"
@@ -201,4 +201,4 @@ const TranslationItem = styled.li`
   flex-direction: column;
   padding: 1rem 0;
 `
-export default DictionaryTranslationItems
+export default DictionaryTranslationItem
