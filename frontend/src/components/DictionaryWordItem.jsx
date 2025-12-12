@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import DictionaryTranslationItems from "./DictionaryTranslationItems";
+import DictionaryTranslationItem from "./DictionaryTranslationItem";
 import arrow_down_icon from "../assets/icons/arrow_down.svg";
 import arrow_up_icon from "../assets/icons/arrow_up.svg";
 import edit_icon from "../assets/icons/edit_24dp.svg"
@@ -120,12 +120,12 @@ function DictionaryWordItem({
                     {translations?.map((t, index) => {
                         const split_t = t.split(/[;:]+/)
                         return (
-                            <DictionaryTranslationItems
+                            <DictionaryTranslationItem
                                 key={index}
                                 wordId={wordItem.id}
                                 translationIndex={index}
                                 clickedWord={clickedWord}
-                                translationItems={split_t}
+                                translationItem={split_t} // split each point of translation into a list
                                 wordType={wordType}
                                 dictionaryWords={dictionaryWords}
                                 setDictionaryWords={setDictionaryWords}
