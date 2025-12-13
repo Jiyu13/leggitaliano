@@ -4,46 +4,40 @@ import arrow_down_icon from "../assets/icons/arrow_down.svg";
 import arrow_up_icon from "../assets/icons/arrow_up.svg";
 import edit_icon from "../assets/icons/edit_24dp.svg"
 import delete_icon from "../assets/icons/delete_24dp.svg"
-
-import {useEffect, useState} from "react";
 import DictionaryWordEditForm from "./DictionaryWordEditForm";
 import api from "../api";
 
 
 function DictionaryWordItem({
-    clickedWord, wordItem, wordItemId, dictionaryWords, setClickedWordId,clickedWordItemId,
-    setDictionaryWords,setShowToast,  isShowEditForm, setShowEditForm
+    clickedWord, wordItem, wordItemId, dictionaryWords, setDictionaryWords,
+    setShowMeaningId, showMeaningId, setShowEditFormId, showEditFormId,
 }) {
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
     const translations = wordItem["translations"]
     const notes = wordItem["notes"]
 
-    const [isShowMeaning, setShowMeaning] = useState(false)
-    // const [clickedWordItemid, setClickedWordId] = useState(wordItemId)
+    const isShowMeaning = showMeaningId === wordItem.id
+    const isShowEditForm = showEditFormId === wordItem.id
 
     function handleToggleShowMeaning() {
-        setShowMeaning(!isShowMeaning)
-        setShowEditForm(false)
+        setShowEditFormId(null)
+        setShowMeaningId(prev => prev === wordItem.id ? null : wordItem.id)
     }
 
     function handleEditWordClick() {
-        setShowMeaning(false)
-        setShowEditForm(!isShowEditForm)
-        setClickedWordId(wordItemId)
+        setShowMeaningId(null)
+        setShowEditFormId(prev => prev === wordItem.id ? null : wordItemId)
     }
 
     function handleDeleteWordItemByType() {
-        setShowMeaning(false)
-        setShowEditForm(false)
+        setShowMeaningId(null)
         api.delete(`/word/id/${wordItem.id}/`)
                .then(res => {
                    const updatedWords = dictionaryWords?.filter(dw => {
                        return dw.id !== wordItem.id
                    })
                    setDictionaryWords(updatedWords)
-                   // setShowNewMeaningForm(false)
-
                 })
                 .catch(error => {
                    if (error.response) {
@@ -135,12 +129,13 @@ function DictionaryWordItem({
                 </TranslationListContainer>
             )}
 
-            {isShowEditForm && wordItem.id == clickedWordItemId && (
+            {isShowEditForm && (
                 <DictionaryWordEditForm
                     word={wordItem}
                     dictionaryWords={dictionaryWords}
                     setDictionaryWords={setDictionaryWords}
-                    setShowEditForm={setShowEditForm}
+                    setShowEditFormId={setShowEditFormId}
+                    setShowMeaningId={setShowMeaningId}
                 />
             )}
 
