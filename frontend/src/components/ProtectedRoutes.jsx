@@ -17,6 +17,36 @@ function ProtectedRoutes() {
         auth().catch(() => setIsAuthorized(false))
     }, []);
 
+        const auth = async () => {
+        // check if access token exists & if it needs to be refreshed if expired
+        const token = localStorage.getItem(ACCESS_TOKEN)
+        if (!token) {
+            console.log("---------------access token invalid----------------------------")
+            setIsAuthorized(false)
+            return
+        }
+
+        let tokenExpiration = 0;
+        try {
+          const decoded = jwtDecode(token);
+          tokenExpiration = typeof decoded?.exp === "number" ? decoded.exp : 0;
+        } catch {
+          // token malformed/expired -> try refresh
+          const ok = await refreshToken();
+          setIsAuthorized(ok);
+          return;
+        }
+
+        const now = Math.floor(Date.now() / 1000)
+        const skew = 10 // second
+        if (tokenExpiration <= now + skew) {
+            const refreshed =  await refreshToken()
+            setIsAuthorized(refreshed)
+        } else {
+            setIsAuthorized(true)
+        }
+    }
+
     const refreshToken = async () => {
         // refresh the access  token automatically
         const refresh = localStorage.getItem(REFRESH_TOKEN)
@@ -47,36 +77,6 @@ function ProtectedRoutes() {
             localStorage.removeItem(REFRESH_TOKEN);
             setIsLogin(false)
             return false
-        }
-    }
-
-    const auth = async () => {
-        // check if access token exists & if it needs to be refreshed if expired
-        const token = localStorage.getItem(ACCESS_TOKEN)
-        if (!token) {
-            console.log("---------------access token invalid----------------------------")
-            setIsAuthorized(false)
-            return
-        }
-
-        let tokenExpiration = 0;
-        try {
-          const decoded = jwtDecode(token);
-          tokenExpiration = typeof decoded?.exp === "number" ? decoded.exp : 0;
-        } catch {
-          // token malformed/expired -> try refresh
-          const ok = await refreshToken();
-          setIsAuthorized(ok);
-          return;
-        }
-
-        const now = Math.floor(Date.now() / 1000)
-        const skew = 10 // second
-        if (tokenExpiration <= now + skew) {
-            const refreshed =  await refreshToken()
-            setIsAuthorized(refreshed)
-        } else {
-            setIsAuthorized(true)
         }
     }
 
