@@ -10,8 +10,7 @@ import {IS_INHERIT} from "./DictionaryWordEditForm";
 
 
 function DictionaryWordNewMeaningForm({
-      clickedWord, setIpa, setDictionaryWords, setNotFound,
-      setShowNewMeaningForm, isShowEditForm, setShowEditForm
+      clickedWord, setIpa, setDictionaryWords, setNotFound, setShowNewMeaningForm
 }) {
     const {wordTypes} = useContext(UserContext)
 
@@ -32,7 +31,6 @@ function DictionaryWordNewMeaningForm({
     function handleFormSubmit(e) {
         e.preventDefault()
         setWordTypeEmpty(false)
-        setShowEditForm(false)
         if (!formData.word_type_id) {
             setWordTypeEmpty(true)
         } else {
