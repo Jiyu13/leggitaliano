@@ -29,11 +29,14 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
     function handleSubmitEditForm(e) {
         e.preventDefault()
-        const translations_payload = formData.is_inherit_translations ? [] : formData.translations
-        const notes_payload = formData.is_inherit_notes ? [] : formData.notes.map((note, index) =>  note.trim()).filter(note => note !== "");
-        const payload = {...formData, "translations": translations_payload, "notes": notes_payload}
-
-        api.patch(`/word/id/${word.id}/`, payload)
+        // const translations_payload = formData.is_inherit_translations ? [] : formData.translations
+        // const notes_payload =
+        //     (!formData.parent && !formData.is_inherit_notes && formData.notes === [])
+        //     || (formData.parent && formData.is_inherit_notes)
+        //     ? [] : formData.notes.map((note, index) =>  note.trim()).filter(note => note !== "");
+        // const payload = {...formData, "translations": translations_payload}
+        // console.log(formData)
+        api.patch(`/word/id/${word.id}/`, formData)
                .then(res => {
                    const result = res.data
                    const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
