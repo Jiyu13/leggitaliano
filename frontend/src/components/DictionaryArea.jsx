@@ -9,7 +9,7 @@ function DictionaryArea({
     ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
     setShowNewMeaningForm, isShowNewMeaningForm
 }) {
-    const [isShowEditForm, setShowEditForm] = useState(false)
+    // const [isShowEditForm, setShowEditForm] = useState(false)
     const [showMeaningId, setShowMeaningId] = useState(null)
     const [showEditFormId, setShowEditFormId] = useState(null)
 
@@ -76,8 +76,8 @@ function DictionaryArea({
                                 wordItemId={dw.id}
                                 dictionaryWords={dictionaryWords}
                                 setDictionaryWords={setDictionaryWords}
-                                isShowEditForm={isShowEditForm}
-                                setShowEditForm={setShowEditForm}
+                                // isShowEditForm={isShowEditForm}
+                                // setShowEditForm={setShowEditForm}
                                 setShowMeaningId={setShowMeaningId}
                                 showMeaningId={showMeaningId}
                                 setShowEditFormId={setShowEditFormId}
