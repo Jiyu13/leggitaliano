@@ -217,6 +217,7 @@ class DictionaryWordView(APIView):
 
         return Response({"data": new_word_out, "ipa": ipa}, status=status.HTTP_201_CREATED)
 
+
 class DictionaryWordByWordView(APIView):
     authentication_classes = (JWTAuthentication,)
 
@@ -268,6 +269,9 @@ class DictionaryWordByIDView(APIView):
         parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
 
         if parent_word:
+            if is_inherit_translations:
+                data["translations"] = []
+
             if is_inherit_notes is False:
                 if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
                     if len(notes_string) != 0:
@@ -282,6 +286,9 @@ class DictionaryWordByIDView(APIView):
                             formatted_note = ", ".join(verb_conjugation)
                             updated_notes.append(formatted_note)
                         data["notes"] = updated_notes
+            else:
+                data["notes"] = []
+
         # print(data)
         serializer = DictionaryWordSerializer(word, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
