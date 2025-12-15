@@ -6,6 +6,7 @@ import edit_icon from "../assets/icons/edit_24dp.svg"
 import delete_icon from "../assets/icons/delete_24dp.svg"
 import DictionaryWordEditForm from "./DictionaryWordEditForm";
 import api from "../api";
+import {useRef} from "react";
 
 
 function DictionaryWordItem({
@@ -20,14 +21,23 @@ function DictionaryWordItem({
     const isShowMeaning = showMeaningId === wordItem.id
     const isShowEditForm = showEditFormId === wordItem.id
 
+    const itemScrollRef = useRef(null)
+    function scrollToElement() {
+        // Wait for state updates to finish rendering
+        setTimeout(() => {
+            itemScrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50);  // small delay ensures the element is expanded before scrolling
+    }
     function handleToggleShowMeaning() {
         setShowEditFormId(null)
         setShowMeaningId(prev => prev === wordItem.id ? null : wordItem.id)
+        scrollToElement()
     }
 
     function handleEditWordClick() {
         setShowMeaningId(null)
         setShowEditFormId(prev => prev === wordItem.id ? null : wordItemId)
+        scrollToElement()
     }
 
     function handleDeleteWordItemByType() {
@@ -49,7 +59,7 @@ function DictionaryWordItem({
     }
 
     return (
-        <WordItemContainer className="word-item-container">
+        <WordItemContainer className="word-item-container" ref={itemScrollRef} id={wordItem.id}>
 
             <div style={{display: "flex", justifyContent: "space-between"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
