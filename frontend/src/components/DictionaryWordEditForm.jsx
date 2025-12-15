@@ -183,7 +183,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Is inherit translations?</FormLabel>
                             <SelectBox
-                                id={formData.is_inherit_translations}
+                                // id={formData.is_inherit_translations}
                                 name="is_inherit_translations"
                                 value={formData.is_inherit_translations === false ? "False" : "True"}
                                 onChange={handleInputChange}
@@ -264,7 +264,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Is inherit notes?</FormLabel>
                             <SelectBox
-                                id={formData.is_inherit_notes}
+                                // id={formData.is_inherit_notes}
                                 name="is_inherit_notes"
                                 value={formData.is_inherit_notes === false ? "False" : "True"}
                                 onChange={handleInputChange}
