@@ -18,7 +18,7 @@ function DictionaryWordNewMeaningForm({
         word: clickedWord,
         translations: [""],
         ipa: "",
-        parent: "",
+        parent_id: "",         // pass "word string" to post request but convert to word id in the backend
         notes: null,
         word_type_id: null,   // pass "string" id to post request
         is_inherit_notes: false,
@@ -164,15 +164,15 @@ function DictionaryWordNewMeaningForm({
                         <Textarea
                             className="form-input"
                             type="text"
-                            name='parent'
-                            value={formData.parent}
+                            name='parent_id'
+                            value={formData.parent_id}
                             onChange={handleInputChange}
                             style={{border: "2px solid #a9a9a9"}}
 
                         />
                     </FieldBox>
 
-                    {formData.parent && (
+                    {formData.parent_id && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Is inherit translations?</FormLabel>
                             <SelectBox
@@ -253,7 +253,7 @@ function DictionaryWordNewMeaningForm({
                         </FieldBox>
                     )}
 
-                    {formData.parent && (
+                    {formData.parent_id && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Is inherit notes?</FormLabel>
                             <SelectBox
