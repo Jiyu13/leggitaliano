@@ -180,12 +180,12 @@ class DictionaryWordView(APIView):
 
         data = request.data
         word_type_id = int(data['word_type_id'])  # a string of id number
-        parent_string = data['parent']
+        parent_string = data['parent_id']  # a string of word, need to convert to ID / None
         ipa = data['ipa']
         translations = data['translations']
-        notes_list = data["notes"] # a string
+        notes_list = data["notes"] # a string, need to be separated by "; " | null
         is_inherit_translations = data['is_inherit_translations']
-        is_inherit_notes = data['is_inherit_notes']   # a string, need to be separated by "; " | null
+        is_inherit_notes = data['is_inherit_notes']
 
         parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type_id).first()
         if parent_word:
@@ -201,13 +201,16 @@ class DictionaryWordView(APIView):
                             formatted_note = ", ".join(verb_conjugation)
                             updated_notes.append(formatted_note)
                         data["notes"] = updated_notes
-            data["notes"] = []
+            else:
+                data["notes"] = []
+            data["parent_id"] = parent_word.id
+
         else:
-            data["notes"] = notes_list
+            data["notes"] = notes_list.split("; ")
+            data["parent_id"] = None
 
         data["dictionary"] = 1
         data["word_type_id"] = word_type_id
-        data["parent_id"] = parent_word.id
         # print("data", data)
         new_word_serializer = DictionaryWordSerializer(data=data)
         if not new_word_serializer.is_valid():
