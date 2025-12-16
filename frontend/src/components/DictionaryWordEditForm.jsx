@@ -9,7 +9,8 @@ import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
 
 export const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
 
-function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditFormId, setShowMeaningId}) {
+function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditFormId, setShowMeaningId,
+    scrollToElement}) {
     // console.log(word)
     const {wordTypes, } = useContext(UserContext)
 
@@ -43,6 +44,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                    setDictionaryWords(updatedWords)
                    setShowMeaningId(word.id)
                    setShowEditFormId(null)
+                   scrollToElement()
                 })
                 .catch(error => {
                    if (error.response) {
