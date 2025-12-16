@@ -146,6 +146,7 @@ function DictionaryWordItem({
                     setDictionaryWords={setDictionaryWords}
                     setShowEditFormId={setShowEditFormId}
                     setShowMeaningId={setShowMeaningId}
+                    scrollToElement={scrollToElement}
                 />
             )}
 
