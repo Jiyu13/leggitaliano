@@ -183,15 +183,18 @@ class DictionaryWordView(APIView):
         parent_string = data['parent_id']  # a string of word, need to convert to ID / None
         ipa = data['ipa']
         translations = data['translations']
-        notes_list = data["notes"] # a string, need to be separated by "; " | null
         is_inherit_translations = data['is_inherit_translations']
+
+        notes_string = data["notes"]  # a string, need to be separated by "; " | null
+        # notes_list = notes_string.split("; ") if notes_string else notes_string
         is_inherit_notes = data['is_inherit_notes']
 
         parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type_id).first()
         if parent_word:
             if is_inherit_notes is False:
                 if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
-                    if len(notes_list) != 0:
+                    if len(notes_string) != 0:
+                        notes_list = notes_string.split("; ")
                         updated_notes = []
                         for tense in notes_list:
                             verb = Verb.objects.filter(infinitive=parent_word.word).first()
@@ -206,7 +209,7 @@ class DictionaryWordView(APIView):
             data["parent_id"] = parent_word.id
 
         else:
-            data["notes"] = notes_list.split("; ")
+            data["notes"] = notes_string.split("; ") if notes_string else []
             data["parent_id"] = None
 
         data["dictionary"] = 1
