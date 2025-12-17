@@ -14,6 +14,10 @@ function DictionaryTranslationItem({
     // translationItem = ["1....", "s1 -- t1", "s2 -- t2", ...],
     // it is one of the translations of each word -> word.translations = ["1...", "2...", ...]
 
+    useEffect(() => {
+        // to update the UI instantly
+        setTransItem(translationItem)}, [dictionaryWords])
+
     const [transItem, setTransItem] = useState(translationItem)
     const [textareaError, setTextareaError] = useState(null)
     const [isPopupOpen, setPopupOpen] = useState(false)
