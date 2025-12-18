@@ -68,6 +68,11 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
     translations = serializers.JSONField(required=False)
     notes = serializers.JSONField(required=False)
 
+    is_verb = serializers.SerializerMethodField
+
+    def get_is_verb(self, obj):
+        return obj.is_verb
+
     class Meta:
         model = DictionaryWord
         fields = (
@@ -75,6 +80,7 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
             "is_inherit_translations", "is_inherit_notes",
             "word_type_id",   # write-only
             "word_type",      # read-only label
+            "is_verb"
         )
 
     def to_representation(self, instance):
