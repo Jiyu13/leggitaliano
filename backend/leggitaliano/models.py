@@ -124,6 +124,11 @@ class DictionaryWord(models.Model):
     notes = models.JSONField(default=list, blank=True)
     is_inherit_notes = models.BooleanField(default=False)
 
+    VERB_TYPE_IDS = [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]
+    @property
+    def is_verb(self):
+        return self.word_type.id in self.VERB_TYPE_IDS
+
     def __str__(self):
         return f"{self.word} - {self.word_type.type}"
 
