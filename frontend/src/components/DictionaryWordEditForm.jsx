@@ -6,12 +6,13 @@ import styled from "styled-components";
 import api from "../api";
 import add_another_translation_icon from "../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
+import ConjugationOptions, {CONJUGATIONS} from "./ConjugationOptions";
 
 export const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
 
 function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditFormId, setShowMeaningId,
     scrollToElement}) {
-    // console.log(word)
+    // console.log(word.notes[0].split(", ")[0])
     const {wordTypes, } = useContext(UserContext)
 
     const initialValue = {
@@ -94,8 +95,21 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         });
     }
 
+    function handleChangeVerbTense(e, index) {
+        const newTense = e.target.value
+        setFormData(prev => {
+            const notesCopy = [...prev.notes]
+            notesCopy[index] = newTense
+            return {
+                ...prev,
+                notes: notesCopy,
+            };
+        })
+    }
+
     function handleAddNoteClick() {
-        setFormData({...formData, notes: [...formData.notes, ""]})
+        const newNote = word.is_verb ? CONJUGATIONS[0] : ""
+        setFormData({...formData, notes: [...formData.notes, newNote]})
     }
 
     function handleRemoveNoteClick(index) {
@@ -210,9 +224,8 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                             {formData.translations.length !== 0 ? (
 
                                 formData.translations.map((t, index) =>
-                                    <div style={{display: "flex", alignItems: "center"}}>
+                                    <div style={{display: "flex", alignItems: "center"}} key={index}>
                                         <Textarea
-                                            key={index}
                                             className="form-input"
                                             type='text'
                                             name='translations'
@@ -290,17 +303,49 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                             <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
                             {formData.notes.length !== 0 ? (
                                 formData.notes.map((note, index) =>
-                                    <div style={{display: "flex", alignItems: "center"}}>
-                                        <Textarea
-                                            key={index}
-                                            className="form-input"
-                                            type='text'
-                                            name='notes'
-                                            value={note}
-                                            onChange={(e) => handleNoteChange(e, index)}
-                                            style={{border: "2px solid #a9a9a9"}}
-
+                                    <div style={{display: "flex", alignItems: "center"}} key={index}>
+                                        <ConjugationOptions
+                                            handleChangeVerbTense={handleChangeVerbTense}
+                                            handleNoteChange={handleNoteChange}
+                                            isVerb={word.is_verb}
+                                            index={index}
+                                            note={note}
                                         />
+                                        {/*{word.is_verb ?*/}
+                                        {/*    <SelectBox*/}
+                                        {/*        // id={formData.word_type}*/}
+                                        {/*        name="notes"*/}
+                                        {/*        value={note.split(",")[0]}*/}
+                                        {/*        onChange={(e) => handleChangeVerbTense(e, index)}*/}
+                                        {/*        style={{*/}
+                                        {/*            color: "#ddd",*/}
+                                        {/*            background: "#222",*/}
+                                        {/*            borderRadius: "8px",*/}
+                                        {/*            // border: wordTypeEmpty ? "2px solid #e74c3c" : "2px solid #a9a9a9"*/}
+                                        {/*        }}*/}
+
+                                        {/*    >*/}
+                                        {/*        {CONJUGATIONS?.map((conjugation, index) =>*/}
+                                        {/*            <OptionBox*/}
+                                        {/*                key={index}*/}
+                                        {/*                value={conjugation}*/}
+                                        {/*            >*/}
+                                        {/*                {conjugation}*/}
+                                        {/*            </OptionBox>*/}
+                                        {/*        )}*/}
+
+                                        {/*    </SelectBox>*/}
+                                        {/*    :*/}
+                                        {/*    <Textarea*/}
+                                        {/*        className="form-input"*/}
+                                        {/*        type='text'*/}
+                                        {/*        name='notes'*/}
+                                        {/*        value={note}*/}
+                                        {/*        onChange={(e) => handleNoteChange(e, index)}*/}
+                                        {/*        style={{border: "2px solid #a9a9a9"}}*/}
+
+                                        {/*    />*/}
+                                        {/*}*/}
                                         {index === formData?.notes.length - 1 ?
 
                                             <AddTranslationIconImg
@@ -322,15 +367,22 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                                 :
                                 (
                                     <div style={{display: "flex", alignItems: "center"}}>
-                                        <Textarea
-                                            className="form-input"
-                                            type='text'
-                                            name='notes'
-                                            value=""
-                                            onChange={(e) => handleNoteChange(e, 0)}
-                                            style={{border: "2px solid #a9a9a9"}}
-
+                                        <ConjugationOptions
+                                            handleChangeVerbTense={handleChangeVerbTense}
+                                            handleNoteChange={handleNoteChange}
+                                            isVerb={word.is_verb}
+                                            index={0}
+                                            note=""
                                         />
+                                        {/*<Textarea*/}
+                                        {/*    className="form-input"*/}
+                                        {/*    type='text'*/}
+                                        {/*    name='notes'*/}
+                                        {/*    value=""*/}
+                                        {/*    onChange={(e) => handleNoteChange(e, 0)}*/}
+                                        {/*    style={{border: "2px solid #a9a9a9"}}*/}
+
+                                        {/*/>*/}
 
                                         <AddTranslationIconImg
                                             alt="add another note icon"
