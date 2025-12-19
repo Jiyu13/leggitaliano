@@ -150,19 +150,11 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                             name="word_type"
                             value={formData.word_type}
                             onChange={handleInputChange}
-                            style={{
-                                color: "#ddd",
-                                background: "#222",
-                                borderRadius: "8px",
-                                // border: wordTypeEmpty ? "2px solid #e74c3c" : "2px solid #a9a9a9"
-                            }}
+                            style={{color: "#ddd", background: "#222", borderRadius: "8px",}}
 
                         >
                             {wordTypes?.map((type, index) =>
-                                <OptionBox
-                                    key={index}
-                                    value={type.type}
-                                >
+                                <OptionBox key={index} value={type.type}>
                                     {type.type}
                                 </OptionBox>
                             )}
@@ -206,10 +198,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                                 style={{color: "#ddd", background: "#222", borderRadius: "8px", border: "2px solid #a9a9a9"}}
                             >
                                 {IS_INHERIT?.map((each, index) =>
-                                    <OptionBox
-                                        key={index}
-                                        value={each.is_inherit}
-                                    >
+                                    <OptionBox key={index} value={each.is_inherit}>
                                         {each.is_inherit}
                                     </OptionBox>
                                 )}
@@ -279,17 +268,13 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Is inherit notes?</FormLabel>
                             <SelectBox
-                                // id={formData.is_inherit_notes}
                                 name="is_inherit_notes"
                                 value={formData.is_inherit_notes === false ? "False" : "True"}
                                 onChange={handleInputChange}
                                 style={{color: "#ddd", background: "#222", borderRadius: "8px", border: "2px solid #a9a9a9"}}
                             >
                                 {IS_INHERIT?.map((each, index) =>
-                                    <OptionBox
-                                        key={index}
-                                        value={each.is_inherit}
-                                    >
+                                    <OptionBox key={index} value={each.is_inherit}>
                                         {each.is_inherit}
                                     </OptionBox>
                                 )}
@@ -311,41 +296,6 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                                             index={index}
                                             note={note}
                                         />
-                                        {/*{word.is_verb ?*/}
-                                        {/*    <SelectBox*/}
-                                        {/*        // id={formData.word_type}*/}
-                                        {/*        name="notes"*/}
-                                        {/*        value={note.split(",")[0]}*/}
-                                        {/*        onChange={(e) => handleChangeVerbTense(e, index)}*/}
-                                        {/*        style={{*/}
-                                        {/*            color: "#ddd",*/}
-                                        {/*            background: "#222",*/}
-                                        {/*            borderRadius: "8px",*/}
-                                        {/*            // border: wordTypeEmpty ? "2px solid #e74c3c" : "2px solid #a9a9a9"*/}
-                                        {/*        }}*/}
-
-                                        {/*    >*/}
-                                        {/*        {CONJUGATIONS?.map((conjugation, index) =>*/}
-                                        {/*            <OptionBox*/}
-                                        {/*                key={index}*/}
-                                        {/*                value={conjugation}*/}
-                                        {/*            >*/}
-                                        {/*                {conjugation}*/}
-                                        {/*            </OptionBox>*/}
-                                        {/*        )}*/}
-
-                                        {/*    </SelectBox>*/}
-                                        {/*    :*/}
-                                        {/*    <Textarea*/}
-                                        {/*        className="form-input"*/}
-                                        {/*        type='text'*/}
-                                        {/*        name='notes'*/}
-                                        {/*        value={note}*/}
-                                        {/*        onChange={(e) => handleNoteChange(e, index)}*/}
-                                        {/*        style={{border: "2px solid #a9a9a9"}}*/}
-
-                                        {/*    />*/}
-                                        {/*}*/}
                                         {index === formData?.notes.length - 1 ?
 
                                             <AddTranslationIconImg
@@ -374,15 +324,6 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                                             index={0}
                                             note=""
                                         />
-                                        {/*<Textarea*/}
-                                        {/*    className="form-input"*/}
-                                        {/*    type='text'*/}
-                                        {/*    name='notes'*/}
-                                        {/*    value=""*/}
-                                        {/*    onChange={(e) => handleNoteChange(e, 0)}*/}
-                                        {/*    style={{border: "2px solid #a9a9a9"}}*/}
-
-                                        {/*/>*/}
 
                                         <AddTranslationIconImg
                                             alt="add another note icon"
@@ -401,11 +342,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                             type="submit"
                             value="Edit"
                             // disabled={disabledButton}
-                            style={{
-                                border: "2px solid #a9a9a9", marginTop: "1rem"
-                                // backgroundColor: disabledButton ? "rgba(40,44,52,.7)" : "rgba(40,44,52, 1)",
-                                // cursor: disabledButton ? "no-drop" : "pointer",
-                            }}
+                            style={{border: "2px solid #a9a9a9", marginTop: "1rem"}}
                         />
                     </FormButtonWrapper>
                 </NewWordForm>
