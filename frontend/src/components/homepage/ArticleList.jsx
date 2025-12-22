@@ -1,14 +1,16 @@
 import {useContext} from "react";
-import {UserContext} from "../user-content/UserContent";
+import {UserContext} from "../../user-content/UserContent";
 import styled from "styled-components";
+import NoArticlePrompt from "./NoArticlePrompt";
 
-function ArticleList() {
-    const { articles, setArticles } = useContext(UserContext)
+function ArticleList({filterArticles}) {
+
+    const {articles} = useContext(UserContext)
 
     return (
         <ArticlesListContainer className="article-list-container">
             <ListWrapper className="aArticle-list-wrapper">
-                {articles?.map(each =>
+                {filterArticles?.map(each =>
                     <ArticleItemContainer className="article-item-container" key={each.id}>
                          <Link href={`article/${each.title.replaceAll(" ", "-")}/${each.id}`} key={each.id}>
                             <ArticleItem className="article-item">
@@ -18,7 +20,19 @@ function ArticleList() {
                     </ArticleItemContainer>
                 )}
 
-                {articles?.length === 0 && (<ArticleItemContainer>You don't have any articles.</ArticleItemContainer>)}
+                {filterArticles?.length === 0 && (
+                    <NoArticlePrompt
+                        targetLists={filterArticles}
+                        message="These's no article that matches the search right now."
+                    />
+                )}
+
+                {articles?.length === 0 && (
+                    <NoArticlePrompt
+                        targetLists={articles}
+                        message="You haven't added any articles right now. Why not add a new one and start reading?"
+                    />
+                )}
             </ListWrapper>
         </ArticlesListContainer>
     )
@@ -43,19 +57,21 @@ const ArticleItemContainer = styled.div`
   padding: 16px 0;
 `
 const ArticleItem = styled.div`
-  border-bottom: 1px solid #ddd;
-  padding: 16px 0;
-  //box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f6f6f6;
+  border-radius: 8px;
+  padding: 16px;
   transition: transform 0.2s;
+  font-weight: bold;
 
   &:hover {
     cursor: pointer;
+    background-color: rgb(151, 253, 138);
   }
 `
 
 const Link = styled.a`
     text-decoration: none;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0);
     font-size: inherit;
   
   &:hover {
