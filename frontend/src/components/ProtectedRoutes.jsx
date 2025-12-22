@@ -4,9 +4,10 @@ import {Navigate, Outlet} from "react-router-dom";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 import {jwtDecode} from "jwt-decode";
 import api from "../api";
-import Header from "./Header";
+import Header from "./header/Header";
 import styled from "styled-components";
 import {UserContext} from "../user-content/UserContent";
+import FloatingHeaderNoBackground from "./header/FloatingHeaderNoBackground";
 
 function ProtectedRoutes() {
 
@@ -83,7 +84,8 @@ function ProtectedRoutes() {
     if (isAuthorized === null) return <div>Loading...</div>
     return isAuthorized ?
         <PageContainer>
-            <Header />
+            {/*<Header />*/}
+            <FloatingHeaderNoBackground />
             <Main>
                <Outlet />
             </Main>
@@ -93,11 +95,13 @@ function ProtectedRoutes() {
         <Navigate to="/login" replace/>
 }
 
-const PageContainer = styled.div``
+const PageContainer = styled.div`
+  background-color: #000;
+`
 const Main = styled.main`
-    height: 100vh;
+    min-height: calc(100vh - 120px);
     width: 725px;
-    margin: 60px auto 0;
+    margin: 0 auto 0;
     display: flex;
     justify-content: center;
 `;
