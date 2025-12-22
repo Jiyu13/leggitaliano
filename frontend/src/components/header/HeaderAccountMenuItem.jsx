@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export function HeaderMenuItem(props) {
+export function HeaderAccountMenuItem(props) {
 
     const {icon, icon_info, text, handleClick, goTo} = props
 
