@@ -123,7 +123,7 @@ const GreetingInputArea = styled.input`
 
   @keyframes blink {
     0%, 100% {
-      border-color: #fff;
+      border-color: transparent;
     }
     50% {
       border-color: transparent;
