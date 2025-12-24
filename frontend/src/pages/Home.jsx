@@ -43,16 +43,19 @@ function Home() {
                 setUserText={setUserText}
             />
 
-            <ExploreMenu
-                setIsOpen={setIsOpen}
-                isOpen={isOpen}
-                setSortOption={setSortOption}
-                sortOption={sortOption}
-                isFilterFinishedClicked={isFilterFinishedClicked}
-                setFilterFinishedClicked={setFilterFinishedClicked}
-            />
+            <ArticlesSection>
+                <ExploreMenu
+                    setIsOpen={setIsOpen}
+                    isOpen={isOpen}
+                    setSortOption={setSortOption}
+                    sortOption={sortOption}
+                    isFilterFinishedClicked={isFilterFinishedClicked}
+                    setFilterFinishedClicked={setFilterFinishedClicked}
+                />
 
-            <ArticleList filterArticles={filterArticles}/>
+                <ArticleList filterArticles={filterArticles}/>
+            </ArticlesSection>
+
 
         </HomePageContainer>
 
@@ -63,7 +66,12 @@ function Home() {
 const HomePageContainer = styled.div`
   min-height: calc(100vh - 120px);
   width: 100%;
-  padding-top: 120px;
+`
+const ArticlesSection = styled.div`
+  max-width: 1920px;
+  padding: 0 8px 0;
+  margin-left: auto;
+  margin-right: auto;
 `
 
 export default Home
