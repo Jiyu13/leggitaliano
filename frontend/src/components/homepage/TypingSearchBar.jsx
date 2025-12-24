@@ -96,7 +96,7 @@ function TypingSearchBar({userText, setUserText}) {
 }
 const GreetingInputContainer = styled.div`
   margin: 3rem 0;
-  padding: 20px 30px;
+  padding: 120px 30px 30px;
   font-size: 35px;
   font-family: monospace;
   overflow: hidden;

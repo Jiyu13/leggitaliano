@@ -96,6 +96,7 @@ const ExploreMenuContainer = styled.div`
   align-items: center;
   gap: 8px;
   height: 70px;
+  margin-bottom: 48px;
 `
 // ====================== SortBy Container ==========================================
 const SortByMenuContainer = styled.div`

@@ -100,7 +100,7 @@ const PageContainer = styled.div`
 `
 const Main = styled.main`
     min-height: calc(100vh - 120px);
-    width: 725px;
+    //width: 725px;
     margin: 0 auto 0;
     display: flex;
     justify-content: center;
