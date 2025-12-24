@@ -6,17 +6,19 @@ import NoArticlePrompt from "./NoArticlePrompt";
 function ArticleList({filterArticles}) {
 
     const {articles} = useContext(UserContext)
-
+    // console.log(articles)
     return (
         <ArticlesListContainer className="article-list-container">
             <ListWrapper className="aArticle-list-wrapper">
                 {filterArticles?.map(each =>
-                    <ArticleItemContainer className="article-item-container" key={each.id}>
-                         <Link href={`article/${each.title.replaceAll(" ", "-")}/${each.id}`} key={each.id}>
-                            <ArticleItem className="article-item">
-                                {each.title}
-                            </ArticleItem>
-                          </Link>
+                    <ArticleItemContainer
+                        key={each.id}
+                        className="article-item-container"
+                        href={`article/${each.title.replaceAll(" ", "-")}/${each.id}`}
+                    >
+                        <ArticleItem className="article-item">
+                            {each.title}
+                        </ArticleItem>
                     </ArticleItemContainer>
                 )}
 
@@ -43,8 +45,11 @@ const ArticlesListContainer = styled.div`
     line-height: 1.6;
     display: flex;
     justify-content: center;
-    margin: 12px 0;
-    //height: calc(100% - 200px);
+    margin-top: 48px;
+    
+    flex: 0 1 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
 `
 
 const ListWrapper = styled.div`
@@ -53,29 +58,22 @@ const ListWrapper = styled.div`
   justify-items: center;    /* center items inside each grid cell */
   width: 100%;
 `
-const ArticleItemContainer = styled.div`
-  padding: 16px 0;
-`
-const ArticleItem = styled.div`
+const ArticleItemContainer = styled.a`
+  padding: 32px;
+  border: 1px solid #fff;
+  border-radius: 24px;
   background-color: #f6f6f6;
-  border-radius: 8px;
-  padding: 16px;
-  transition: transform 0.2s;
   font-weight: bold;
+  transition: transform 0.2s;
+  text-decoration: none;
+  color: rgba(0, 0, 0);
+  margin-bottom: 12px;
 
   &:hover {
     cursor: pointer;
     background-color: rgb(151, 253, 138);
   }
 `
+const ArticleItem = styled.div``
 
-const Link = styled.a`
-    text-decoration: none;
-    color: rgba(0, 0, 0);
-    font-size: inherit;
-  
-  &:hover {
-    color: #000000;
-  }
-`;
 export default ArticleList
