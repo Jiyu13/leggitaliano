@@ -8,27 +8,23 @@ import {useContext, useEffect, useRef, useState} from "react";
 
 function FloatingHeaderNoBackground() {
 
-    const { setIsLogin, currentUser, setCurrentUser } = useContext(UserContext)
+    const { currentUser } = useContext(UserContext)
 
-   const [isOpen, setIsOpen] = useState(false)
-    const navigate = useNavigate()
+    function handleClick() {}
 
-
-    function handleClick() {setIsOpen(!isOpen)}
-
-    let menuRef = useRef()
-    useEffect(() => {
-      let handler = (e) => {
-        if (!menuRef.current.contains(e.target)) {
-          setIsOpen(false)
-        }
-      }
-      document.addEventListener("mousedown", handler)
-
-      return() =>{
-        document.removeEventListener("mousedown", handler);
-      }
-    })
+    // let menuRef = useRef()
+    // useEffect(() => {
+    //   let handler = (e) => {
+    //     if (!menuRef.current.contains(e.target)) {
+    //       setIsOpen(false)
+    //     }
+    //   }
+    //   document.addEventListener("mousedown", handler)
+    //
+    //   return() =>{
+    //     document.removeEventListener("mousedown", handler);
+    //   }
+    // })
 
     return (
         <HeaderContainer className="heading-container">
@@ -73,7 +69,9 @@ function FloatingHeaderNoBackground() {
                 {/* call Accessibility component */}
                 <RightSection>
                     {/*<HeaderAccountMenu/>*/}
-                    <RightMenuContainer ref={menuRef}>
+                    <RightMenuContainer
+                        // ref={menuRef}
+                    >
                         <RightMenuTrigger onClick={handleClick} >
                             <UserName>{currentUser?.username}</UserName>
                         </RightMenuTrigger>
