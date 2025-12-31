@@ -42,9 +42,16 @@ class AppUserLoginSerializer(serializers.Serializer):
 
 
 class ArticleSerializer(serializers.ModelSerializer):
+    total_words = serializers.SerializerMethodField()
+
+    def get_total_words(self, obj):
+        return obj.total_words
+
     class Meta:
         model = Article
-        fields = "__all__"
+        fields = (
+            "id", "user", "title", "content", "uuid", "current_page", "finished", "created_at", "update_at", "total_words"
+        )
         read_only_fields = ("user", "uuid", "current_page", "finished", "created_at", "update_at")
 
 
@@ -68,7 +75,7 @@ class DictionaryWordSerializer(serializers.ModelSerializer):
     translations = serializers.JSONField(required=False)
     notes = serializers.JSONField(required=False)
 
-    is_verb = serializers.SerializerMethodField
+    is_verb = serializers.SerializerMethodField()
 
     def get_is_verb(self, obj):
         return obj.is_verb
