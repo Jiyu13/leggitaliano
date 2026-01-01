@@ -7,6 +7,7 @@ import ArticleReadingArea from "../components/ArticleReadingArea";
 import {splitText} from "../utils/splitText";
 import {calculatePages} from "../utils/calculatePages";
 import DictionaryArea from "../components/DictionaryArea";
+import ArticleHeader from "../components/header/ArticleHeader";
 
 function Article() {
 
@@ -205,13 +206,13 @@ const ArticleContainer = styled.div`
    justify-content: center;
     align-items: stretch;
     //gap: 1px;
-    margin: 20px auto 0;
+    margin: 100px auto 0;
     box-sizing: border-box;
     //width: 100%;
     min-height: 450px;
     font-size: 20px;
     line-height: 1.6;
-    height: calc(100% - 60px);  // Handle top bar which is 60px
+    height: calc(100% - 120px);  // Handle top bar which is 60px
     position: fixed;
 `
 
