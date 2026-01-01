@@ -1,6 +1,6 @@
 // Wrapper for a protected route, need an authentication token before accessing the route
 import {useContext, useEffect, useState} from "react";
-import {Navigate, Outlet} from "react-router-dom";
+import {Navigate, Outlet, useLocation} from "react-router-dom";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 import {jwtDecode} from "jwt-decode";
 import api from "../api";
@@ -8,11 +8,15 @@ import Header from "./header/Header";
 import styled from "styled-components";
 import {UserContext} from "../user-content/UserContent";
 import FloatingHeaderNoBackground from "./header/FloatingHeaderNoBackground";
+import ArticleHeader from "./header/ArticleHeader";
 
 function ProtectedRoutes() {
 
-    const {setIsLogin} = useContext(UserContext)
+    const {setIsLogin, currentArticle} = useContext(UserContext)
     const [isAuthorized, setIsAuthorized] = useState(null)
+
+    const location = useLocation()
+    const notShowHeader = location.pathname.startsWith("/article")
 
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false))
@@ -85,7 +89,7 @@ function ProtectedRoutes() {
     return isAuthorized ?
         <PageContainer>
             {/*<Header />*/}
-            <FloatingHeaderNoBackground />
+            {!notShowHeader ? <FloatingHeaderNoBackground /> :  <ArticleHeader articleTitle={currentArticle?.title}/>}
             <Main>
                <Outlet />
             </Main>
@@ -95,11 +99,9 @@ function ProtectedRoutes() {
         <Navigate to="/login" replace/>
 }
 
-const PageContainer = styled.div`
-  background-color: #000;
-`
+const PageContainer = styled.div``
 const Main = styled.main`
-    min-height: calc(100vh - 120px);
+    //min-height: calc(100vh - 120px);
     //width: 725px;
     margin: 0 auto 0;
     display: flex;
