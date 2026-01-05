@@ -54,7 +54,7 @@ const ArrowContainer = styled.div`
 `
 
 const ArrowImg = styled.img`
-  width: 36px;
+  width: 100%;
   height: 36px;
   //filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(0deg);
 
