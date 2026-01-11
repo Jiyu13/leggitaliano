@@ -6,7 +6,7 @@ import {FilledButton} from "../styles/buttonStyles";
 import {useState} from "react";
 
 function DictionaryArea({
-    ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
+    ipa, setIpa, clickedWord,clickedWordIndex, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
     setShowNewMeaningForm, isShowNewMeaningForm
 }) {
     // const [isShowEditForm, setShowEditForm] = useState(false)
@@ -15,46 +15,35 @@ function DictionaryArea({
 
     return (
         <DictionaryContainer className="dinctionary-area-container">
-            {/*<SearchBarContainer>*/}
-            {/*    <SearchBar>*/}
-            {/*        <Img alt="search icon" src={search_icon}/>*/}
-            {/*        <Input*/}
-            {/*            type="text"*/}
-            {/*            placeholder="Search..."*/}
-            {/*        />*/}
-            {/*    </SearchBar>*/}
-            {/*</SearchBarContainer>*/}
 
-
-            <DictionarySection>
-
-                <HeadSectionContainer>
-                    {/*<LeftSection>*/}
+            <DictionarySection className="dinctionary-section">
+                {/*<SearchBarContainer>*/}
+                {/*    <SearchBar>*/}
+                {/*        <Img alt="search icon" src={search_icon}/>*/}
+                {/*        <Input*/}
+                {/*            type="text"*/}
+                {/*            placeholder="Search..."*/}
+                {/*        />*/}
+                {/*    </SearchBar>*/}
+                {/*</SearchBarContainer>*/}
+                {clickedWord && (
+                    <HeadSectionContainer className="dinctionary-head">
                         <Word>{clickedWord}</Word>
                         <Ipa>{ipa}</Ipa>
-                    {/*</LeftSection>*/}
-                    {/*<RightSection>*/}
 
-                    {/*</RightSection>*/}
+                    </HeadSectionContainer>
+                )}
 
-                </HeadSectionContainer>
-                <div>
-                    {/*<FilledButton*/}
-                    {/*    style={{border: "2px solid #a9a9a9"}}*/}
-                    {/*    onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}*/}
-                    {/*>*/}
-                    {/*    Edit*/}
-                    {/*</FilledButton>*/}
-
-                    <FilledButton
-                        style={{border: "2px solid #a9a9a9"}}
-                        onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
-                    >
-                        Add new meaning
-                    </FilledButton>
-                </div>
-
-                <hr/>
+                {!clickedWord && (
+                    <div className="add-meaning-button" >
+                        <FilledButton
+                            style={{border: "2px solid #a9a9a9"}}
+                            onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
+                        >
+                            Add new meaning
+                        </FilledButton>
+                    </div>
+                )}
 
                 {isShowNewMeaningForm && (
                     <DictionaryWordNewMeaningForm
@@ -121,9 +110,17 @@ const HeadSectionContainer = styled.div`
     display: flex;
     align-items: center;
     //justify-content: space-between;
-  margin-bottom: 1rem;
+    margin-bottom: .5rem;
+    padding-bottom: .5rem;
+    border-bottom: #fff 1px solid;
 `
 const DictionarySection = styled.div`
+    width: 100%;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: #333;
+    color: #ddd;
+    border-radius: 8px;
 `
 const SearchBarContainer = styled.div`
   display: block;
@@ -157,15 +154,8 @@ const Input = styled.input`
 
 const DictionaryContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    max-width: 725px;
+    max-width: 420px;
     width: 100%;
-    background-color: #333;
-    color: #ddd;
-    overflow: auto;
-    border-radius: 8px;
-    padding: 16px; 
-    gap: 1rem;
 `
 
 export default DictionaryArea
