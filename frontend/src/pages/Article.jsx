@@ -9,6 +9,8 @@ import {calculatePages} from "../utils/calculatePages";
 import DictionaryArea from "../components/DictionaryArea";
 import ArticleHeader from "../components/header/ArticleHeader";
 
+const WORD_EACH_PAGE = 100
+
 function Article() {
 
     const { article_title, article_id } = useParams()
@@ -84,8 +86,8 @@ function Article() {
 
     // ======================== article -> paragraphs -> words =========================================================
     const articleWords = splitText(currentArticle?.content)
-    const pages = calculatePages(articleWords)
-    const textInPages = articleWords?.slice((currentPage) * 250, (currentPage) * 250 + 250) // slice, get words from [0-250], page increases/decreases by 1
+    const pages = calculatePages(articleWords, WORD_EACH_PAGE)
+    const textInPages = articleWords?.slice((currentPage) * WORD_EACH_PAGE, (currentPage) * WORD_EACH_PAGE + WORD_EACH_PAGE) // slice, get words from [0-250], page increases/decreases by 1
                         .join(' ')    // join 250 words with space to make it a paragraph
                         .replaceAll("##", "\n\n")
     const paragraphs = textInPages?.split("\n\n").map(p => p.trim())
@@ -95,6 +97,9 @@ function Article() {
 
     const divRef = useRef(null)
     function handlePrevPage() {
+        setClickedWord(null)
+        setClickedWordIndex(null)
+        setDictionaryWords(null)
         if (currentPage > 0){
             const prevPage = currentPage - 1
             setCurrentPage(prevPage)
@@ -106,8 +111,8 @@ function Article() {
         }
         setFinishReading(false)
 
-        if (totalWords >= currentPage*250){
-            setTotalWords(totalWords - 250)
+        if (totalWords >= currentPage * WORD_EACH_PAGE){
+            setTotalWords(totalWords - WORD_EACH_PAGE)
         }
         divRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -119,15 +124,18 @@ function Article() {
 
 
     function handleNextPage() {
+        setClickedWord(null)
+        setClickedWordIndex(null)
+        setDictionaryWords(null)
         let timeNow = new Date().getTime()
         if (currentPage < pages - 1) {
             const nextPage = currentPage + 1
             setCurrentPage(nextPage)
             updatePageInDB(nextPage)
             if (lastClick && timeNow > (lastClick + 25000)) {
-                handleWordsRead(250)
+                handleWordsRead(WORD_EACH_PAGE)
             }
-            setTotalWords(totalWords + 250)
+            setTotalWords(totalWords + WORD_EACH_PAGE)
         }
         divRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -149,7 +157,7 @@ function Article() {
         if ( currentArticle.finished !== true ) {
             try {
                 const rest = api.patch(`/article/${currentArticle.id}/`, {finished: true,})
-                const lastPageWords = articleWords?.length - (pages - 1)*250
+                const lastPageWords = articleWords?.length - (pages - 1) * WORD_EACH_PAGE
                 handleWordsRead(lastPageWords)
                 setTotalWords(totalWords + lastPageWords)
                 setFinishReading(true)
@@ -189,6 +197,7 @@ function Article() {
                 ipa={ipa}
                 setIpa={setIpa}
                 clickedWord={clickedWord}
+                clickedWordIndex={clickedWordIndex}
                 dictionaryWords={dictionaryWords}
                 setDictionaryWords={setDictionaryWords}
                 wordNotFound={wordNotFound}
@@ -200,20 +209,17 @@ function Article() {
     )
 }
 const ArticleContainer = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 424px;
-    //flex-direction: row;
-   justify-content: center;
+    display: flex;
+    justify-content: center;
     align-items: stretch;
-    //gap: 1px;
     margin: 100px auto 0;
     box-sizing: border-box;
-    //width: 100%;
     min-height: 450px;
     font-size: 20px;
     line-height: 1.6;
     height: calc(100% - 120px);  // Handle top bar which is 60px
     position: fixed;
+    padding: 0 1rem;
 `
 
 export default Article
