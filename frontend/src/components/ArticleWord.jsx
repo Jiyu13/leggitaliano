@@ -21,8 +21,8 @@ export default function ArticleWord({
     
     
     // const match = vocabularies?.filter((v) => v.hawaiian_clean.toLowerCase() === word_clean)[0]
-    let activeStyling = "rgba(112, 161, 255, 0.5)"
-    const unactiveStyling = "rgba(112, 161, 255, 0.2"
+    let activeStyling = "rgba(31, 240, 115, 0.8)"  // "rgba(112, 161, 255, 0.5)"
+    const unactiveStyling = "" //"rgba(112, 161, 255, 0.2"
     // if (match) {
     //     // & word_clean!==""
     //     switch(match.status) {
@@ -51,7 +51,10 @@ export default function ArticleWord({
     return (
         <WordContainer
             onClick={handleClick}
-            style={{backgroundColor: isActive ? activeStyling : unactiveStyling}}
+            style={{
+                backgroundColor: isActive ? activeStyling : unactiveStyling,
+                color: isActive ? "#000" : "#FFF"
+            }}
         >
             {word}
         </WordContainer>
@@ -71,10 +74,10 @@ const WordContainer = styled.div`
     padding: 0px 4px;
     display: inline-block;
     vertical-align: top;
-    font-size: 20px;
+    font-size: 24px;
     &:hover {
         color: #fff;
-        background-color: #bdc3c7;
+        background-color:  rgba(31, 240, 115, 0.3); // rgba(112, 161, 255, 0.3); //#bdc3c7;
         cursor: pointer;
     }
 `

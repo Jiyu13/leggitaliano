@@ -45,9 +45,8 @@ function ArticleReadingArea({
 }
 
 const ReadableContent = styled.div`
-    font-size: 20px;
+    font-size: 24px;
     line-height: 1.6;
-    padding: 0 8px 8px;
 `
 
 const PagesContainer = styled.div`
@@ -58,9 +57,9 @@ const PagesContainer = styled.div`
 
 const ReadableArea = styled.div`
     display: block;
-    max-width: 725px;
+    //max-width: 825px;
     width: 100%;
-    background-color: #333;
+    //background-color: #333;
     color: #ddd;
     overflow: auto;
     border-radius: 8px;
