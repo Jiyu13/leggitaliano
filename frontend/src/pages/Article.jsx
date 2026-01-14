@@ -177,35 +177,39 @@ function Article() {
     }
 
     return (
-        <ArticleContainer className="article-container">
-            <ArticleReadingArea
-                currentPage={currentPage}
-                paragraphs={paragraphs}
-                isLoading={isLoading}
-                divRef={divRef}
-                pages={pages}
-                setClickedWordIndex={setClickedWordIndex}
-                clickedWordIndex={clickedWordIndex}
-                handleWordClicked={handleWordClicked}
-                handlePrevPage={handlePrevPage}
-                handleNextPage={handleNextPage}
-                handleFinishReading={handleFinishReading}
-                sentence={sentence}
-                setSentence={setSentence}
-            />
-            <DictionaryArea
-                ipa={ipa}
-                setIpa={setIpa}
-                clickedWord={clickedWord}
-                clickedWordIndex={clickedWordIndex}
-                dictionaryWords={dictionaryWords}
-                setDictionaryWords={setDictionaryWords}
-                wordNotFound={wordNotFound}
-                setNotFound={setNotFound}
-                isShowNewMeaningForm={isShowNewMeaningForm}
-                setShowNewMeaningForm={setShowNewMeaningForm}
-            />
-        </ArticleContainer>
+        <>
+            {currentArticle && (
+                <ArticleContainer className="article-container">
+                    <ArticleReadingArea
+                        currentPage={currentPage}
+                        paragraphs={paragraphs}
+                        isLoading={isLoading}
+                        divRef={divRef}
+                        pages={pages}
+                        setClickedWordIndex={setClickedWordIndex}
+                        clickedWordIndex={clickedWordIndex}
+                        handleWordClicked={handleWordClicked}
+                        handlePrevPage={handlePrevPage}
+                        handleNextPage={handleNextPage}
+                        handleFinishReading={handleFinishReading}
+                        sentence={sentence}
+                        setSentence={setSentence}
+                    />
+                    <DictionaryArea
+                        ipa={ipa}
+                        setIpa={setIpa}
+                        clickedWord={clickedWord}
+                        clickedWordIndex={clickedWordIndex}
+                        dictionaryWords={dictionaryWords}
+                        setDictionaryWords={setDictionaryWords}
+                        wordNotFound={wordNotFound}
+                        setNotFound={setNotFound}
+                        isShowNewMeaningForm={isShowNewMeaningForm}
+                        setShowNewMeaningForm={setShowNewMeaningForm}
+                    />
+                </ArticleContainer>
+            )}
+        </>
     )
 }
 const ArticleContainer = styled.div`
