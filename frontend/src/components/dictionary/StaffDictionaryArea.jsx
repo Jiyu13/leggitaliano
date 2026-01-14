@@ -5,7 +5,7 @@ import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
 import {FilledButton} from "../../styles/buttonStyles";
 import {useState} from "react";
 
-function DictionaryArea({
+function StaffDictionaryArea({
     ipa, setIpa, clickedWord,clickedWordIndex, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
     setShowNewMeaningForm, isShowNewMeaningForm
 }) {
@@ -111,7 +111,6 @@ const DictionarySection = styled.div`
     padding: 16px;
     overflow-y: auto;
     color: #ddd;
-    border-radius: 8px;
 `
 const SearchBarContainer = styled.div`
   display: block;
@@ -152,6 +151,8 @@ const DictionaryContainer = styled.div`
     display: flex;
     max-width: 450px;
     width: 100%;
+    background-color: #333333;
+    border-radius: 8px;
 `
 
-export default DictionaryArea
+export default StaffDictionaryArea
