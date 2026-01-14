@@ -6,15 +6,15 @@ import styled from "styled-components";
 import ArticleReadingArea from "../components/ArticleReadingArea";
 import {splitText} from "../utils/splitText";
 import {calculatePages} from "../utils/calculatePages";
-import DictionaryArea from "../components/DictionaryArea";
-import ArticleHeader from "../components/header/ArticleHeader";
+import StaffDictionaryArea from "../components/dictionary/StaffDictionaryArea";
+import UserDictionaryArea from "../components/dictionary/UserDictionaryArea";
 
 const WORD_EACH_PAGE = 100
 
 function Article() {
 
     const { article_title, article_id } = useParams()
-    const {currentArticle, setCurrentArticle} = useContext(UserContext)
+    const {currentArticle, setCurrentArticle, currentUser} = useContext(UserContext)
 
     const [isLoading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(0)
@@ -195,18 +195,32 @@ function Article() {
                         sentence={sentence}
                         setSentence={setSentence}
                     />
-                    <DictionaryArea
-                        ipa={ipa}
-                        setIpa={setIpa}
-                        clickedWord={clickedWord}
-                        clickedWordIndex={clickedWordIndex}
-                        dictionaryWords={dictionaryWords}
-                        setDictionaryWords={setDictionaryWords}
-                        wordNotFound={wordNotFound}
-                        setNotFound={setNotFound}
-                        isShowNewMeaningForm={isShowNewMeaningForm}
-                        setShowNewMeaningForm={setShowNewMeaningForm}
-                    />
+                    {currentUser?.is_staff ?
+                        <StaffDictionaryArea
+                            ipa={ipa}
+                            setIpa={setIpa}
+                            clickedWord={clickedWord}
+                            clickedWordIndex={clickedWordIndex}
+                            dictionaryWords={dictionaryWords}
+                            setDictionaryWords={setDictionaryWords}
+                            wordNotFound={wordNotFound}
+                            setNotFound={setNotFound}
+                            isShowNewMeaningForm={isShowNewMeaningForm}
+                            setShowNewMeaningForm={setShowNewMeaningForm}
+                        />
+                        :
+                        <UserDictionaryArea
+                            ipa={ipa}
+                            setIpa={setIpa}
+                            clickedWord={clickedWord}
+                            clickedWordIndex={clickedWordIndex}
+                            dictionaryWords={dictionaryWords}
+                            setDictionaryWords={setDictionaryWords}
+                            wordNotFound={wordNotFound}
+                            setNotFound={setNotFound}
+                        />
+                    }
+
                 </ArticleContainer>
             )}
         </>
