@@ -28,21 +28,20 @@ function DictionaryArea({
                 {/*</SearchBarContainer>*/}
                 {clickedWord && (
                     <HeadSectionContainer className="dinctionary-head">
-                        <Word>{clickedWord}</Word>
-                        <Ipa>{ipa}</Ipa>
+                        <WordInfoWrapper>
+                            <Word>{clickedWord}</Word>
+                            <Ipa>{ipa}</Ipa>
+                        </WordInfoWrapper>
+                        <AddNewButtonWrapper className="add-meaning-button-wrapper" >
+                            <FilledButton
+                                style={{border: "2px solid #a9a9a9", width: "100%"}}
+                                onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
+                            >
+                                Add new meaning
+                            </FilledButton>
+                        </AddNewButtonWrapper>
 
                     </HeadSectionContainer>
-                )}
-
-                {!clickedWord && (
-                    <div className="add-meaning-button" >
-                        <FilledButton
-                            style={{border: "2px solid #a9a9a9"}}
-                            onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
-                        >
-                            Add new meaning
-                        </FilledButton>
-                    </div>
                 )}
 
                 {isShowNewMeaningForm && (
@@ -99,17 +98,10 @@ const Word = styled.div`
 const NotFoundContainer = styled.div`
   margin-top: 3rem;
 `
-const LeftSection = styled.div`
-  display: flex;
-  align-items: center;
-`
-const RightSection = styled.div`
-  
-`
 const HeadSectionContainer = styled.div`
     display: flex;
     align-items: center;
-    //justify-content: space-between;
+    justify-content: space-between;
     margin-bottom: .5rem;
     padding-bottom: .5rem;
     border-bottom: #fff 1px solid;
@@ -151,6 +143,11 @@ const Input = styled.input`
     outline: none;
   }
 `
+const WordInfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+const AddNewButtonWrapper = styled.div``
 
 const DictionaryContainer = styled.div`
     display: flex;
