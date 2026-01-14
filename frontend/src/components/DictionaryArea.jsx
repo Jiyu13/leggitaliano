@@ -34,10 +34,10 @@ function DictionaryArea({
                         </WordInfoWrapper>
                         <AddNewButtonWrapper className="add-meaning-button-wrapper" >
                             <FilledButton
-                                style={{border: "2px solid #a9a9a9", width: "100%"}}
+                                style={{border: "2px solid #a9a9a9", width: "100%", padding: "12px"}}
                                 onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
                             >
-                                Add new meaning
+                                New meaning
                             </FilledButton>
                         </AddNewButtonWrapper>
 
@@ -145,13 +145,13 @@ const Input = styled.input`
 `
 const WordInfoWrapper = styled.div`
   display: flex;
-  align-items: center;
+  align-items: baseline;
 `
 const AddNewButtonWrapper = styled.div``
 
 const DictionaryContainer = styled.div`
     display: flex;
-    max-width: 420px;
+    max-width: 450px;
     width: 100%;
 `
 
