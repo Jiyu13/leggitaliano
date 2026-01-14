@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import search_icon from "../assets/icons/search_icon.svg";
+import search_icon from "../../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
 import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
-import {FilledButton} from "../styles/buttonStyles";
+import {FilledButton} from "../../styles/buttonStyles";
 import {useState} from "react";
 
 function DictionaryArea({
@@ -110,7 +110,6 @@ const DictionarySection = styled.div`
     width: 100%;
     padding: 16px;
     overflow-y: auto;
-    background-color: #333;
     color: #ddd;
     border-radius: 8px;
 `
