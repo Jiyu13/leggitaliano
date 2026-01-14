@@ -87,18 +87,18 @@ function StaffDictionaryArea({
         </DictionaryContainer>
     )
 }
-const Ipa = styled.div`
+export const Ipa = styled.div`
     color: #5b80b2;
     font-size: 0.9rem;
 `
-const Word = styled.div`
+export const Word = styled.div`
   font-weight: bolder;
   padding-right: 1rem;
 `
-const NotFoundContainer = styled.div`
+export const NotFoundContainer = styled.div`
   margin-top: 3rem;
 `
-const HeadSectionContainer = styled.div`
+export const HeadSectionContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
