@@ -1,12 +1,12 @@
-import {FieldBox, FormButtonWrapper, FormLabel, OptionBox, SelectBox, Textarea} from "../styles/formStyles";
+import {FieldBox, FormButtonWrapper, FormLabel, OptionBox, SelectBox, Textarea} from "../../styles/formStyles";
 import {useContext, useState} from "react";
-import {UserContext} from "../user-content/UserContent";
-import {SubmitInputButton} from "../styles/buttonStyles";
+import {UserContext} from "../../user-content/UserContent";
+import {SubmitInputButton} from "../../styles/buttonStyles";
 import styled from "styled-components";
-import api from "../api";
-import add_another_translation_icon from "../assets/icons/add_24dp.svg";
-import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
-import ConjugationOptions, {CONJUGATIONS} from "./ConjugationOptions";
+import api from "../../api";
+import add_another_translation_icon from "../../assets/icons/add_24dp.svg";
+import remove_this_translation_icon from "../../assets/icons/remove_24dp.svg";
+import ConjugationOptions, {CONJUGATIONS} from "../ConjugationOptions";
 
 export const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
 

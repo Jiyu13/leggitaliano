@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import DictionaryTranslationItem from "./DictionaryTranslationItem";
-import arrow_down_icon from "../assets/icons/arrow_down.svg";
-import arrow_up_icon from "../assets/icons/arrow_up.svg";
-import edit_icon from "../assets/icons/edit_24dp.svg"
-import delete_icon from "../assets/icons/delete_24dp.svg"
+import arrow_down_icon from "../../assets/icons/arrow_down.svg";
+import arrow_up_icon from "../../assets/icons/arrow_up.svg";
+import edit_icon from "../../assets/icons/edit_24dp.svg"
+import delete_icon from "../../assets/icons/delete_24dp.svg"
 import DictionaryWordEditForm from "./DictionaryWordEditForm";
-import api from "../api";
+import api from "../../api";
 import {useRef} from "react";
 
 

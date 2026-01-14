@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import {FilledButton} from "../styles/buttonStyles";
+import {FilledButton} from "../../styles/buttonStyles";
 import {useState, useEffect} from "react";
-import {RequiredWarning, Textarea} from "../styles/formStyles";
-import api from "../api";
-import PopupModal from "./PopupModal";
-import ToastMessage from "./ToastMessage";
+import {RequiredWarning, Textarea} from "../../styles/formStyles";
+import api from "../../api";
+import PopupModal from "../PopupModal";
+import ToastMessage from "../ToastMessage";
 
 
 function DictionaryTranslationItem({

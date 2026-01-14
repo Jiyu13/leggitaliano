@@ -1,11 +1,11 @@
-import {FieldBox, FormButtonWrapper, FormLabel, OptionBox, SelectBox, Textarea} from "../styles/formStyles";
+import {FieldBox, FormButtonWrapper, FormLabel, OptionBox, SelectBox, Textarea} from "../../styles/formStyles";
 import {useContext, useState} from "react";
 import styled from "styled-components";
-import {SubmitInputButton} from "../styles/buttonStyles";
-import {UserContext} from "../user-content/UserContent";
-import add_another_translation_icon from "../assets/icons/add_24dp.svg";
-import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
-import api from "../api";
+import {SubmitInputButton} from "../../styles/buttonStyles";
+import {UserContext} from "../../user-content/UserContent";
+import add_another_translation_icon from "../../assets/icons/add_24dp.svg";
+import remove_this_translation_icon from "../../assets/icons/remove_24dp.svg";
+import api from "../../api";
 import {IS_INHERIT} from "./DictionaryWordEditForm";
 
 
