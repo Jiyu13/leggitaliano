@@ -1,22 +1,16 @@
 import arrow_up_icon from "../../assets/icons/arrow_up.svg";
 import arrow_down_icon from "../../assets/icons/arrow_down.svg";
-import edit_icon from "../../assets/icons/edit_24dp.svg";
-import delete_icon from "../../assets/icons/delete_24dp.svg";
-import DictionaryTranslationItem from "./DictionaryTranslationItem";
-import DictionaryWordEditForm from "./DictionaryWordEditForm";
 import styled from "styled-components";
 import {useRef, useState} from "react";
 import UserDictVerbConjugation from "./UserDictVerbConjugation";
 
-function UserDictionaryWordItem({
-                                    wordItem, setShowMeaningId, showMeaningId, setShowEditFormId, showEditFormId,
+function UserDictionaryWordItem({wordItem, setShowMeaningId, showMeaningId,
 }) {
 
     const wordType = wordItem.word_type
     const translations = wordItem["translations"]
 
     const isShowMeaning = showMeaningId === wordItem.id
-    const isShowEditForm = showEditFormId === wordItem.id
     const [isShowConjunctions, setShowConjunctions] = useState(false)
     const [isShowMeanings, setShowMeanings] = useState(true)
 
@@ -30,7 +24,6 @@ function UserDictionaryWordItem({
     }
 
     function handleToggleShowMeaning() {
-        setShowEditFormId(null)
         setShowMeaningId(prev => prev === wordItem.id ? null : wordItem.id)
         scrollToElement()
     }
@@ -113,8 +106,8 @@ function UserDictionaryWordItem({
                                         <div style={{fontWeight: "Bolder"}}>{extractedMeaning}</div>
                                         <div
                                             style={{
-                                                color: "#000",
-                                                backgroundColor: "rgba(137, 188, 248, 0.8)",
+                                                color: "rgb(224, 224, 224)",
+                                                backgroundColor: "rgb(86, 86, 86)",
                                                 paddingLeft: "0.5rem",
                                                 borderRadius: "8px"
                                             }}
