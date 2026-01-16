@@ -33,6 +33,8 @@ function Article() {
 
     const [isShowNewMeaningForm, setShowNewMeaningForm] = useState(false)
 
+    const [searchInputData, setSearchInputData] = useState("")
+    const [searchResult, setSearchResult] = useState(null)
 
 
     useEffect(() => {
@@ -60,6 +62,9 @@ function Article() {
         setNotFound(null)
         setClickedWord(null)
         setIpa(null)
+
+        setSearchResult(null)
+        setSearchInputData("")
 
         const cleanWord = word
             .trim()
@@ -218,6 +223,10 @@ function Article() {
                             setDictionaryWords={setDictionaryWords}
                             wordNotFound={wordNotFound}
                             setNotFound={setNotFound}
+                            searchResult={searchResult}
+                            setSearchResult={setSearchResult}
+                            searchInputData={searchInputData}
+                            setSearchInputData={setSearchInputData}
                         />
                     }
 
