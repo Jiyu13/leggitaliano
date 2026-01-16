@@ -34,7 +34,7 @@ function StaffDictionaryArea({
                         </WordInfoWrapper>
                         <AddNewButtonWrapper className="add-meaning-button-wrapper" >
                             <FilledButton
-                                style={{border: "2px solid #a9a9a9", width: "100%", padding: "12px"}}
+                                style={{border: "2px solid #a9a9a9", width: "100%", padding: "0.75rem"}}
                                 onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
                             >
                                 New meaning
@@ -92,6 +92,7 @@ export const Ipa = styled.div`
     font-size: 0.9rem;
 `
 export const Word = styled.div`
+  color: #fff;
   font-weight: bolder;
   padding-right: 1rem;
 `
@@ -102,13 +103,13 @@ export const HeadSectionContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: .5rem;
-    padding-bottom: .5rem;
+    padding: 0.5rem;
+    //padding-bottom: .5rem;
     border-bottom: #fff 1px solid;
 `
 const DictionarySection = styled.div`
     width: 100%;
-    padding: 16px;
+    padding: 0 1rem 1rem;
     overflow-y: auto;
     color: #ddd;
 `
