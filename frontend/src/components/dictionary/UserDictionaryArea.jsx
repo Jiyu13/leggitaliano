@@ -23,6 +23,7 @@ function UserDictionaryArea({
         } else {
             setSearchInputData(value)
         }
+        setSearchError(null)
     }
 
     function handleSearch(e) {
@@ -50,15 +51,27 @@ function UserDictionaryArea({
     return (
         <DictionaryContainer className="dinctionary-area-container">
             <SearchBarContainer>
-                <SearchBarForm onSubmit={handleSearch}>
+                <SearchBarForm
+                    onSubmit={handleSearch}
+                    style={{border: searchError ? "2px solid #e74c3c" : "2px solid rgb(169,169,169, 0.5)"}}
+                >
                     <Input
                         type="text"
                         placeholder="Search..."
                         value={searchInputData}
                         onChange={handleInputChange}
                     />
-                    <Img alt="search icon" src={search_icon}/>
+                    <Img
+                        alt="search icon"
+                        src={search_icon}
+                        onClick={handleSearch}
+                    />
                 </SearchBarForm>
+
+                {searchError && (
+                     <SearchErrorMessage>"{searchInputData}" doesn't not exist</SearchErrorMessage>
+                )}
+
             </SearchBarContainer>
 
             <HeadSectionContainer className="dinctionary-head">
@@ -130,16 +143,22 @@ function UserDictionaryArea({
 
 
 const SearchBarContainer = styled.div`
-  height: 50px;
+  //height: 50px;
   padding: 0.5rem;
 `
 const SearchBarForm = styled.form`
   box-sizing: border-box;
   display: flex;
-  //background-color: rgb(169,169,169, 0.5);
   border-radius: 8px;
-  border: 2px solid rgb(169,169,169, 0.5);
 `
+
+const SearchErrorMessage = styled.div`
+  color: #e74c3c;
+  font-size: 0.9rem;
+  padding-left: 0.5rem;  
+  padding-top: 0.5rem;  
+`
+
 const Img = styled.img`
   margin: 8px;
 `
