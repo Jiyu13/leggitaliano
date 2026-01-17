@@ -55,15 +55,13 @@ function UserDictionarySearchResult({result}) {
             {isShowSearch && (
                 <TranslationListContainer>
                     {result.parent && result.is_verb && (
-                        <WordConjunctions className="">
+                        <WordConjunctions onClick={() => setShowConjunctions(!isShowConjunctions)}>
                             <div>Conjunction of&nbsp;
                                 <span style={{fontWeight: "bolder", textDecoration: "underline"}}>{result.parent}</span>
                             </div>
                             <Img
                                 alt={isShowConjunctions ? "show conjunction icon " : "close conjunction icon"}
                                 src={isShowConjunctions ? arrow_up_icon : arrow_down_icon}
-                                onClick={() => setShowConjunctions(!isShowConjunctions)}
-
                             />
                         </WordConjunctions>
 
@@ -74,13 +72,14 @@ function UserDictionarySearchResult({result}) {
                         />
                     )}
 
-                    <WordConjunctions style={{marginTop: "1rem"}}>
+                    <WordConjunctions
+                        style={{marginTop: "1rem"}}
+                        onClick={() => setShowMeanings(!isShowMeanings)}
+                    >
                         <div>Meanings</div>
                         <Img
                             alt={isShowMeanings ? "show meaning icon " : "close meaning icon"}
                             src={isShowMeanings ? arrow_up_icon : arrow_down_icon}
-                            onClick={() => setShowMeanings(!isShowMeanings)}
-
                         />
                     </WordConjunctions>
 
