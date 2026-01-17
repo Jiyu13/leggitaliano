@@ -9,11 +9,10 @@ import UserDictionarySearchResult from "./UserDictionarySearchResult";
 
 function UserDictionaryArea({
     ipa, clickedWord, dictionaryWords, wordNotFound, setNotFound,
-    searchInputData, setSearchInputData, searchResult, setSearchResult
+    searchInputData, setSearchInputData, searchResult, setSearchResult, searchError, setSearchError
 }) {
 
     const [showMeaningId, setShowMeaningId] = useState(null)
-    const [searchError, setSearchError] = useState(null)
 
 
     function handleInputChange(e) {
@@ -47,11 +46,6 @@ function UserDictionaryArea({
 
     const wordToShow = searchResult !== null ? searchResult.word : clickedWord
     const ipaToShow = searchResult !== null ? searchResult.ipa : ipa
-
-    const wordMeaningsToShow = searchResult !== null ? searchResult.data : dictionaryWords
-    const notFoundWord =  searchError !== null && searchInputData !== "" ? searchInputData : clickedWord
-
-    console.log("wordToShow", wordToShow)
 
     return (
         <DictionaryContainer className="dinctionary-area-container">
@@ -104,8 +98,6 @@ function UserDictionaryArea({
                             <UserDictionarySearchResult
                                 key={index}
                                 result={result}
-                                setShowMeaningId={setShowMeaningId}
-                                showMeaningId={showMeaningId}
                             />
                         )}
                     </>
@@ -122,19 +114,10 @@ function UserDictionaryArea({
                     </>
                 }
 
-                { searchError !== null &&
-                    // searchInputData!== "") | (wordNotFound !== null && clickedWord!== null) &&
-                    (
-                    <NotFoundContainer>
-                        <div>No results found.</div>
-                    </NotFoundContainer>
-                )}
-
                 { wordNotFound !== null &&
-                    // searchInputData!== "") | (wordNotFound !== null && clickedWord!== null) &&
                     (
                     <NotFoundContainer>
-                        <div>No results found for "{notFoundWord}".</div>
+                        <div>No results found for "{clickedWord}".</div>
                     </NotFoundContainer>
                 )}
 
