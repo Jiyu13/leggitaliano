@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 function UserDictionarySearchResult({result}) {
 
-    const [isShowMeaning, setShowMeaning] = useState(true)
+    const [isShowSearch, setShowMeSearch] = useState(false)
     const [isShowMeanings, setShowMeanings] = useState(true)
     const [isShowConjunctions, setShowConjunctions] = useState(false)
 
@@ -19,7 +19,7 @@ function UserDictionarySearchResult({result}) {
     }
 
     function handleToggleShowMeaning() {
-        setShowMeaning(!isShowMeaning)
+        setShowMeSearch(!isShowSearch)
         scrollToElement()
     }
 
@@ -29,7 +29,7 @@ function UserDictionarySearchResult({result}) {
             <div style={{display: "flex", justifyContent: "space-between"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <WordType>{result.word_type}</WordType>
-                    {isShowMeaning && (
+                    {isShowSearch && (
                         <Img
                             style={{margin: "4px"}}
                             alt="close meaning icon"
@@ -39,7 +39,7 @@ function UserDictionarySearchResult({result}) {
                     )}
 
 
-                    {!isShowMeaning && (
+                    {!isShowSearch && (
                         <Img
                             style={{margin: "4px"}}
                             alt="show meaning icon"
@@ -52,7 +52,7 @@ function UserDictionarySearchResult({result}) {
 
             </div>
 
-            {isShowMeaning && (
+            {isShowSearch && (
                 <TranslationListContainer>
                     {result.parent && result.is_verb && (
                         <WordConjunctions className="">
