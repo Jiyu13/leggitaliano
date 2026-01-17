@@ -35,6 +35,8 @@ function Article() {
 
     const [searchInputData, setSearchInputData] = useState("")
     const [searchResult, setSearchResult] = useState(null)
+    const [searchError, setSearchError] = useState(null)
+
 
 
     useEffect(() => {
@@ -59,10 +61,11 @@ function Article() {
     function handleWordClicked(word) {
         setShowNewMeaningForm(false)
         setDictionaryWords(null)
-        setNotFound(null)
         setClickedWord(null)
         setIpa(null)
+        setNotFound(null)
 
+        setSearchError(null)
         setSearchResult(null)
         setSearchInputData("")
 
@@ -227,6 +230,8 @@ function Article() {
                             setSearchResult={setSearchResult}
                             searchInputData={searchInputData}
                             setSearchInputData={setSearchInputData}
+                            searchError={searchError}
+                            setSearchError={setSearchError}
                         />
                     }
 
