@@ -109,6 +109,9 @@ function Article() {
         setClickedWord(null)
         setClickedWordIndex(null)
         setDictionaryWords(null)
+        setIpa(null)
+
+
         if (currentPage > 0){
             const prevPage = currentPage - 1
             setCurrentPage(prevPage)
@@ -136,6 +139,8 @@ function Article() {
         setClickedWord(null)
         setClickedWordIndex(null)
         setDictionaryWords(null)
+        setIpa(null)
+
         let timeNow = new Date().getTime()
         if (currentPage < pages - 1) {
             const nextPage = currentPage + 1
