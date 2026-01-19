@@ -103,7 +103,7 @@ function UserDictionaryArea({
 
             {/*}*/}
 
-            <DictionaryWrapper className="dinctionary-section">
+            <DictionaryWrapper className="dinctionary-wrapper">
 
                 {searchResult !== null ?
                     <>
@@ -117,14 +117,17 @@ function UserDictionaryArea({
                     :
                     <>
                         {dictionaryWords?.map((dw, index) =>
-                            <UserDictionaryWordItem
-                                key={index}
-                                wordItem={dw}
-                                setShowMeaningId={setShowMeaningId}
-                                showMeaningId={showMeaningId}
-                            />
-                        )}
+                            <li style={{borderTop: index === 0 ? "1px solid #fff": "none"}}>
+                                <UserDictionaryWordItem
+                                    key={index}
+                                    wordItem={dw}
+                                    setShowMeaningId={setShowMeaningId}
+                                    showMeaningId={showMeaningId}
+                                />
+                            </li>
+                         )}
                     </>
+
                 }
 
                 { wordNotFound !== null &&
@@ -182,11 +185,13 @@ const WordInfoWrapper = styled.div`
   align-items: baseline;
 `
 
-const DictionaryWrapper = styled.div`
+const DictionaryWrapper = styled.ul`
     //width: 100%;
-    padding: 0 1rem 1rem;
+    padding: 0 1rem 0.75rem;
     overflow-y: auto;
     color: #ddd;
+    list-style-type: none;
+    margin: 0
 `
 const DictionaryContainer = styled.div`
     display: flex;
