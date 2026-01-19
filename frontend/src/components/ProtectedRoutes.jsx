@@ -16,7 +16,9 @@ function ProtectedRoutes() {
     const [isAuthorized, setIsAuthorized] = useState(null)
 
     const location = useLocation()
+    // article-reading-page, article/add
     const notShowHeader = location.pathname.startsWith("/article")
+    const headerTitle = location.pathname === "/article/add" ? "Add a new article" : currentArticle?.title
 
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false))
@@ -89,7 +91,7 @@ function ProtectedRoutes() {
     return isAuthorized ?
         <PageContainer>
             {/*<Header />*/}
-            {!notShowHeader ? <FloatingHeaderNoBackground /> :  <ArticleHeader articleTitle={currentArticle?.title}/>}
+            {!notShowHeader ? <FloatingHeaderNoBackground /> :  <ArticleHeader articleTitle={headerTitle}/>}
             <Main>
                <Outlet />
             </Main>
@@ -106,6 +108,7 @@ const Main = styled.main`
     margin: 0 auto 0;
     display: flex;
     justify-content: center;
+    height: 100vh;   // newly added
 `;
 
 export default ProtectedRoutes
