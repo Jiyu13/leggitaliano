@@ -3,6 +3,7 @@ import {useState} from "react";
 import {FieldBox, Form, FormInput, FormLabel, FormTextarea, FormWrapper} from "../styles/formStyles";
 import {FilledButton} from "../styles/buttonStyles";
 import api from "../api";
+import {ArticleHeaderContainer} from "../styles/containerStyles";
 
 function ArticleCreate() {
 
@@ -48,35 +49,36 @@ function ArticleCreate() {
     return (
         <ArticleCreatePageContainer className="article-create-page-container">
             <ArticleCreatePageWrapper className="article-create-page-wrapper">
-                <FormWrapper
-                    className="form-wrapper"
-                    style={{height: "100%", padding: "0"}}
-                >
+                <FormWrapper className="form-wrapper" style={{paddingTop: "0"}}>
                     <Form
                         onSubmit={handleFormSubmit}
                         className="form"
                         style={{minHeight: '750px', height: "100%", display: "flex", flexDirection: "column", flex: 1}}
                     >
-                         <SubmitButtonContainer>
-                             {/*<TotalWords>Total: {totalWords} words.</TotalWords>*/}
-                            <FilledButton
-                                type="submit"
-                                style={{width: "120px"}}
-                            >
-                                Add
-                            </FilledButton>
-                        </SubmitButtonContainer>
 
-                        <FieldBox className="field-box">
-                            <FormInput
-                                type="text"
-                                name="title"
-                                value={formData.title}
-                                placeholder="Add a title."
-                                onChange={onValueChange}
-                                style={{}}
-                            />
-                        </FieldBox>
+                        <div style={{display: "flex", alignItems: "center", width: "100%", gap: "0.75rem"}}>
+                            <FieldBox className="field-box" style={{flex: "1"}}>
+                                <FormInput
+                                    type="text"
+                                    name="title"
+                                    value={formData.title}
+                                    placeholder="Add a title."
+                                    onChange={onValueChange}
+                                    style={{ marginBottom: 0}}
+                                />
+
+                            </FieldBox>
+                             <SubmitButtonContainer>
+                                    <FilledButton
+                                        type="submit"
+                                        style={{width:" 120px", padding: "0.75rem", fontSize: "1.2rem"}}
+                                    >
+                                        Save
+                                    </FilledButton>
+                                </SubmitButtonContainer>
+                        </div>
+
+
 
                         <FieldBox className="field-box">
                             <FormTextarea
@@ -96,9 +98,7 @@ function ArticleCreate() {
         </ArticleCreatePageContainer>
     )
 }
-const TotalWords = styled.div`
-  padding: 0 1rem;
-`
+
 const SubmitButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -108,13 +108,11 @@ const SubmitButtonContainer = styled.div`
 const ArticleCreatePageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 727px;
 `
 
-const ArticleCreatePageContainer = styled.div`
-  height: 100%;
+const ArticleCreatePageContainer = styled(ArticleHeaderContainer)`
   width: 100%;
-  padding-top: 30px;
   overflow-y: hidden;
+  padding: 0 1rem;
 `
 export default ArticleCreate;
