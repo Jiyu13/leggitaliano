@@ -75,6 +75,8 @@ const ArticleItemContainer = styled.a`
     color: rgb(0, 0, 0);
   }
 `
-const ArticleItem = styled.div``
+const ArticleItem = styled.div`
+  font-size: 1.2rem;
+`
 
 export default ArticleList
