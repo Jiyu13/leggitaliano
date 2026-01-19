@@ -47,7 +47,6 @@ export const FormInput = styled.input`
   padding: 0.75rem;
   font-size: 1.2rem;
   border-radius: 8px;
-  box-shadow: rgba(25, 4, 69, 0.05) 0px 3px 6px;
   border: 1.5px solid rgb(143, 143, 143);
   background: none;
   color: rgba(255, 255, 255, 1);
@@ -66,7 +65,6 @@ export const FormTextarea = styled.textarea`
   padding: 0.75rem;
   font-size: 1.2rem;
   border-radius: 8px;
-  box-shadow: rgba(25, 4, 69, 0.05) 0px 3px 6px;
   resize: none;
   background: none;
   border: 1.5px solid rgb(143, 143, 143);
