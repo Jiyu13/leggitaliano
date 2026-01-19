@@ -20,6 +20,7 @@ export const FormContainer = styled.div`
 `
 export const FormTitle = styled.div`
   text-align: left;
+  color: rgba(255, 255, 255, 1);
 `
 
 export const FormWrapper = styled.div`
@@ -33,32 +34,51 @@ export const FieldBox = styled.div`
   flex-direction: column;
 `
 export const FormLabel = styled.label`
-    color: rgb(82, 82, 82);
-    font-size: 0.9rem;
-    font-weight: bold;
-    margin-bottom: 0.2rem
+  color: rgba(255, 255, 255, 1);
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem
 `
 
 export const FormInput = styled.input`
   box-sizing: border-box;
   width: 100%;
   margin-bottom: 1rem;
-  padding: 10px 12px;
+  padding: 0.75rem;
   font-size: 1.2rem;
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: rgba(25, 4, 69, 0.05) 0px 3px 6px;
-  border: 1px solid rgba(25, 4, 69, 0.15);
+  border: 1.5px solid rgb(143, 143, 143);
+  background: none;
+  color: rgba(255, 255, 255, 1);
+  &:hover {
+    border: 1.5px solid rgb(255, 255, 255);
+  }
+
+  &:focus {
+    border: 1.5px solid rgb(255, 255, 255);
+  }
 `
 export const FormTextarea = styled.textarea`
   box-sizing: border-box;
   width: 100%;
   margin-bottom: 1rem;
-  padding: 10px 12px;
+  padding: 0.75rem;
   font-size: 1.2rem;
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: rgba(25, 4, 69, 0.05) 0px 3px 6px;
-  border: 1px solid rgba(25, 4, 69, 0.15);
   resize: none;
+  background: none;
+  border: 1.5px solid rgb(143, 143, 143);
+  color: rgba(255, 255, 255, 1);
+
+  &:hover {
+    border: 1.5px solid rgb(255, 255, 255);
+  }
+
+  &:focus {
+    border: 1.5px solid rgb(255, 255, 255);
+  }
 `
 
 export const Textarea = styled.textarea`
@@ -69,7 +89,7 @@ export const Textarea = styled.textarea`
   resize: none;
   field-sizing: content;
   box-sizing: border-box;
-  padding: 12px;
+  padding: 0.75rem;
   color: #ddd;
   background: none;
 
@@ -100,12 +120,15 @@ export const CustomLink = styled.a`
     }
 `
 export const LoginLink = styled(CustomLink)`
-  color: rgb(82, 82, 82);
+  color: rgb(255, 255, 255);
   font-size: 0.9rem;
   margin: 0 6px;
   font-weight: bold;
 `
-
+export const LinkText = styled.div`
+  color: rgb(197, 197, 197);
+  font-size: 0.9rem;
+`
 // ============== select & options ===========================
 export const SelectBox = styled.select`
     //margin-bottom: 1rem;
