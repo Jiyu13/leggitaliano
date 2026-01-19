@@ -60,18 +60,19 @@ const ListWrapper = styled.div`
 `
 const ArticleItemContainer = styled.a`
   padding: 32px;
-  border: 1px solid #fff;
+  //border: 1px solid #fff;
   border-radius: 24px;
-  background-color: #f6f6f6;
+  background-color: rgb(33, 33, 33);
   font-weight: bold;
   transition: transform 0.2s;
   text-decoration: none;
-  color: rgba(0, 0, 0);
+  color: rgb(255, 255, 255);
   margin-bottom: 12px;
 
   &:hover {
     cursor: pointer;
-    background-color: rgb(151, 253, 138);
+    background-color: rgba(23,188,90, 1);
+    color: rgb(0, 0, 0);
   }
 `
 const ArticleItem = styled.div``
