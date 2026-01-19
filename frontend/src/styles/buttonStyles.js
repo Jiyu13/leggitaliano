@@ -1,16 +1,17 @@
 import styled from "styled-components";
 
 export const SubmitInputButton = styled.input`
-    background-color: rgba(40,44,52, 1);
+    background-color: rgba(23,188,90, 1);
     color: whitesmoke;
-    padding: 12px 24px;
+    padding: 1rem;
     border: none;
     letter-spacing: 0.1rem;
     cursor: pointer;
     transition: .3s ease;
-    margin: 2rem 0 2rem;
-    border-radius: 8px;
+    margin: 0.75rem 0 2rem;
+    border-radius: 0.75rem;
     width: 100%;
+    font-size: 1rem;
   
     //width: 100%;
     &:hover {
