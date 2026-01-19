@@ -107,7 +107,7 @@ const GreetingInputContainer = styled.div`
 
 const GreetingInputArea = styled.input`
   background: none;
-  color: #fff;
+  color: rgb(232, 232, 232);
   border: none;
   font-size: 4rem;
   text-align: center;
