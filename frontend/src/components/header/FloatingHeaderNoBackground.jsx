@@ -146,7 +146,7 @@ const LogoText = styled.h2`
     font-weight: 500;
     
     &:hover {
-      color: #17BC5A;
+      color: rgba(23,188,90, 1);
     } 
 `
 const HideTitle = styled.div`
@@ -258,7 +258,7 @@ const RightMenuContainer = styled.div`
   align-items: center;
 
   &:hover {
-    background-color: #17BC5A;
+    background-color: rgba(23,188,90, 1);
   }
 `;
 
