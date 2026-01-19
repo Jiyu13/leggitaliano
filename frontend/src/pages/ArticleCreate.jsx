@@ -46,10 +46,8 @@ function ArticleCreate() {
     }
 
     return (
-        <ArticleCreatePageContainer>
-            <ArticleCreatePageWrapper>
-
-
+        <ArticleCreatePageContainer className="article-create-page-container">
+            <ArticleCreatePageWrapper className="article-create-page-wrapper">
                 <FormWrapper
                     className="form-wrapper"
                     style={{height: "100%", padding: "0"}}
