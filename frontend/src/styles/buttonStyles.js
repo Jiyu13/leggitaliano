@@ -20,8 +20,8 @@ export const SubmitInputButton = styled.input`
 `
 
 export const FilledButton = styled.button`
-    background-color: rgba(40,44,52, 1);
-    color: whitesmoke;
+    background-color: rgba(23,188,90, 1);
+    color: rgba(0, 0, 0);
     padding: 12px 24px;
     border: none;
     letter-spacing: 0.1rem;
