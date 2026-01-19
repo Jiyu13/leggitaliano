@@ -8,6 +8,7 @@ import {splitText} from "../utils/splitText";
 import {calculatePages} from "../utils/calculatePages";
 import StaffDictionaryArea from "../components/dictionary/StaffDictionaryArea";
 import UserDictionaryArea from "../components/dictionary/UserDictionaryArea";
+import {ArticleHeaderContainer, CustomContainer} from "../styles/containerStyles";
 
 const WORD_EACH_PAGE = 100
 
@@ -240,18 +241,15 @@ function Article() {
         </>
     )
 }
-const ArticleContainer = styled.div`
+const ArticleContainer = styled(ArticleHeaderContainer)`
     display: flex;
     justify-content: center;
     align-items: stretch;
-    margin: 100px auto 0;
     box-sizing: border-box;
     min-height: 450px;
     font-size: 20px;
     line-height: 1.6;
-    height: calc(100% - 120px);  // Handle top bar which is 60px
     position: fixed;
-    padding: 0 1rem;
 `
 
 export default Article
