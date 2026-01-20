@@ -267,6 +267,7 @@ const ArticleContainer = styled(ArticleHeaderContainer)`
     font-size: 20px;
     line-height: 1.6;
     position: fixed;
+    padding: 0 1rem;
 `
 
 export default Article
