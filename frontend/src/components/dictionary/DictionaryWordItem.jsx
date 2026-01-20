@@ -58,30 +58,21 @@ function DictionaryWordItem({
 
     }
 
+    const icon = isShowMeaning ? arrow_up_icon : arrow_down_icon
+    const iconAlt =  isShowMeaning ? "close meaning icon" : "show meaning icon"
+
     return (
         <WordItemContainer className="word-item-container" ref={itemScrollRef} id={wordItem.id}>
 
             <div style={{display: "flex", justifyContent: "space-between"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <WordType>{wordType}</WordType>
-                    {isShowMeaning && (
-                        <Img
-                            alt="close meaning icon"
-                            src={arrow_up_icon}
-                            onClick={handleToggleShowMeaning}
+                    <Img
+                        alt={iconAlt}
+                        src={icon}
+                        onClick={handleToggleShowMeaning}
 
-                        />
-                    )}
-
-
-                    {!isShowMeaning && (
-                        <Img
-                            alt="show meaning icon"
-                            src={arrow_down_icon}
-                            onClick={handleToggleShowMeaning}
-                        />
-
-                    )}
+                    />
                 </div>
                 <div style={{display: "flex", alignItems: "center"}}>
                      <Img
