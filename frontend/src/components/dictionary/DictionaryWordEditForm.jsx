@@ -31,12 +31,6 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
     function handleSubmitEditForm(e) {
         e.preventDefault()
-        // const translations_payload = formData.is_inherit_translations ? [] : formData.translations
-        // const notes_payload =
-        //     (!formData.parent && !formData.is_inherit_notes && formData.notes === [])
-        //     || (formData.parent && formData.is_inherit_notes)
-        //     ? [] : formData.notes.map((note, index) =>  note.trim()).filter(note => note !== "");
-        // const payload = {...formData, "translations": translations_payload}
         // console.log(formData)
         api.patch(`/word/id/${word.id}/`, formData)
                .then(res => {
