@@ -4,27 +4,10 @@ import leggitaliano_grey_border from "../../assets/logo/leggitaliano-grey-border
 import {UserContext} from "../../user-content/UserContent";
 import api from "../../api";
 import {useContext, useEffect, useRef, useState} from "react";
+import {AccountAccessibility} from "./AccountAccessibility";
 
 
 function FloatingHeaderNoBackground() {
-
-    const { currentUser } = useContext(UserContext)
-
-    function handleClick() {}
-
-    // let menuRef = useRef()
-    // useEffect(() => {
-    //   let handler = (e) => {
-    //     if (!menuRef.current.contains(e.target)) {
-    //       setIsOpen(false)
-    //     }
-    //   }
-    //   document.addEventListener("mousedown", handler)
-    //
-    //   return() =>{
-    //     document.removeEventListener("mousedown", handler);
-    //   }
-    // })
 
     return (
         <HeaderContainer className="heading-container">
@@ -68,16 +51,7 @@ function FloatingHeaderNoBackground() {
 
                 {/* call Accessibility component */}
                 <RightSection>
-                    {/*<HeaderAccountMenu/>*/}
-                    <RightMenuContainer
-                        // ref={menuRef}
-                    >
-                        <RightMenuTrigger onClick={handleClick} >
-                            <UserName>{currentUser?.username}</UserName>
-                        </RightMenuTrigger>
-
-
-                    </RightMenuContainer>
+                    <AccountAccessibility />
                 </RightSection>
             </HeaderWrapper>
         </HeaderContainer>
