@@ -14,9 +14,9 @@ html, body, #root {
     background-color: #000;
     letter-spacing: 0.3px;
 }
-html {
-  scrollbar-gutter: stable; /*to reserve scrollbar space in advance*/
-}
+/*html {*/
+/*  scrollbar-gutter: stable; !*to reserve scrollbar space in advance*!*/
+/*}*/
 
 /* Make the scrollbar thin --- scrollbar-width: thin + ::-webkit-scrollbar */
 /* Firefox */
