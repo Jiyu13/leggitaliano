@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {FilledButton} from "../../styles/buttonStyles";
+import {FilledButton, StaffDictionaryButton} from "../../styles/buttonStyles";
 import {useState, useEffect} from "react";
 import {RequiredWarning, Textarea} from "../../styles/formStyles";
 import api from "../../api";
@@ -158,36 +158,31 @@ function DictionaryTranslationItem({
                         <RequiredWarning>{textareaError[1]}</RequiredWarning>
                     )}
 
-                    <div style={{display: "flex", gap:"0.5rem"}}>
-                        <FilledButton
+                    <DictionaryButtonsContainer>
+                        <StaffDictionaryButton
                             // disabled={transItems[index] === ""}
-                            style={{
-                                border: "1px solid #fff", marginTop: "8px",
+                            style={{marginTop: "8px",
                                 //cursor: transItems[index] === "" ? "no-drop" : "pointer",
                             }}
                             onClick={ () => handleUpdateTranslationItem(tran_item, index)}
                         >
                             update
-                        </FilledButton>
+                        </StaffDictionaryButton>
 
-                        <FilledButton
-                            // disabled={transItems[index] === ""}
-                            style={{
-                                border: "1px solid #fff", marginTop: "8px",
-                                //cursor: transItems[index] === "" ? "no-drop" : "pointer",
-                            }}
+                        <StaffDictionaryButton
+                            style={{marginTop: "8px",}}
                             onClick={ () => handleMoveToSentences(index)}
                         >
                             Move to sentences
-                        </FilledButton>
+                        </StaffDictionaryButton>
 
-                        <FilledButton
-                            style={{border: "1px solid #fff", marginTop: "8px"}}
+                        <StaffDictionaryButton
+                            style={{marginTop: "8px"}}
                             onClick={ () => handleDeleteTranslationItem(tran_item, index)}
                         >
                             Delete
-                        </FilledButton>
-                    </div>
+                        </StaffDictionaryButton>
+                    </DictionaryButtonsContainer>
 
                     {isShowToast !== null && targetTranslationId === index &&(
                         <ToastMessage message={isShowToast}/>
@@ -204,5 +199,10 @@ const TranslationItem = styled.li`
   display: flex;
   flex-direction: column;
   padding: 1rem 0;
+`
+const DictionaryButtonsContainer = styled.div`
+  display: flex; 
+  gap:0.5rem;
+  justify-content: space-around;
 `
 export default DictionaryTranslationItem
