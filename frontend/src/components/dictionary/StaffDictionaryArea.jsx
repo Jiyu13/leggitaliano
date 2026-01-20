@@ -4,53 +4,59 @@ import DictionaryWordItem from "./DictionaryWordItem";
 import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
 import {FilledButton, StaffDictionaryButton} from "../../styles/buttonStyles";
 import {useState} from "react";
+import DictionarySearchBar from "./DictionarySearchBar";
 
 function StaffDictionaryArea({
-    ipa, setIpa, clickedWord,clickedWordIndex, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
-    setShowNewMeaningForm, isShowNewMeaningForm
+    ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
+    setShowNewMeaningForm, isShowNewMeaningForm, searchInputData, setSearchInputData, searchResult,
+    setSearchResult, searchError, setSearchError
+
 }) {
     // const [isShowEditForm, setShowEditForm] = useState(false)
     const [showMeaningId, setShowMeaningId] = useState(null)
     const [showEditFormId, setShowEditFormId] = useState(null)
 
+    const wordTOShow = searchResult !== null ? searchResult.word : clickedWord
+    const ipaToShow = searchResult !== null ? searchResult.ipa : ipa
+    const dictionaryWordsToShow = searchResult !== null ? searchResult.data : dictionaryWords
+
+
     return (
         <DictionaryContainer className="dinctionary-area-container">
 
             <DictionarySection className="dinctionary-section">
-                {clickedWord && (
-                    <HeadSectionContainer
-                        className="staff-dictionary-header"
-                        style={{padding: "0.5rem 0"}}
-                    >
-                        <WordInfoWrapper>
-                            <Word>{clickedWord}</Word>
-                            <Ipa>{ipa}</Ipa>
-                        </WordInfoWrapper>
-                        <AddNewButtonWrapper className="add-meaning-button-wrapper" >
-                            <StaffDictionaryButton
-                                style={{width: "100%", padding: "0.75rem"}}
-                                onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
-                            >
-                                New meaning
-                            </StaffDictionaryButton>
-                        </AddNewButtonWrapper>
+                <DictionarySearchBar
+                    setSearchInputData={setSearchInputData}
+                    searchInputData={searchInputData}
+                    setSearchResult={setSearchResult}
+                    setSearchError={setSearchError}
+                    searchError={searchError}
+                />
 
-                    </HeadSectionContainer>
-                )}
 
-                {isShowNewMeaningForm && (
-                    <DictionaryWordNewMeaningForm
-                        setIpa={setIpa}
-                        clickedWord={clickedWord}
-                        setDictionaryWords={setDictionaryWords}
-                        setShowNewMeaningForm={setShowNewMeaningForm}
-                        setNotFound={setNotFound}
-                    />
-                )}
+                <HeadSectionContainer
+                    className="staff-dictionary-header"
+                    style={{padding: "0.5rem 0"}}
+                >
+                    <WordInfoWrapper>
+                        <Word>{wordTOShow}</Word>
+                        <Ipa>{ipaToShow}</Ipa>
+                    </WordInfoWrapper>
+                    <AddNewButtonWrapper className="add-meaning-button-wrapper" >
+                        <StaffDictionaryButton
+                            style={{width: "100%", padding: "0.75rem"}}
+                            onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
+                        >
+                            New meaning
+                        </StaffDictionaryButton>
+                    </AddNewButtonWrapper>
+
+                </HeadSectionContainer>
+
 
                 {!isShowNewMeaningForm && (
                     <>
-                        {dictionaryWords?.map((dw, index) =>
+                        {dictionaryWordsToShow?.map((dw, index) =>
                             <DictionaryWordItem
                                 key={index}
                                 clickedWord={clickedWord}
@@ -67,6 +73,17 @@ function StaffDictionaryArea({
                             />
                         )}
                     </>
+                )}
+
+
+                {isShowNewMeaningForm && (
+                    <DictionaryWordNewMeaningForm
+                        setIpa={setIpa}
+                        clickedWord={clickedWord}
+                        setDictionaryWords={setDictionaryWords}
+                        setShowNewMeaningForm={setShowNewMeaningForm}
+                        setNotFound={setNotFound}
+                    />
                 )}
 
                 { wordNotFound !== null && clickedWord !== null && !isShowNewMeaningForm && (
