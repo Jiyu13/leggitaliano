@@ -296,11 +296,7 @@ function DictionaryWordNewMeaningForm({
                             type="submit"
                             value="Add"
                             // disabled={disabledButton}
-                            style={{
-                                border: "2px solid #a9a9a9", marginTop: "1rem"
-                                // backgroundColor: disabledButton ? "rgba(40,44,52,.7)" : "rgba(40,44,52, 1)",
-                                // cursor: disabledButton ? "no-drop" : "pointer",
-                            }}
+                            style={{marginTop: "1rem"}}
                         />
                     </FormButtonWrapper>
                 </NewWordForm>
