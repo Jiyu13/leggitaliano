@@ -99,8 +99,6 @@ const DictionaryContainer = styled.div`
     width: 100%;
     background-color: #333333;
     border-radius: 8px;
-    box-sizing: border-box;
-
 `
 
 export default UserDictionaryArea
