@@ -34,9 +34,13 @@ function Article() {
 
     const [isShowNewMeaningForm, setShowNewMeaningForm] = useState(false)
 
-    const [searchInputData, setSearchInputData] = useState("")
-    const [searchResult, setSearchResult] = useState(null)
-    const [searchError, setSearchError] = useState(null)
+    const [userDictSearchInputData, setUserDictSearchInputData] = useState("")
+    const [userDictSearchResult, setUserDictSearchResult] = useState(null)
+    const [userDictSearchError, setUserDictSearchError] = useState(null)
+
+    const [staffDictSearchInputData, setStaffDictSearchInputData] = useState("")
+    const [staffDictSearchResult, setStaffDictSearchResult] = useState(null)
+    const [staffDictSearchError, setStaffDictSearchError] = useState(null)
 
 
 
@@ -66,9 +70,12 @@ function Article() {
         setIpa(null)
         setNotFound(null)
 
-        setSearchError(null)
-        setSearchResult(null)
-        setSearchInputData("")
+        setUserDictSearchError(null)
+        setUserDictSearchResult(null)
+        setUserDictSearchInputData("")
+        setStaffDictSearchError(null)
+        setStaffDictSearchResult(null)
+        setStaffDictSearchInputData("")
 
         const cleanWord = word
             .trim()
@@ -209,7 +216,7 @@ function Article() {
                         sentence={sentence}
                         setSentence={setSentence}
                     />
-                    {currentUser?.is_staff ?
+                    {currentUser?.is_staff && (
                         <StaffDictionaryArea
                             ipa={ipa}
                             setIpa={setIpa}
@@ -221,26 +228,31 @@ function Article() {
                             setNotFound={setNotFound}
                             isShowNewMeaningForm={isShowNewMeaningForm}
                             setShowNewMeaningForm={setShowNewMeaningForm}
+                            searchResult={staffDictSearchResult}
+                            setSearchResult={setStaffDictSearchResult}
+                            searchInputData={staffDictSearchInputData}
+                            setSearchInputData={setStaffDictSearchInputData}
+                            searchError={userDictSearchError}
+                            setSearchError={setStaffDictSearchError}
                         />
-                        :
-                        <UserDictionaryArea
-                            ipa={ipa}
-                            setIpa={setIpa}
-                            clickedWord={clickedWord}
-                            clickedWordIndex={clickedWordIndex}
-                            dictionaryWords={dictionaryWords}
-                            setDictionaryWords={setDictionaryWords}
-                            wordNotFound={wordNotFound}
-                            setNotFound={setNotFound}
-                            searchResult={searchResult}
-                            setSearchResult={setSearchResult}
-                            searchInputData={searchInputData}
-                            setSearchInputData={setSearchInputData}
-                            searchError={searchError}
-                            setSearchError={setSearchError}
-                        />
-                    }
 
+                    )}
+                    <UserDictionaryArea
+                        ipa={ipa}
+                        setIpa={setIpa}
+                        clickedWord={clickedWord}
+                        clickedWordIndex={clickedWordIndex}
+                        dictionaryWords={dictionaryWords}
+                        setDictionaryWords={setDictionaryWords}
+                        wordNotFound={wordNotFound}
+                        setNotFound={setNotFound}
+                        searchResult={userDictSearchResult}
+                        setSearchResult={setUserDictSearchResult}
+                        searchInputData={userDictSearchInputData}
+                        setSearchInputData={setUserDictSearchInputData}
+                        searchError={userDictSearchError}
+                        setSearchError={setUserDictSearchError}
+                    />
                 </ArticleContainer>
             )}
         </>
