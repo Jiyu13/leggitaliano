@@ -2,7 +2,7 @@ import styled from "styled-components";
 import search_icon from "../../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
 import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
-import {FilledButton} from "../../styles/buttonStyles";
+import {FilledButton, StaffDictionaryButton} from "../../styles/buttonStyles";
 import {useState} from "react";
 
 function StaffDictionaryArea({
@@ -17,28 +17,22 @@ function StaffDictionaryArea({
         <DictionaryContainer className="dinctionary-area-container">
 
             <DictionarySection className="dinctionary-section">
-                {/*<SearchBarContainer>*/}
-                {/*    <SearchBar>*/}
-                {/*        <Img alt="search icon" src={search_icon}/>*/}
-                {/*        <Input*/}
-                {/*            type="text"*/}
-                {/*            placeholder="Search..."*/}
-                {/*        />*/}
-                {/*    </SearchBar>*/}
-                {/*</SearchBarContainer>*/}
                 {clickedWord && (
-                    <HeadSectionContainer className="dinctionary-head">
+                    <HeadSectionContainer
+                        className="staff-dictionary-header"
+                        style={{padding: "0.5rem 0"}}
+                    >
                         <WordInfoWrapper>
                             <Word>{clickedWord}</Word>
                             <Ipa>{ipa}</Ipa>
                         </WordInfoWrapper>
                         <AddNewButtonWrapper className="add-meaning-button-wrapper" >
-                            <FilledButton
-                                style={{border: "2px solid #a9a9a9", width: "100%", padding: "0.75rem"}}
+                            <StaffDictionaryButton
+                                style={{width: "100%", padding: "0.75rem"}}
                                 onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
                             >
                                 New meaning
-                            </FilledButton>
+                            </StaffDictionaryButton>
                         </AddNewButtonWrapper>
 
                     </HeadSectionContainer>
@@ -103,44 +97,13 @@ export const HeadSectionContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem;
-    //padding-bottom: .5rem;
-    border-bottom: #fff 1px solid;
+    padding: 0.5rem 1rem;
 `
 const DictionarySection = styled.div`
     width: 100%;
     padding: 0 1rem 1rem;
     overflow-y: auto;
     color: #ddd;
-`
-const SearchBarContainer = styled.div`
-  display: block;
-  height: 50px;
-`
-const SearchBar = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  //background-color: rgb(169,169,169, 0.5);
-  border-radius: 8px;
-  border: 2px solid rgb(169,169,169, 0.5);
-
-`
-const Img = styled.img`
-  margin: 8px;
-`
-const Input = styled.input`
-  width: 100%;
-  font-size: 1rem;
-  border: none;
-  background: none;
-  color: #ddd;
-
-  &:hover {
-    outline: none;
-  }
-  &:focus {
-    outline: none;
-  }
 `
 const WordInfoWrapper = styled.div`
   display: flex;
