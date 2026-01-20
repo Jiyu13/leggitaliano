@@ -134,6 +134,7 @@ const DictionaryContainer = styled.div`
     width: 100%;
     background-color: #333333;
     border-radius: 8px;
+    margin-right: 0.25rem;
 `
 
 export default StaffDictionaryArea
