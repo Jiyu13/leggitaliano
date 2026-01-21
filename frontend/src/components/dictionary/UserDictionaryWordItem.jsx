@@ -28,6 +28,11 @@ function UserDictionaryWordItem({wordItem, setShowMeaningId, showMeaningId,
         scrollToElement()
     }
 
+    const isVerbWithNotes = wordItem?.parent !== null && wordItem.is_verb
+    const isNotVerbWithNotes
+        = (wordItem?.parent === null && wordItem.notes.length > 0 && !wordItem.is_verb)
+        || (wordItem.parent !== null && wordItem.notes.length === 0 && !wordItem.is_verb)
+
     // function handleEditWordClick() {
     //     setShowMeaningId(null)
     //     setShowEditFormId(prev => prev === wordItem.id ? null : wordItemId)
@@ -64,7 +69,7 @@ function UserDictionaryWordItem({wordItem, setShowMeaningId, showMeaningId,
 
             {isShowMeaning && (
                 <TranslationListContainer>
-                    {wordItem.parent && wordItem.is_verb && (
+                    {isVerbWithNotes && (
                         <WordConjunctions onClick={() => setShowConjunctions(!isShowConjunctions)}>
                             <div>Conjunction of&nbsp;
                                 <span style={{fontWeight: "bolder", textDecoration: "underline"}}>{wordItem.parent}</span>
@@ -76,6 +81,22 @@ function UserDictionaryWordItem({wordItem, setShowMeaningId, showMeaningId,
                         </WordConjunctions>
 
                     )}
+
+                    {isNotVerbWithNotes && (
+                        <WordConjunctions onClick={() => setShowConjunctions(!isShowConjunctions)}>
+                            <div>Forms of&nbsp;
+                                <span style={{fontWeight: "bolder", textDecoration: "underline"}}>
+                                    {wordItem.parent ?  wordItem.parent : wordItem.word}
+                                </span>
+                            </div>
+                            <Img
+                                alt={isShowConjunctions ? "show conjunction icon " : "close conjunction icon"}
+                                src={isShowConjunctions ? arrow_up_icon : arrow_down_icon}
+                            />
+                        </WordConjunctions>
+
+                    )}
+
                     {isShowConjunctions && (
                         <UserDictVerbConjugation
                             wordItem={wordItem}
