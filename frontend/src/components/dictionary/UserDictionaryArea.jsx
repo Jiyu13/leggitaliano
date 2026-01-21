@@ -17,6 +17,7 @@ function UserDictionaryArea({
 
     const wordToShow = searchResult !== null ? searchResult.word : clickedWord
     const ipaToShow = searchResult !== null ? searchResult.ipa : ipa
+    const dictionaryWordsToShow = searchResult !== null ? searchResult.data : dictionaryWords
 
     return (
         <DictionaryContainer className="dinctionary-area-container">
@@ -37,31 +38,16 @@ function UserDictionaryArea({
             </HeadSectionContainer>
 
             <DictionaryWrapper className="dinctionary-wrapper">
-
-                {searchResult !== null ?
-                    <>
-                        {searchResult.data?.map((result, index) =>
-                            <UserDictionarySearchResult
-                                key={index}
-                                result={result}
-                            />
-                        )}
-                    </>
-                    :
-                    <>
-                        {dictionaryWords?.map((dw, index) =>
-                            <li style={{borderTop: index === 0 ? "1px solid #fff": "none"}}>
-                                <UserDictionaryWordItem
-                                  key={index}
-                                    wordItem={dw}
-                                    setShowMeaningId={setShowMeaningId}
-                                    showMeaningId={showMeaningId}
-                                />
-                            </li>
-                         )}
-                    </>
-
-                }
+                {dictionaryWordsToShow?.map((dw, index) =>
+                    <li style={{borderTop: index === 0 ? "1px solid #fff": "none"}}>
+                        <UserDictionaryWordItem
+                          key={index}
+                            wordItem={dw}
+                            setShowMeaningId={setShowMeaningId}
+                            showMeaningId={showMeaningId}
+                        />
+                    </li>
+                 )}
 
                 { wordNotFound !== null &&
                     (
