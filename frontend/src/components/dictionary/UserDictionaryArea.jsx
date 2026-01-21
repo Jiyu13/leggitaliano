@@ -52,7 +52,7 @@ function UserDictionaryArea({
                         {dictionaryWords?.map((dw, index) =>
                             <li style={{borderTop: index === 0 ? "1px solid #fff": "none"}}>
                                 <UserDictionaryWordItem
-                                    key={index}
+                                  key={index}
                                     wordItem={dw}
                                     setShowMeaningId={setShowMeaningId}
                                     showMeaningId={showMeaningId}

@@ -91,7 +91,7 @@ function UserDictionarySearchResult({result}) {
                                const extractedMeaning = splitMeanings[0].replace(regex, "")
                                const firstExample = splitMeanings[1]
                                 return (
-                                    <TranslationWrapper>
+                                    <TranslationWrapper key={index}>
                                         <div style={{fontWeight: "Bolder"}}>{extractedMeaning}</div>
                                         <div
                                             style={{
