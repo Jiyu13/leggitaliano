@@ -93,7 +93,7 @@ function DictionaryTranslationItem({
             setTextareaError([index,"Required."])
         } else {
             const updatedItem = transItem.map((original_item, i) => index === i ? tran_item: original_item)
-            console.log(updatedItem)
+            // console.log(updatedItem)
             updateTranslationItem(updatedItem, index, "Updated!")
         }
     }
