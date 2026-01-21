@@ -45,7 +45,9 @@ urlpatterns = [
          ),
 
     path("sentences/", GetAllSentencesView.as_view(), name="all_sentences"),
+    path("sentence/move/<int:word_id>/", MoveSentenceView.as_view(), name="move_sentence"),
     path("sentence/add/<int:word_id>/", CreateSentenceView.as_view(), name="add_sentence"),
+
     path("sentence/<int:word_id>/<int:sentence_id>/", SentenceByIdView.as_view(), name="sentence_by_id")
 ]
 
