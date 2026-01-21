@@ -5,6 +5,7 @@ import {RequiredWarning, Textarea} from "../../styles/formStyles";
 import api from "../../api";
 import PopupModal from "../PopupModal";
 import ToastMessage from "../ToastMessage";
+import {showToast} from "../../utils/showToast";
 
 
 function DictionaryTranslationItem({
@@ -57,31 +58,21 @@ function DictionaryTranslationItem({
                }
 
                setTargetTransId(index)
-               setShowToast(msg)
-               setTimeout(function() {
-                    setShowToast(null)
-               }, 1000)
-
+               showToast(setShowToast, msg)
             })
             .catch(error => {
                if (error.response) {// server responded with error status
                     setError(error.response.data.error);
                     setPopupOpen(true)
 
-                    setShowToast("Update failed.")
-                        setTimeout(function() {
-                        setShowToast(null)
-                    }, 1000)
+                    showToast(setShowToast, "Update failed.")
 
               } else {// network / CORS / other failure
                    console.log("network error", error.message)
                     setError(error.message);
                     setPopupOpen(true)
-                    setShowToast("Update failed.")
-                    setTimeout(function() {
-                        setShowToast(null)
-                    }, 1000)
 
+                    showToast(setShowToast, "Update failed.")
             }})
     }
 
@@ -105,6 +96,35 @@ function DictionaryTranslationItem({
         updateTranslationItem(updatedTransItem, index, "Deleted!")
     }
 
+    function handleAddToSentences(index) {
+        const targetItem = transItem.filter((ti, i) => index === i)
+        const splitItem = targetItem[0].split("--")
+        const targetSentence = splitItem[0]
+        const sentenceTranslation = splitItem[1]
+
+        const data = {
+            word: clickedWord,
+            word_type: wordType,
+            sentence: targetSentence.trim(),
+            sentence_translation: sentenceTranslation.trim()
+        }
+        api.post(`/sentence/add/${wordId}/`, data)
+               .then(res => {
+                   console.log(res.status === 201)
+                    if (res.status === 201) {
+                       setTargetTransId(index)
+                        showToast(setShowToast, "Sentence added!")
+                    }
+                })
+                .catch(error => {
+                   if (error.response) {
+                   setError(error.response.data.error);
+                  } else {
+                    console.log("network error", error.message);
+                    setError("network error")
+                }})
+    }
+
     function handleMoveToSentences(index) {
         setTextareaError(null)
 
@@ -125,7 +145,7 @@ function DictionaryTranslationItem({
                 sentence: targetSentence.trim(),
                 sentence_translation: sentenceTranslation.trim()
             }
-            api.post(`/sentence/add/${wordId}/`, data)
+            api.post(`/sentence/move/${wordId}/`, data)
                .then(res => {
                     const result = res.data
                     const updatedWord = result["word"]
@@ -181,10 +201,17 @@ function DictionaryTranslationItem({
                         </StaffDictionaryButton>
 
                         <StaffDictionaryButton
-                            style={{marginTop: "8px",}}
+                            style={{marginTop: "8px", padding: "0"}}
                             onClick={ () => handleMoveToSentences(index)}
                         >
                             Move to sentences
+                        </StaffDictionaryButton>
+
+                        <StaffDictionaryButton
+                            style={{marginTop: "8px",  padding: "0"}}
+                            onClick={ () => handleAddToSentences(index)}
+                        >
+                            add to sentences
                         </StaffDictionaryButton>
 
                         <StaffDictionaryButton
