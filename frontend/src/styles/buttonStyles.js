@@ -39,6 +39,7 @@ export const FilledButton = styled.button`
 export const StaffDictionaryButton = styled(FilledButton)`
   background-color: #ffffff;
   color: #000000;
+  padding: 0.75rem;
   
   &:hover {
     background-color: rgba(23,188,90, 1);)
