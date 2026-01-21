@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {FilledButton, StaffDictionaryButton} from "../../styles/buttonStyles";
+import {FilledButton, StaffDictTranslationButton, StaffDictionaryButton} from "../../styles/buttonStyles";
 import {useState, useEffect} from "react";
 import {RequiredWarning, Textarea} from "../../styles/formStyles";
 import api from "../../api";
@@ -191,36 +191,46 @@ function DictionaryTranslationItem({
                     )}
 
                     <DictionaryButtonsContainer>
-                        <StaffDictionaryButton
-                            // disabled={transItems[index] === ""}
-                            style={{marginTop: "8px",
-                                //cursor: transItems[index] === "" ? "no-drop" : "pointer",
-                            }}
-                            onClick={ () => handleUpdateTranslationItem(tran_item, index)}
-                        >
-                            update
-                        </StaffDictionaryButton>
+                        {index === 0 ?
+                            <StaffDictTranslationButton
+                                style={{marginTop: "8px",}}
+                                onClick={ () => handleUpdateTranslationItem(tran_item, index)}
+                            >
+                                update
+                            </StaffDictTranslationButton>
 
-                        <StaffDictionaryButton
-                            style={{marginTop: "8px", padding: "0"}}
-                            onClick={ () => handleMoveToSentences(index)}
-                        >
-                            Move to sentences
-                        </StaffDictionaryButton>
+                            :
 
-                        <StaffDictionaryButton
-                            style={{marginTop: "8px",  padding: "0"}}
-                            onClick={ () => handleAddToSentences(index)}
-                        >
-                            add to sentences
-                        </StaffDictionaryButton>
+                            <>
+                                <StaffDictionaryButton
+                                    style={{marginTop: "8px",}}
+                                    onClick={ () => handleUpdateTranslationItem(tran_item, index)}
+                                >
+                                    update
+                                </StaffDictionaryButton>
+                                <StaffDictionaryButton
+                                    style={{marginTop: "8px", padding: "0"}}
+                                    onClick={ () => handleMoveToSentences(index)}
+                                >
+                                    Move to sentences
+                                </StaffDictionaryButton>
 
-                        <StaffDictionaryButton
-                            style={{marginTop: "8px"}}
-                            onClick={ () => handleDeleteTranslationItem(tran_item, index)}
-                        >
-                            Delete
-                        </StaffDictionaryButton>
+                                <StaffDictionaryButton
+                                    style={{marginTop: "8px",  padding: "0"}}
+                                    onClick={ () => handleAddToSentences(index)}
+                                >
+                                    add to sentences
+                                </StaffDictionaryButton>
+
+                                <StaffDictionaryButton
+                                    style={{marginTop: "8px"}}
+                                    onClick={ () => handleDeleteTranslationItem(tran_item, index)}
+                                >
+                                    Delete
+                                </StaffDictionaryButton>
+                            </>
+                        }
+
                     </DictionaryButtonsContainer>
 
                     {isShowToast !== null && targetTranslationId === index &&(
