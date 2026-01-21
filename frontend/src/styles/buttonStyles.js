@@ -36,6 +36,15 @@ export const FilledButton = styled.button`
     }
 `
 
+export const StaffDictTranslationButton = styled(FilledButton)`
+  margin-top: 8px;
+  width: 100%;
+  background-color: rgba(137, 188, 248, 0.8);
+  &:hover {
+    background-color: rgba(137, 188, 248, 1)
+  }
+`
+
 export const StaffDictionaryButton = styled(FilledButton)`
   background-color: #ffffff;
   color: #000000;
