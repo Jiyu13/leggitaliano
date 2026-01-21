@@ -42,7 +42,7 @@ function DictionaryWordNewMeaningForm({
             api.post(`/words/`, payload)
                .then(res => {
                    const result = res.data
-                   console.log("add word result-------------", result)
+                   // console.log("add word result-------------", result)
                    const ipa = result["ipa"]
                    const data = result["data"]
                    setIpa(ipa)
