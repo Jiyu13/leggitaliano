@@ -9,7 +9,7 @@ import ToastMessage from "../ToastMessage";
 
 function DictionaryTranslationItem({
     translationItem, wordId, translationIndex,
-    clickedWord, wordType, dictionaryWords, setDictionaryWords
+    clickedWord, wordType, dictionaryWords, setDictionaryWords, searchResult, setSearchResult, searchInputData
 }) {
     // translationItem = ["1....", "s1 -- t1", "s2 -- t2", ...],
     // it is one of the translations of each word -> word.translations = ["1...", "2...", ...]
@@ -41,11 +41,21 @@ function DictionaryTranslationItem({
             translation_index: translationIndex,
             translation: updatedItem,
         }
+
         api.patch(`/word/update_translation/${wordId}/`, data)
            .then(res => {
                const result = res.data
-               const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
-               setDictionaryWords(updatedWords)
+               // const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
+               // setDictionaryWords(updatedWords)
+
+               if (searchResult) {
+                   const updateSearchResult= searchResult.data?.map(dw => dw.id === result.id ? result : dw)
+                   setSearchResult({...searchResult, data: updateSearchResult})
+               } else {
+                 const updatedWords = dictionaryWords?.map(dw => dw.id === result.id ? result : dw)
+                   setDictionaryWords(updatedWords)
+               }
+
                setTargetTransId(index)
                setShowToast(msg)
                setTimeout(function() {
@@ -83,6 +93,7 @@ function DictionaryTranslationItem({
             setTextareaError([index,"Required."])
         } else {
             const updatedItem = transItem.map((original_item, i) => index === i ? tran_item: original_item)
+            console.log(updatedItem)
             updateTranslationItem(updatedItem, index, "Updated!")
         }
     }

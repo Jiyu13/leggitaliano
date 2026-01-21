@@ -125,6 +125,10 @@ function DictionaryWordItem({
                                 wordType={wordType}
                                 dictionaryWords={dictionaryWords}
                                 setDictionaryWords={setDictionaryWords}
+
+                                setSearchResult={setSearchResult}
+                                searchResult={searchResult}
+                                searchInputData={searchInputData}
                             />
                         )}
                     )}
