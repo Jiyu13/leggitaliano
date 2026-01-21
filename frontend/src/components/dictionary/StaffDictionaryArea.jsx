@@ -70,6 +70,10 @@ function StaffDictionaryArea({
                                 showMeaningId={showMeaningId}
                                 setShowEditFormId={setShowEditFormId}
                                 showEditFormId={showEditFormId}
+
+                                setSearchResult={setSearchResult}
+                                searchResult={searchResult}
+                                searchInputData={searchInputData}
                             />
                         )}
                     </>

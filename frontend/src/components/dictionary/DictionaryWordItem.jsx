@@ -12,6 +12,7 @@ import {useRef} from "react";
 function DictionaryWordItem({
     clickedWord, wordItem, wordItemId, dictionaryWords, setDictionaryWords,
     setShowMeaningId, showMeaningId, setShowEditFormId, showEditFormId,
+    searchResult, setSearchResult, searchInputData
 }) {
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
@@ -138,6 +139,10 @@ function DictionaryWordItem({
                     setShowEditFormId={setShowEditFormId}
                     setShowMeaningId={setShowMeaningId}
                     scrollToElement={scrollToElement}
+
+                    setSearchResult={setSearchResult}
+                    searchResult={searchResult}
+                    searchInputData={searchInputData}
                 />
             )}
 

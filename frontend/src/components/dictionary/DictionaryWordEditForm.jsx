@@ -11,7 +11,8 @@ import ConjugationOptions, {CONJUGATIONS} from "../ConjugationOptions";
 export const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
 
 function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditFormId, setShowMeaningId,
-    scrollToElement}) {
+    scrollToElement, searchResult, setSearchResult, searchInputData
+}) {
     // console.log(word.notes[0].split(", ")[0])
     const {wordTypes, } = useContext(UserContext)
 
@@ -35,10 +36,16 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         api.patch(`/word/id/${word.id}/`, formData)
                .then(res => {
                    const result = res.data
-                   const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
-                   setDictionaryWords(updatedWords)
-                   setShowMeaningId(word.id)
+                   // check if it's search input result, or clicked word result
+                   if (searchResult) {
+                       const updateSearchResult= searchResult.data?.map(dw => dw.id === word.id ? result : dw)
+                       setSearchResult({...searchResult, data: updateSearchResult})
+                   } else {
+                     const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
+                       setDictionaryWords(updatedWords)
+                   }
                    setShowEditFormId(null)
+                   setShowMeaningId(word.id)
                    scrollToElement()
                 })
                 .catch(error => {
