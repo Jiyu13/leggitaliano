@@ -276,6 +276,7 @@ class DictionaryWordByIDView(APIView):
         parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
 
         if parent_word:
+            data["parent_id"] = parent_word.id
             if is_inherit_translations:
                 data["translations"] = []
 
