@@ -201,9 +201,8 @@ function DictionaryWordNewMeaningForm({
                             {formData.translations.length !== 0 ? (
 
                                 formData.translations.map((t, index) =>
-                                    <div style={{display: "flex", alignItems: "center"}}>
+                                    <div style={{display: "flex", alignItems: "center"}} key={index}>
                                         <Textarea
-                                            key={index}
                                             className="form-input"
                                             type='text'
                                             name='translations'
