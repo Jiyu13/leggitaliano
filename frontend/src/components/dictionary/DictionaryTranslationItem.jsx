@@ -52,6 +52,7 @@ function DictionaryTranslationItem({
                if (searchResult) {
                    const updateSearchResult= searchResult.data?.map(dw => dw.id === result.id ? result : dw)
                    setSearchResult({...searchResult, data: updateSearchResult})
+                   setTransItem(updatedItem)
                } else {
                  const updatedWords = dictionaryWords?.map(dw => dw.id === result.id ? result : dw)
                    setDictionaryWords(updatedWords)
