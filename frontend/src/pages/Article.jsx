@@ -25,7 +25,7 @@ function Article() {
     const [clickedWordIndex, setClickedWordIndex] = useState(null)
 
     const [ipa, setIpa] = useState(null)
-    const [dictionaryWords, setDictionaryWords] = useState(null)
+    const [dictionaryWords, setDictionaryWords] = useState(null)             // {} a word model data
     const [wordNotFound, setNotFound] = useState(null)
 
     const [totalWords, setTotalWords] = useState(0)
@@ -39,7 +39,7 @@ function Article() {
     const [userDictSearchError, setUserDictSearchError] = useState(null)
 
     const [staffDictSearchInputData, setStaffDictSearchInputData] = useState("")
-    const [staffDictSearchResult, setStaffDictSearchResult] = useState(null)
+    const [staffDictSearchResult, setStaffDictSearchResult] = useState(null)   // {word, ipa, data(a word model data)}
     const [staffDictSearchError, setStaffDictSearchError] = useState(null)
 
 
