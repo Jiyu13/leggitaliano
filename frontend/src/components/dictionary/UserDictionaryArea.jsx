@@ -48,7 +48,7 @@ function UserDictionaryArea({
                     </li>
                  )}
 
-                { wordNotFound !== null &&
+                { wordNotFound !== null && searchInputData === "" &&
                     (
                     <NotFoundContainer>
                         <div>No results found for "{clickedWord}".</div>
