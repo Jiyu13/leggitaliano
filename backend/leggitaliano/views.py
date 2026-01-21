@@ -346,6 +346,35 @@ class GetAllSentencesView(ListAPIView):
 
 
 class CreateSentenceView(CreateAPIView):
+    """ add sentence """
+    """ do NOT remove the sentence from word translations)"""
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+
+        word_id = kwargs["word_id"]
+        sentence = request.data.get("sentence")
+        sentence_translation = request.data.get("sentence_translation")
+
+        # 1) check if word exists before adding sentence + updating word
+        try:
+            dict_word = DictionaryWord.objects.get(pk=word_id)
+        except DictionaryWord.DoesNotExist:
+            raise NotFound("Word not found.")
+
+        # 2). add the sentence - using serializer (or model)
+        new_sentence_serializer = SentenceSerializer(data={
+            "word": word_id,  # If Sentence.word is a FK
+            "sentence": sentence,
+            "translation": sentence_translation,
+        })
+        new_sentence_serializer.is_valid(raise_exception=True)
+        new_sentence_serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
+        # return Response({}, status=status.HTTP_201_CREATED)
+
+
+class MoveSentenceView(CreateAPIView):
     """create sentence + remove the sentence from word translations"""
 
     @transaction.atomic
