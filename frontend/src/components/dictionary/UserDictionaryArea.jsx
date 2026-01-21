@@ -2,7 +2,6 @@ import styled from "styled-components";
 import {useState} from "react";
 import UserDictionaryWordItem from "./UserDictionaryWordItem";
 import {HeadSectionContainer, Ipa, NotFoundContainer, Word} from "./StaffDictionaryArea";
-import UserDictionarySearchResult from "./UserDictionarySearchResult";
 import DictionarySearchBar from "./DictionarySearchBar";
 
 
