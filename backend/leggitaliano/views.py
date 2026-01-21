@@ -257,6 +257,7 @@ class DictionaryWordByIDView(APIView):
         """ Edit word form ,
             Receive complete data object from request,
             notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...]
+            notes for non-verb: ["form1", "form2, ..."...]
         """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
