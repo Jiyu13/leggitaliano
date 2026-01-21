@@ -29,9 +29,7 @@ function UserDictionaryWordItem({wordItem, setShowMeaningId, showMeaningId,
     }
 
     const isVerbWithNotes = wordItem?.parent !== null && wordItem.is_verb
-    const isNotVerbWithNotes
-        = (wordItem?.parent === null && wordItem.notes.length > 0 && !wordItem.is_verb)
-        || (wordItem.parent !== null && wordItem.notes.length === 0 && !wordItem.is_verb)
+    const isNotVerbWithNotes = wordItem.notes.length > 0 && !wordItem.is_verb
 
     // function handleEditWordClick() {
     //     setShowMeaningId(null)
