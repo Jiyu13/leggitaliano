@@ -111,7 +111,6 @@ function DictionaryTranslationItem({
         }
         api.post(`/sentence/add/${wordId}/`, data)
                .then(res => {
-                   console.log(res.status === 201)
                     if (res.status === 201) {
                        setTargetTransId(index)
                         showToast(setShowToast, "Sentence added!")
