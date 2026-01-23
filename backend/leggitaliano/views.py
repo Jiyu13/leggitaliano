@@ -296,7 +296,8 @@ class DictionaryWordByIDView(APIView):
                         data["notes"] = updated_notes
             else:
                 data["notes"] = []
-
+        if data["notes"] == [""]:
+            data["notes"] = []
         # print(data)
         serializer = DictionaryWordSerializer(word, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
