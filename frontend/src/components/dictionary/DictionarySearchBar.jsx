@@ -36,12 +36,13 @@ export default function DictionarySearchBar({
                 }})
     }
 
+    const inputBorder = searchError ? "2px solid rgba(231, 76, 60, 1)" : "2px solid rgba(169,169,169, 0.5)"
 
     return (
         <SearchBarContainer>
             <SearchBarForm
                 onSubmit={handleSearch}
-                style={{border: searchError ? "2px solid #e74c3c" : "2px solid rgb(169,169,169, 0.5)"}}
+                style={{border: inputBorder}}
             >
                 <Input
                     type="text"
