@@ -90,7 +90,7 @@ function StaffDictionaryArea({
                     />
                 )}
 
-                { wordNotFound !== null && clickedWord !== null && !isShowNewMeaningForm && (
+                { wordNotFound !== null && clickedWord !== null && !isShowNewMeaningForm && searchInputData === "" && (
                     <NotFoundContainer>
                         <div>No results found for "{clickedWord}".</div>
                     </NotFoundContainer>
