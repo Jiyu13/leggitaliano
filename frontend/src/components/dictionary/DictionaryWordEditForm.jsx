@@ -1,4 +1,12 @@
-import {FieldBox, FormButtonWrapper, FormLabel, OptionBox, SelectBox, Textarea} from "../../styles/formStyles";
+import {
+    FieldBox,
+    FormButtonWrapper,
+    FormErrorContainer,
+    FormLabel,
+    OptionBox,
+    SelectBox,
+    Textarea
+} from "../../styles/formStyles";
 import {useContext, useState} from "react";
 import {UserContext} from "../../user-content/UserContent";
 import {SubmitInputButton} from "../../styles/buttonStyles";
@@ -29,6 +37,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     }
 
     const [formData, setFormData] = useState(initialValue)
+    const [editFormError, setEditFormError] = useState(null)
 
     function handleSubmitEditForm(e) {
         e.preventDefault()
@@ -50,7 +59,8 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                 })
                 .catch(error => {
                    if (error.response) {
-                   console.log(error.response.data.error);
+                       setEditFormError(error.response.data.error)
+                       console.log(error.response.data.error);
                   } else {
                     console.log("network error", error.message);
                 }})
@@ -66,6 +76,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
         } else {
             value = e.target.value
         }
+        setEditFormError(null)
         setFormData({...formData, [name]:value})
     }
 
@@ -187,6 +198,14 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
                         />
                     </FieldBox>
+
+                    {editFormError === "parent_word_error" && (
+                        <FormErrorContainer style={{margin: "0rem"}}>
+                            <li>
+                                Parent word ${formData.parent} with word type ${formData.word_type} not found.
+                            </li>
+                         </FormErrorContainer>
+                    )}
 
                     {formData.parent && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
