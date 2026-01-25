@@ -48,7 +48,12 @@ function DictionaryWordItem({
                    const updatedWords = dictionaryWords?.filter(dw => {
                        return dw.id !== wordItem.id
                    })
-                   setDictionaryWords(updatedWords)
+                   // setDictionaryWords(updatedWords)
+                   if (searchResult) {
+                       setSearchResult({...searchResult, data: updatedWords})
+                   } else {
+                       setDictionaryWords(updatedWords)
+                   }
                 })
                 .catch(error => {
                    if (error.response) {
