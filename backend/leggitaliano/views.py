@@ -286,7 +286,7 @@ class DictionaryWordByIDView(APIView):
                 ).first()
             if not parent_word:
                 return Response(
-                    data={"parent_word_error": f"Parent word '{parent_string}' with word type '{word_type.type}' not found."},
+                    data={"error": "parent_word_error"},
                     status=status.HTTP_404_NOT_FOUND
                 )
 
