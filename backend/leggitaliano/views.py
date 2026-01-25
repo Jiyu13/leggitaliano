@@ -253,11 +253,14 @@ class DictionaryWordByIDView(APIView):
             response = {"error": "Word not found"}
             return Response(response)
 
+    @transaction.atomic
     def patch(self, request, word_id):
-        """ Edit word form ,
-            Receive complete data object from request,
-            notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...]
-            notes for non-verb: ["form1", "form2, ..."...]
+        """ 1. Edit word form ,
+            2. Receive complete data object from request,
+            3. notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...]
+            4. notes for non-verb: ["form1", "form2, ..."...]
+            5. parent word: if PARENT word_type changes, synchronize all CHILD words word_type
+            6. to update word type use 'word_type_id', same for 'parent_id'
         """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
@@ -273,10 +276,28 @@ class DictionaryWordByIDView(APIView):
 
         word = DictionaryWord.objects.get(pk=word_id)
         word_type = WordType.objects.get(type=word_type_string)
-        parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
 
+        # Find chosen parent (if any)
+        parent_word = None
+        if parent_string:
+            parent_word = DictionaryWord.objects.filter(
+                    word__iexact=parent_string,
+                    word_type_id=word_type.id
+                ).first()
+            if not parent_word:
+                return Response(
+                    data={"parent_word_error": f"Parent word '{parent_string}' with word type '{word_type.type}' not found."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+        # ============ parent_word exists =====================
         if parent_word:
+            """ if parent_word, means it's a CHILD  word """
             data["parent_id"] = parent_word.id
+
+            # ============ inherit parent_word word_type_id ===================
+            data["word_type_id"] = parent_word.word_type_id
+
             if is_inherit_translations:
                 data["translations"] = []
 
@@ -296,6 +317,15 @@ class DictionaryWordByIDView(APIView):
                         data["notes"] = updated_notes
             else:
                 data["notes"] = []
+        else:
+            """ an empty 'parent_string' from data """
+            """ this is a PARENT word / normal word, ---> update parent word + all child words word_type_id """
+            data["word_type_id"] = word_type.id
+
+            all_child_words = DictionaryWord.objects.filter(parent=word.id)
+            if len(all_child_words) > 0:
+                all_child_words.update(word_type_id=word_type.id)
+
         if data["notes"] == [""]:
             data["notes"] = []
         # print(data)
