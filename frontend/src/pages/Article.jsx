@@ -232,7 +232,7 @@ function Article() {
                             setSearchResult={setStaffDictSearchResult}
                             searchInputData={staffDictSearchInputData}
                             setSearchInputData={setStaffDictSearchInputData}
-                            searchError={userDictSearchError}
+                            searchError={staffDictSearchError}
                             setSearchError={setStaffDictSearchError}
                         />
 
