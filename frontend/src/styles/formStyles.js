@@ -82,7 +82,7 @@ export const FormTextarea = styled.textarea`
 export const Textarea = styled.textarea`
   width: 100%;
   font-size: 1rem;
-  border: none;
+  //border: none;
   border-radius: 8px;
   resize: none;
   field-sizing: content;
@@ -90,12 +90,15 @@ export const Textarea = styled.textarea`
   padding: 0.75rem;
   color: #ddd;
   background: none;
+  border: 1.5px solid rgba(169, 169, 169, 1);
+
 
   &:hover {
-    outline: none;
+    border: 1.5px solid rgb(255, 255, 255);
   }
+
   &:focus {
-    outline: none;
+    border: 1.5px solid rgb(255, 255, 255);
   }
 `
 
