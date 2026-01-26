@@ -130,6 +130,8 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
     }
 
+    const inputBorder =  editFormError === "parent_word_error"  ? "1.5px solid rgba(231, 76, 60, 1)" : "1.5px solid rgba(169, 169, 169, 1)"
+
     return (
         <NewWordContainer className="edit-word-container">
             <NewWordContainerWrapper>
@@ -162,7 +164,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                             name="word_type"
                             value={formData.word_type}
                             onChange={handleInputChange}
-                            style={{color: "#ddd", background: "#222", borderRadius: "8px",}}
+                            style={{color: "#ddd", background: "#222", borderRadius: "8px", border:  inputBorder}}
 
                         >
                             {wordTypes?.map((type, index) =>
@@ -194,7 +196,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                             name='parent'
                             value={formData.parent}
                             onChange={handleInputChange}
-                            style={{border: "2px solid #a9a9a9"}}
+                            style={{border: inputBorder}}
 
                         />
                     </FieldBox>
@@ -202,7 +204,11 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                     {editFormError === "parent_word_error" && (
                         <FormErrorContainer style={{margin: "0rem"}}>
                             <li>
-                                Parent word ${formData.parent} with word type ${formData.word_type} not found.
+                                Parent word &nbsp;
+                                <span style={{fontWeight: "Bolder", textDecoration: "underline"}}>{formData.parent}</span>
+                                &nbsp;with word type &nbsp;
+                                <span style={{fontWeight: "Bolder", textDecoration: "underline"}}>{formData.word_type}</span>
+                                &nbsp; not found.
                             </li>
                          </FormErrorContainer>
                     )}
