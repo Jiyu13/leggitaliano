@@ -36,7 +36,7 @@ export default function DictionarySearchBar({
                 }})
     }
 
-    const inputBorder = searchError ? "2px solid rgba(231, 76, 60, 1)" : "2px solid rgba(169,169,169, 0.5)"
+    const inputBorder = searchError ? "2px solid rgba(231, 76, 60, 1)" : "2px solid rgba(169,169,169, 1)"
 
     return (
         <SearchBarContainer>
