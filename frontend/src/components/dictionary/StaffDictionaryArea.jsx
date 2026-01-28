@@ -16,7 +16,7 @@ function StaffDictionaryArea({
     const [showMeaningId, setShowMeaningId] = useState(null)
     const [showEditFormId, setShowEditFormId] = useState(null)
 
-    const wordTOShow = searchResult !== null ? searchResult.word : clickedWord
+    const wordToShow = searchResult !== null ? searchResult.word : clickedWord
     const ipaToShow = searchResult !== null ? searchResult.ipa : ipa
     const dictionaryWordsToShow = searchResult !== null ? searchResult.data : dictionaryWords
 
@@ -39,7 +39,7 @@ function StaffDictionaryArea({
                     style={{padding: "0.5rem 0"}}
                 >
                     <WordInfoWrapper>
-                        <Word>{wordTOShow}</Word>
+                        <Word>{wordToShow}</Word>
                         <Ipa>{ipaToShow}</Ipa>
                     </WordInfoWrapper>
                     <AddNewButtonWrapper className="add-meaning-button-wrapper" >
@@ -83,7 +83,7 @@ function StaffDictionaryArea({
                 {isShowNewMeaningForm && (
                     <DictionaryWordNewMeaningForm
                         setIpa={setIpa}
-                        clickedWord={clickedWord}
+                        clickedWord={wordToShow}
                         setDictionaryWords={setDictionaryWords}
                         setShowNewMeaningForm={setShowNewMeaningForm}
                         setNotFound={setNotFound}
