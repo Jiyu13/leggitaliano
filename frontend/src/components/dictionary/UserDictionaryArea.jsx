@@ -27,6 +27,7 @@ function UserDictionaryArea({
                 setSearchResult={setSearchResult}
                 setSearchError={setSearchError}
                 searchError={searchError}
+                setShowMeaningId={setShowMeaningId}
             />
 
             <HeadSectionContainer className="dinctionary-head">
@@ -38,9 +39,11 @@ function UserDictionaryArea({
 
             <DictionaryWrapper className="dinctionary-wrapper">
                 {dictionaryWordsToShow?.map((dw, index) =>
-                    <li style={{borderTop: index === 0 ? "1px solid #fff": "none"}}>
+                    <li
+                        key={index}
+                        style={{borderTop: index === 0 ? "1px solid #fff": "none"}}
+                    >
                         <UserDictionaryWordItem
-                          key={index}
                             wordItem={dw}
                             setShowMeaningId={setShowMeaningId}
                             showMeaningId={showMeaningId}
