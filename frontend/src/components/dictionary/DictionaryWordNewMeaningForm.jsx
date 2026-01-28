@@ -75,6 +75,7 @@ function DictionaryWordNewMeaningForm({
         } else {
             value = e.target.value
         }
+        setWordTypeEmpty(false)
         setFormData({...formData, [name]:value})
     }
 
