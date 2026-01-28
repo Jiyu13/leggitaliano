@@ -4,6 +4,7 @@ import api from "../../api";
 
 export default function DictionarySearchBar({
     setSearchInputData, searchInputData,  setSearchResult, setSearchError, searchError,
+    setShowMeaningId, setShowNewMeaningForm,
 }) {
 
     function handleInputChange(e) {
@@ -21,6 +22,8 @@ export default function DictionarySearchBar({
         e.preventDefault()
 
         setSearchError(null)
+        setShowNewMeaningForm(false)
+        setShowMeaningId(null)
 
         api.get(`/word/word/${searchInputData}/`)
             .then(res => {

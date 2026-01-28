@@ -31,6 +31,8 @@ function StaffDictionaryArea({
                     setSearchResult={setSearchResult}
                     setSearchError={setSearchError}
                     searchError={searchError}
+                    setShowNewMeaningForm={setShowNewMeaningForm}
+                    setShowMeaningId={setShowMeaningId}
                 />
 
 
