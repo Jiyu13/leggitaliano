@@ -17,7 +17,7 @@ function DictionaryTranslationItem({
 
     useEffect(() => {
         // to update the UI instantly
-        setTransItem(translationItem)}, [dictionaryWords])
+        setTransItem(translationItem)}, [dictionaryWords, translationItem])
 
     const [transItem, setTransItem] = useState(translationItem)
     const [textareaError, setTextareaError] = useState(null)
