@@ -149,8 +149,17 @@ function DictionaryTranslationItem({
                .then(res => {
                     const result = res.data
                     const updatedWord = result["word"]
-                    const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
-                   setDictionaryWords(updatedWords)
+
+                   if (searchResult) {
+                       const updateSearchResult = searchResult.data?.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
+                       setSearchResult({...searchResult, data: updateSearchResult})
+                       setTransItem(updatedItems)
+
+                   } else {
+                       const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
+                       setDictionaryWords(updatedWords)
+                   }
+
                 })
                 .catch(error => {
                    if (error.response) {
