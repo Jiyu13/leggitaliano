@@ -2,9 +2,12 @@ import search_icon from "../../assets/icons/search_icon.svg";
 import styled from "styled-components";
 import api from "../../api";
 
+const noop = () => {};
+
+
 export default function DictionarySearchBar({
     setSearchInputData, searchInputData,  setSearchResult, setSearchError, searchError,
-    setShowMeaningId, setShowNewMeaningForm,
+    setShowMeaningId, setShowNewMeaningForm, setShowEditFormId
 }) {
 
     function handleInputChange(e) {
@@ -22,8 +25,9 @@ export default function DictionarySearchBar({
         e.preventDefault()
 
         setSearchError(null)
-        setShowNewMeaningForm(false)
         setShowMeaningId(null)
+        setShowNewMeaningForm?.(false)
+        setShowEditFormId?.(null)
 
         api.get(`/word/word/${searchInputData}/`)
             .then(res => {
