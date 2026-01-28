@@ -31,8 +31,9 @@ function StaffDictionaryArea({
                     setSearchResult={setSearchResult}
                     setSearchError={setSearchError}
                     searchError={searchError}
-                    setShowNewMeaningForm={setShowNewMeaningForm}
                     setShowMeaningId={setShowMeaningId}
+                    setShowNewMeaningForm={setShowNewMeaningForm}
+                    setShowEditFormId={setShowEditFormId}
                 />
 
 
@@ -60,7 +61,7 @@ function StaffDictionaryArea({
                     <>
                         {dictionaryWordsToShow?.map((dw, index) =>
                             <DictionaryWordItem
-                                key={index}
+                                key={dw.index}
                                 clickedWord={clickedWord}
                                 wordItem={dw}
                                 wordItemId={dw.id}
