@@ -55,5 +55,6 @@ class DictionaryWordAdmin(admin.ModelAdmin):
 @admin.register(Sentence)
 class SentenceAdmin(admin.ModelAdmin):
     list_display = ("id", "word", "sentence", "translation")
+    autocomplete_fields = ("word",)
     search_fields = ['=word__word']
-    readonly_fields = ['word']
+    # readonly_fields = ['word']
