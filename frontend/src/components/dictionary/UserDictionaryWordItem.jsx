@@ -120,7 +120,7 @@ function UserDictionaryWordItem({wordItem, setShowMeaningId, showMeaningId,
                                const extractedMeaning = splitMeanings[0].replace(regex, "")
                                const firstExample = splitMeanings[1]
                                 return (
-                                    <TranslationWrapper>
+                                    <TranslationWrapper key={t.id}>
                                         <div style={{fontWeight: "Bolder"}}>{extractedMeaning}</div>
                                         <div
                                             style={{
