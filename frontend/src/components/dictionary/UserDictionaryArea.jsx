@@ -48,16 +48,12 @@ function UserDictionaryArea({
 
                 <DictionaryWrapper className="dinctionary-wrapper">
                     {dictionaryWordsToShow?.map((dw, index) =>
-                        // <li
-                        //     key={index}
-                        //     style={{borderTop: index === 0 ? "1px solid #fff": "none"}}
-                        // >
-                            <UserDictionaryWordItem
-                                wordItem={dw}
-                                setShowMeaningId={setShowMeaningId}
-                                showMeaningId={showMeaningId}
-                            />
-                        // </li>
+                        <UserDictionaryWordItem
+                            key={dw.id}
+                            wordItem={dw}
+                            setShowMeaningId={setShowMeaningId}
+                            showMeaningId={showMeaningId}
+                        />
                      )}
 
                     { wordNotFound !== null && searchInputData === "" &&
