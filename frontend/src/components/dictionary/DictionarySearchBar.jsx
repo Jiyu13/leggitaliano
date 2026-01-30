@@ -18,6 +18,7 @@ export default function DictionarySearchBar({
         } else {
             setSearchInputData(value)
         }
+        setShowNewMeaningForm(false)
         setSearchError(null)
     }
 
