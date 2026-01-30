@@ -7,19 +7,21 @@ import add_another_translation_icon from "../../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../../assets/icons/remove_24dp.svg";
 import api from "../../api";
 import {IS_INHERIT} from "./DictionaryWordEditForm";
+import NotesOptions, {CONJUGATIONS} from "../ConjugationOptions";
 
 
 function DictionaryWordNewMeaningForm({
-      clickedWord, setIpa, setDictionaryWords, setNotFound, setShowNewMeaningForm
+      clickedWord, setIpa, setDictionaryWords, setNotFound, setShowNewMeaningForm,
+    searchResult, setSearchResult, setSearchInputData, setSearchError
 }) {
     const {wordTypes} = useContext(UserContext)
 
     const initialValue = {
-        word: clickedWord,
+        word: "",
         translations: [""],
         ipa: "",
         parent_id: "",         // pass "word string" to post request but convert to word id in the backend
-        notes: null,
+        notes: [],
         word_type_id: null,   // pass "string" id to post request
         is_inherit_notes: false,
         is_inherit_translations: false,
@@ -28,12 +30,18 @@ function DictionaryWordNewMeaningForm({
     const [formData, setFormData] = useState(initialValue)
     const [wordTypeEmpty, setWordTypeEmpty] = useState(false)
 
+    // check if adding new added word for clickedWord, if not, take it as a search word
+    const isClickedWord = clickedWord === formData.word
+
     function handleFormSubmit(e) {
         e.preventDefault()
         setWordTypeEmpty(false)
         if (!formData.word_type_id) {
             setWordTypeEmpty(true)
         } else {
+            setSearchResult(null)
+            setSearchError(null)
+
             const translations_payload = formData.is_inherit_translations ? [] : formData.translations
             const notess_payload = formData.is_inherit_notes ? "" : formData.notes
 
@@ -46,13 +54,32 @@ function DictionaryWordNewMeaningForm({
                    const ipa = result["ipa"]
                    const data = result["data"]
                    setIpa(ipa)
-                   setDictionaryWords(prev => {
-                       if (prev === null) {
-                           return [data]
-                       } else {
-                           return [...prev, data]
-                       }
-                   })
+
+                   if (!isClickedWord) {
+                       setSearchInputData(result.word)
+                       setSearchResult(result)
+
+
+                        // result.word = formData.word
+                        // const updatedData =  [...searchResult?.data, data]
+                        // const updatedSearchResult  = {
+                        //     ipa: ipa, word: formData.word, data: updatedData
+                        // }
+                       // console.log("updatedSearchResult-------------", updatedSearchResult)
+                        // setSearchResult(updatedSearchResult)
+
+
+                   } else {
+                       setDictionaryWords(data)
+                       //  setDictionaryWords(prev => {
+                       //     if (prev === null) {
+                       //         return [data]
+                       //     } else {
+                       //         return [...prev, data]
+                       //     }
+                       // })
+                   }
+
                    setShowNewMeaningForm(false)
                    setNotFound(null)
                 })
@@ -98,6 +125,40 @@ function DictionaryWordNewMeaningForm({
         setFormData({...formData, translations: updated})
     }
 
+
+    const newVerb =  [9, 12, 62, 63, 64, 65, 66, 67, 68, 96].includes(parseInt(formData.word_type_id))
+
+    function handleNoteChange(e, index) {
+        const value = e.target.value
+        setFormData(prev => {
+            const next = [...prev.notes];
+            next[index] = value;
+            return { ...prev, notes: next };
+        });
+    }
+
+    function handleChangeVerbTense(e, index) {
+        const newTense = e.target.value
+        setFormData(prev => {
+            const notesCopy = [...prev.notes]
+            notesCopy[index] = newTense
+            return {
+                ...prev,
+                notes: notesCopy,
+            };
+        })
+    }
+    function handleAddNoteClick() {
+        const newNote = newVerb ? CONJUGATIONS[0] : ""
+        setFormData({...formData, notes: [...formData.notes, newNote]})
+    }
+
+    function handleRemoveNoteClick(index) {
+        const updated = formData.notes.filter((note, idx) => idx !== index)
+        setFormData({...formData, notes: updated})
+
+    }
+
     return (
         <NewWordContainer className="new-word-container">
             <NewWordContainerWrapper>
@@ -111,12 +172,16 @@ function DictionaryWordNewMeaningForm({
 
                     <FieldBox className="field-box">
                         <FormLabel style={{color: "#ddd"}}>Word</FormLabel>
-                        <div
+                        <Textarea
                             className="form-input"
-                            style={{boxSizing: "border-box", fontSize: "1rem", padding: "8px 12px", border: "2px solid #a9a9a9", borderRadius: "8px"}}
-                        >
-                            {formData.word}
-                        </div>
+                            type="text"
+                            name='word'
+                            value={formData.word}
+                            onChange={handleInputChange}
+                            style={{border: "2px solid #a9a9a9"}}
+
+                        />
+
                     </FieldBox>
 
 
@@ -275,20 +340,61 @@ function DictionaryWordNewMeaningForm({
                             </SelectBox>
                         </FieldBox>
                     )}
+
+
+
                     {formData.is_inherit_notes === false && (
+                        <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
+                            <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
+                            {formData.notes.length !== 0 ?
+                                (
+                                    formData.notes.map((note, index) =>
+                                    <div style={{display: "flex", alignItems: "center"}} key={index}>
+                                        <NotesOptions
+                                            handleChangeVerbTense={handleChangeVerbTense}
+                                            handleNoteChange={handleNoteChange}
+                                            isVerb={newVerb}
+                                            index={index}
+                                            note={note}
+                                        />
+                                        {index === formData?.notes.length - 1 ?
 
-                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
-                        <FormLabel style={{color: "#ddd"}}>Notes (e.g. note1; note2; ...)</FormLabel>
-                        <Textarea
-                            className="form-input"
-                            type="text"
-                            name='notes'
-                            value={formData.notes}
-                            onChange={handleInputChange}
-                            style={{border: "2px solid #a9a9a9"}}
+                                            <AddTranslationIconImg
+                                                alt="add another note icon"
+                                                src={add_another_translation_icon}
+                                                onClick={handleAddNoteClick}
+                                            />
+                                            :
+                                            <AddTranslationIconImg
+                                                alt="remove this note icon"
+                                                src={remove_this_translation_icon}
+                                                onClick={() => handleRemoveNoteClick(index)}
+                                            />
+                                        }
 
-                        />
-                    </FieldBox>
+
+                                    </div>
+                                ))
+                                :
+                                (
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <NotesOptions
+                                            handleChangeVerbTense={handleChangeVerbTense}
+                                            handleNoteChange={handleNoteChange}
+                                            isVerb={newVerb}
+                                            index={0}
+                                            note=""
+                                        />
+
+                                        <AddTranslationIconImg
+                                            alt="add another note icon"
+                                            src={add_another_translation_icon}
+                                            onClick={handleAddNoteClick}
+                                        />
+                                    </div>
+                                )
+                            }
+                        </FieldBox>
                     )}
 
                     <FormButtonWrapper>
