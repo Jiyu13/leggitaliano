@@ -1,7 +1,13 @@
-import styled from "styled-components";
 import {useState} from "react";
 import UserDictionaryWordItem from "./UserDictionaryWordItem";
-import {HeadSectionContainer, Ipa, NotFoundContainer, Word} from "./StaffDictionaryArea";
+import {
+    DictionaryContainer, DictionarySection,
+    DictionaryWrapper,
+    HeadSectionContainer,
+    Ipa,
+    NotFoundContainer,
+    Word, WordInfoWrapper
+} from "./StaffDictionaryArea";
 import DictionarySearchBar from "./DictionarySearchBar";
 
 
@@ -20,73 +26,53 @@ function UserDictionaryArea({
 
     return (
         <DictionaryContainer className="dinctionary-area-container">
+            <DictionarySection className="dinctionary-section">
 
-            <DictionarySearchBar
-                setSearchInputData={setSearchInputData}
-                searchInputData={searchInputData}
-                setSearchResult={setSearchResult}
-                setSearchError={setSearchError}
-                searchError={searchError}
-                setShowMeaningId={setShowMeaningId}
-            />
+                <DictionarySearchBar
+                    isStaffDictionary={false}
 
-            <HeadSectionContainer className="dinctionary-head">
-                <WordInfoWrapper>
-                    <Word>{wordToShow}</Word>
-                    <Ipa>{ipaToShow}</Ipa>
-                </WordInfoWrapper>
-            </HeadSectionContainer>
+                    setSearchInputData={setSearchInputData}
+                    searchInputData={searchInputData}
+                    setSearchResult={setSearchResult}
+                    setSearchError={setSearchError}
+                    searchError={searchError}
+                    setShowMeaningId={setShowMeaningId}
+                />
 
-            <DictionaryWrapper className="dinctionary-wrapper">
-                {dictionaryWordsToShow?.map((dw, index) =>
-                    <li
-                        key={index}
-                        style={{borderTop: index === 0 ? "1px solid #fff": "none"}}
-                    >
-                        <UserDictionaryWordItem
-                            wordItem={dw}
-                            setShowMeaningId={setShowMeaningId}
-                            showMeaningId={showMeaningId}
-                        />
-                    </li>
-                 )}
+                <HeadSectionContainer className="dinctionary-head">
+                    <WordInfoWrapper>
+                        <Word>{wordToShow}</Word>
+                        <Ipa>{ipaToShow}</Ipa>
+                    </WordInfoWrapper>
+                </HeadSectionContainer>
 
-                { wordNotFound !== null && searchInputData === "" &&
-                    (
-                    <NotFoundContainer>
-                        <div>No results found for "{clickedWord}".</div>
-                    </NotFoundContainer>
-                )}
+                <DictionaryWrapper className="dinctionary-wrapper">
+                    {dictionaryWordsToShow?.map((dw, index) =>
+                        // <li
+                        //     key={index}
+                        //     style={{borderTop: index === 0 ? "1px solid #fff": "none"}}
+                        // >
+                            <UserDictionaryWordItem
+                                wordItem={dw}
+                                setShowMeaningId={setShowMeaningId}
+                                showMeaningId={showMeaningId}
+                            />
+                        // </li>
+                     )}
 
-            </DictionaryWrapper>
+                    { wordNotFound !== null && searchInputData === "" &&
+                        (
+                        <NotFoundContainer>
+                            <div>No results found for "{clickedWord}".</div>
+                        </NotFoundContainer>
+                    )}
+
+                </DictionaryWrapper>
+            </DictionarySection>
 
 
         </DictionaryContainer>
     )
 }
-
-
-
-const WordInfoWrapper = styled.div`
-  display: flex;
-  align-items: baseline;
-`
-
-const DictionaryWrapper = styled.ul`
-    //width: 100%;
-    padding: 0 1rem 0.75rem;
-    overflow-y: auto;
-    color: #ddd;
-    list-style-type: none;
-    margin: 0
-`
-const DictionaryContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    max-width: 450px;
-    width: 100%;
-    background-color: #333333;
-    border-radius: 8px;
-`
 
 export default UserDictionaryArea
