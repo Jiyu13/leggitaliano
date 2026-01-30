@@ -100,11 +100,15 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
 
     function handleNoteChange(e, index) {
         const value = e.target.value
-        setFormData(prev => {
-            const next = [...prev.notes];
-            next[index] = value;
-            return { ...prev, notes: next };
-        });
+
+        if (value !== "") {
+            setFormData(prev => {
+                const next = [...prev.notes];
+                next[index] = value;
+                return { ...prev, notes: next };
+            });
+        }
+
     }
 
     function handleChangeVerbTense(e, index) {
