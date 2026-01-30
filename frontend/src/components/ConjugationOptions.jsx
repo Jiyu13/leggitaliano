@@ -7,7 +7,7 @@ export const CONJUGATIONS = [
 
 ]
 
-function ConjugationOptions({handleChangeVerbTense, isVerb, handleNoteChange, index, note}) {
+function NotesOptions({handleChangeVerbTense, isVerb, handleNoteChange, index, note}) {
     return (
         <>
             {isVerb ?
@@ -50,4 +50,4 @@ function ConjugationOptions({handleChangeVerbTense, isVerb, handleNoteChange, in
     )
 
 }
-export default ConjugationOptions
+export default NotesOptions
