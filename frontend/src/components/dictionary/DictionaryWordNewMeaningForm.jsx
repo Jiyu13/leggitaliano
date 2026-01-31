@@ -7,7 +7,7 @@ import add_another_translation_icon from "../../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../../assets/icons/remove_24dp.svg";
 import api from "../../api";
 import {IS_INHERIT} from "./DictionaryWordEditForm";
-import NotesOptions, {CONJUGATIONS} from "../ConjugationOptions";
+import NotesOptions, {CONJUGATIONS} from "../NotesOptions";
 
 
 function DictionaryWordNewMeaningForm({

@@ -14,7 +14,8 @@ import styled from "styled-components";
 import api from "../../api";
 import add_another_translation_icon from "../../assets/icons/add_24dp.svg";
 import remove_this_translation_icon from "../../assets/icons/remove_24dp.svg";
-import ConjugationOptions, {CONJUGATIONS} from "../ConjugationOptions";
+import {CONJUGATIONS} from "../NotesOptions";
+import NotesOptions from "../NotesOptions";
 
 export const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
 
@@ -319,7 +320,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                             {formData.notes.length !== 0 ? (
                                 formData.notes.map((note, index) =>
                                     <div style={{display: "flex", alignItems: "center"}} key={index}>
-                                        <ConjugationOptions
+                                        <NotesOptions
                                             handleChangeVerbTense={handleChangeVerbTense}
                                             handleNoteChange={handleNoteChange}
                                             isVerb={word.is_verb}
@@ -347,7 +348,7 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
                                 :
                                 (
                                     <div style={{display: "flex", alignItems: "center"}}>
-                                        <ConjugationOptions
+                                        <NotesOptions
                                             handleChangeVerbTense={handleChangeVerbTense}
                                             handleNoteChange={handleNoteChange}
                                             isVerb={word.is_verb}

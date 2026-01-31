@@ -1,7 +1,7 @@
 import {OptionBox, SelectBox, Textarea} from "../styles/formStyles";
 
 export const CONJUGATIONS = [
-    "gerundo", "participio presente", "participio passato",
+    "gerundio", "participio presente", "participio passato",
     "indicativo presente", "indicativo imperfetto", "indicativo passato remoto", "indicativo futuro",
     "perfetto", "congiuntivo_presente", "congiuntivo_imperfetto", "condizionale", "imperativo"
 
