@@ -43,7 +43,10 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     function handleSubmitEditForm(e) {
         e.preventDefault()
         // console.log(formData)
-        api.patch(`/word/id/${word.id}/`, formData)
+        const validNotes = formData.notes.filter(note => note !=="")
+        const payload = {...formData, notes: validNotes}
+
+        api.patch(`/word/id/${word.id}/`, payload)
                .then(res => {
                    const result = res.data
                    // check if it's search input result, or clicked word result
@@ -102,13 +105,11 @@ function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setS
     function handleNoteChange(e, index) {
         const value = e.target.value
 
-        if (value !== "") {
-            setFormData(prev => {
-                const next = [...prev.notes];
-                next[index] = value;
-                return { ...prev, notes: next };
-            });
-        }
+        setFormData(prev => {
+            const next = [...prev.notes];
+            next[index] = value;
+            return { ...prev, notes: next };
+        });
 
     }
 
