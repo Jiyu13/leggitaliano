@@ -1,8 +1,6 @@
 import styled from "styled-components";
-import search_icon from "../../assets/icons/search_icon.svg";
 import DictionaryWordItem from "./DictionaryWordItem";
 import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
-import {FilledButton, StaffDictionaryButton} from "../../styles/buttonStyles";
 import {useState} from "react";
 import DictionarySearchBar from "./DictionarySearchBar";
 
@@ -22,10 +20,11 @@ function StaffDictionaryArea({
 
 
     return (
-        <DictionaryContainer className="dinctionary-area-container">
+        <DictionaryContainer className="dinctionary-area-container" style={{marginRight: "0.25rem"}}>
 
             <DictionarySection className="dinctionary-section">
                 <DictionarySearchBar
+                    isStaffDictionary={true}
                     setSearchInputData={setSearchInputData}
                     searchInputData={searchInputData}
                     setSearchResult={setSearchResult}
@@ -33,55 +32,62 @@ function StaffDictionaryArea({
                     searchError={searchError}
                     setShowMeaningId={setShowMeaningId}
                     setShowNewMeaningForm={setShowNewMeaningForm}
+                    isShowNewMeaningForm={isShowNewMeaningForm}
                     setShowEditFormId={setShowEditFormId}
+                    setIpa={setIpa}
                 />
 
-
-                <HeadSectionContainer
-                    className="staff-dictionary-header"
-                    style={{padding: "0.5rem 0"}}
-                >
-                    <WordInfoWrapper>
-                        <Word>{wordToShow}</Word>
-                        <Ipa>{ipaToShow}</Ipa>
-                    </WordInfoWrapper>
-                    <AddNewButtonWrapper className="add-meaning-button-wrapper" >
-                        <StaffDictionaryButton
-                            style={{width: "100%", padding: "0.75rem"}}
-                            onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}
-                        >
-                            New meaning
-                        </StaffDictionaryButton>
-                    </AddNewButtonWrapper>
-
-                </HeadSectionContainer>
-
-
                 {!isShowNewMeaningForm && (
-                    <>
-                        {dictionaryWordsToShow?.map((dw, index) =>
-                            <DictionaryWordItem
-                                key={dw.index}
-                                clickedWord={clickedWord}
-                                wordItem={dw}
-                                wordItemId={dw.id}
-                                dictionaryWords={dictionaryWords}
-                                setDictionaryWords={setDictionaryWords}
-                                // isShowEditForm={isShowEditForm}
-                                // setShowEditForm={setShowEditForm}
-                                setShowMeaningId={setShowMeaningId}
-                                showMeaningId={showMeaningId}
-                                setShowEditFormId={setShowEditFormId}
-                                showEditFormId={showEditFormId}
+                    <div>
+                        <HeadSectionContainer className="staff-dictionary-header">
+                        <WordInfoWrapper>
+                            <Word>{wordToShow}</Word>
+                            <Ipa>{ipaToShow}</Ipa>
+                        </WordInfoWrapper>
+                        {/*<AddNewButtonWrapper className="add-meaning-button-wrapper" >*/}
+                        {/*    <StaffDictionaryButton*/}
+                        {/*        style={{width: "100%", padding: "0.75rem"}}*/}
+                        {/*        onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}*/}
+                        {/*    >*/}
+                        {/*        New meaning*/}
+                        {/*    </StaffDictionaryButton>*/}
+                        {/*</AddNewButtonWrapper>*/}
 
-                                setSearchResult={setSearchResult}
-                                searchResult={searchResult}
-                                searchInputData={searchInputData}
-                            />
+                    </HeadSectionContainer>
+
+                        {!isShowNewMeaningForm && (
+                            <DictionaryWrapper className="dinctionary-wrapper">
+                                {dictionaryWordsToShow?.map((dw, index) =>
+                                    <DictionaryWordItem
+                                        key={dw.id}
+                                        clickedWord={clickedWord}
+                                        wordItem={dw}
+                                        wordItemId={dw.id}
+                                        dictionaryWords={dictionaryWords}
+                                        setDictionaryWords={setDictionaryWords}
+                                        // isShowEditForm={isShowEditForm}
+                                        // setShowEditForm={setShowEditForm}
+                                        setShowMeaningId={setShowMeaningId}
+                                        showMeaningId={showMeaningId}
+                                        setShowEditFormId={setShowEditFormId}
+                                        showEditFormId={showEditFormId}
+
+                                        setSearchResult={setSearchResult}
+                                        searchResult={searchResult}
+                                        searchInputData={searchInputData}
+                                    />
+                                )}
+                            </DictionaryWrapper>
                         )}
-                    </>
-                )}
 
+                        { wordNotFound !== null && clickedWord !== null && !isShowNewMeaningForm && searchInputData === "" && (
+                            <NotFoundContainer>
+                                <div>No results found for "{clickedWord}".</div>
+                            </NotFoundContainer>
+                        )}
+
+                    </div>
+                )}
 
                 {isShowNewMeaningForm && (
                     <DictionaryWordNewMeaningForm
@@ -90,13 +96,12 @@ function StaffDictionaryArea({
                         setDictionaryWords={setDictionaryWords}
                         setShowNewMeaningForm={setShowNewMeaningForm}
                         setNotFound={setNotFound}
-                    />
-                )}
 
-                { wordNotFound !== null && clickedWord !== null && !isShowNewMeaningForm && searchInputData === "" && (
-                    <NotFoundContainer>
-                        <div>No results found for "{clickedWord}".</div>
-                    </NotFoundContainer>
+                        setSearchError={setSearchError}
+                        setSearchResult={setSearchResult}
+                        searchResult={searchResult}
+                        setSearchInputData={setSearchInputData}
+                    />
                 )}
 
             </DictionarySection>
@@ -121,27 +126,34 @@ export const HeadSectionContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
 `
-const DictionarySection = styled.div`
-    width: 100%;
-    padding: 0 1rem 1rem;
-    overflow-y: auto;
-    color: #ddd;
-`
-const WordInfoWrapper = styled.div`
+
+export const WordInfoWrapper = styled.div`
   display: flex;
   align-items: baseline;
 `
 const AddNewButtonWrapper = styled.div``
-
-const DictionaryContainer = styled.div`
+export const DictionaryWrapper = styled.ul`
+    //width: 100%;
+    padding: 0 0.75rem 0.75rem;
+    overflow-y: auto;
+    color: #ddd;
+    list-style-type: none;
+    margin: 0
+`
+export const DictionarySection = styled.div`
+    width: 100%;
+    padding: 0.5rem 0.5rem 1rem;
+    overflow-y: auto;
+    color: #ddd;
+`
+export const DictionaryContainer = styled.div`
     display: flex;
     max-width: 450px;
     width: 100%;
     background-color: #333333;
     border-radius: 8px;
-    margin-right: 0.25rem;
 `
 
 export default StaffDictionaryArea
