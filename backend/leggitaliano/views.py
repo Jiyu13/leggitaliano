@@ -172,20 +172,23 @@ class DictionaryWordView(APIView):
 
     def post(self, request):
         """
-        Accept word_type id as string, Return a word with new type.
-        notes -> string, is separated by "; ", "note1.1, note1.2, ...; note2.1, note 2.2, ..."
+        1. Accept word_type id as string, Return a word with new type.
+        2. notes for verb: ["tense1", "tense2"...]
+        3. notes for NON-verb: ["form1", "form2"...]
+        4. return word with all types
         """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
+        word = data["word"]
         word_type_id = int(data['word_type_id'])  # a string of id number
         parent_string = data['parent_id']  # a string of word, need to convert to ID / None
         ipa = data['ipa']
         translations = data['translations']
         is_inherit_translations = data['is_inherit_translations']
 
-        notes_string = data["notes"]  # a string, need to be separated by "; " | null
+        notes_list = data["notes"]  # is a list
         # notes_list = notes_string.split("; ") if notes_string else notes_string
         is_inherit_notes = data['is_inherit_notes']
 
@@ -193,8 +196,8 @@ class DictionaryWordView(APIView):
         if parent_word:
             if is_inherit_notes is False:
                 if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
-                    if len(notes_string) != 0:
-                        notes_list = notes_string.split("; ")
+                    if len(notes_list) != 0:
+                        # notes_list = notes_string.split("; ")
                         updated_notes = []
                         for tense in notes_list:
                             verb = Verb.objects.filter(infinitive=parent_word.word).first()
@@ -209,7 +212,7 @@ class DictionaryWordView(APIView):
             data["parent_id"] = parent_word.id
 
         else:
-            data["notes"] = notes_string.split("; ") if notes_string else []
+            # data["notes"] = notes_string.split("; ") if notes_string else []
             data["parent_id"] = None
 
         data["dictionary"] = 1
@@ -219,9 +222,11 @@ class DictionaryWordView(APIView):
         if not new_word_serializer.is_valid():
             return Response(new_word_serializer.errors, status=400)
         obj = new_word_serializer.save()
-        new_word_out = DictionaryWordSerializer(obj).data
 
-        return Response({"data": new_word_out, "ipa": ipa}, status=status.HTTP_201_CREATED)
+        all_words = DictionaryWord.objects.filter(word__iexact=obj.word).order_by("word_type__type")
+        all_words_out = DictionaryWordSerializer(all_words, many=True).data
+
+        return Response({"data": all_words_out, "ipa": ipa, "word": word}, status=status.HTTP_201_CREATED)
 
 
 class DictionaryWordByWordView(APIView):
@@ -308,7 +313,8 @@ class DictionaryWordByIDView(APIView):
                         for note in notes_string:
                             split_note = note.split(", ")
                             tense = split_note[0]
-                            verb = Verb.objects.filter(infinitive=word.parent.word).first()
+                            verb = Verb.objects.filter(infinitive=parent_string).first()
+                            # print(verb)
                             verb_tense = tense.replace(" ", "_")
                             verb_conjugation = getattr(verb, verb_tense, None)
                             verb_conjugation.insert(0, tense)
