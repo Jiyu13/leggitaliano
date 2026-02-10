@@ -325,6 +325,7 @@ class DictionaryWordByIDView(APIView):
                 data["notes"] = []
         else:
             """ an empty 'parent_string' from data """
+            data["parent_id"] = None
             """ this is a PARENT word / normal word, ---> update parent word + all child words word_type_id """
             data["word_type_id"] = word_type.id
 
