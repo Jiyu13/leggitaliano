@@ -45,13 +45,17 @@ function DictionaryWordItem({
         setShowMeaningId(null)
         api.delete(`/word/id/${wordItem.id}/`)
                .then(res => {
-                   const updatedWords = dictionaryWords?.filter(dw => {
-                       return dw.id !== wordItem.id
-                   })
+
                    // setDictionaryWords(updatedWords)
                    if (searchResult) {
-                       setSearchResult({...searchResult, data: updatedWords})
+                       const updatedSearchResult = searchResult.filter(dw => {
+                            return dw.id !== wordItem.id
+                       })
+                       setSearchResult({...searchResult, data: updatedSearchResult})
                    } else {
+                       const updatedWords = dictionaryWords?.filter(dw => {
+                            return dw.id !== wordItem.id
+                       })
                        setDictionaryWords(updatedWords)
                    }
                 })
