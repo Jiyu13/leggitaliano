@@ -74,9 +74,23 @@ function DictionaryWordItem({
     return (
         <WordItemContainer className="word-item-container" ref={itemScrollRef} id={wordItem.id}>
 
-            <div style={{display: "flex", justifyContent: "space-between"}}>
+            <div style={{display: "flex", justifyContent: "space-between",alignItems: "center"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <WordType>{wordType}</WordType>
+                    <WordType>
+
+                        {wordType}
+
+                        {
+                            wordItem.is_verb && wordItem.parent &&
+                            <>
+                                <span>&nbsp;→</span>
+                                <span style={{fontWeight: "bolder"}}>&nbsp;{wordItem.parent}</span>
+                            </>
+
+                        }
+                    </WordType>
+
+
                     <Img
                         alt={iconAlt}
                         src={icon}

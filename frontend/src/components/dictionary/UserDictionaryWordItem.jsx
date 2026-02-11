@@ -39,30 +39,42 @@ function UserDictionaryWordItem({wordItem, setShowMeaningId, showMeaningId,
     return (
         <WordItemContainer className="word-item-container" ref={itemScrollRef} id={wordItem.id}>
 
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div style={{display: "flex", alignItems: "center"}}>
-                    <WordType>{wordType}</WordType>
-                    {isShowMeaning && (
-                        <Img
-                            style={{margin: "4px"}}
-                            alt="close meaning icon"
-                            src={arrow_up_icon}
-                            onClick={handleToggleShowMeaning}
-                        />
-                    )}
+            <div
+                style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}
+                onClick={handleToggleShowMeaning}
+            >
+                <WordType>
+                    {wordType}
+
+                    {
+                        wordItem.is_verb && wordItem.parent &&
+                        <>
+                            <span>&nbsp;→</span>
+                            <span style={{fontWeight: "bolder"}}>&nbsp;{wordItem.parent}</span>
+                        </>
+
+                    }
+
+                </WordType>
+                {isShowMeaning && (
+                    <Img
+                        style={{margin: "4px"}}
+                        alt="close meaning icon"
+                        src={arrow_up_icon}
+                        // onClick={handleToggleShowMeaning}
+                    />
+                )}
 
 
-                    {!isShowMeaning && (
-                        <Img
-                            style={{margin: "4px"}}
-                            alt="show meaning icon"
-                            src={arrow_down_icon}
-                            onClick={handleToggleShowMeaning}
-                        />
+                {!isShowMeaning && (
+                    <Img
+                        style={{margin: "4px"}}
+                        alt="show meaning icon"
+                        src={arrow_down_icon}
+                        // onClick={handleToggleShowMeaning}
+                    />
 
-                    )}
-                </div>
-
+                )}
             </div>
 
             {isShowMeaning && (
