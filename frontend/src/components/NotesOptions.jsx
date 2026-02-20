@@ -14,7 +14,7 @@ function NotesOptions({handleChangeVerbTense, isVerb, handleNoteChange, index, n
                 <SelectBox
                     // id={formData.word_type}
                     name="notes"
-                    value={note.split(",")[0]}
+                    value={note ? note.split(",")[0] : ""}
                     onChange={(e) => handleChangeVerbTense(e, index)}
                     style={{
                         width: "100%",
@@ -25,6 +25,10 @@ function NotesOptions({handleChangeVerbTense, isVerb, handleNoteChange, index, n
                     }}
 
                 >
+                    <OptionBox value="" disabled hidden>
+                        Select tense...
+                    </OptionBox>
+
                     {CONJUGATIONS?.map((conjugation, index) =>
                         <OptionBox
                             key={index}
