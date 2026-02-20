@@ -29,6 +29,7 @@ function DictionaryWordNewMeaningForm({
 
     const [formData, setFormData] = useState(initialValue)
     const [wordTypeEmpty, setWordTypeEmpty] = useState(false)
+    const [isWordEmpty, setWordEmpty] = useState(false)
 
     // check if adding new added word for clickedWord, if not, take it as a search word
     const isClickedWord = clickedWord === formData.word
@@ -36,9 +37,12 @@ function DictionaryWordNewMeaningForm({
     function handleFormSubmit(e) {
         e.preventDefault()
         setWordTypeEmpty(false)
+        setWordEmpty(false)
         if (!formData.word_type_id) {
             setWordTypeEmpty(true)
-        } else {
+        } else if (formData.word === ""){
+            setWordEmpty(true)
+        }else {
             setSearchResult(null)
             setSearchError(null)
 
@@ -103,6 +107,7 @@ function DictionaryWordNewMeaningForm({
             value = e.target.value
         }
         setWordTypeEmpty(false)
+        setWordEmpty(false)
         setFormData({...formData, [name]:value})
     }
 
@@ -178,7 +183,7 @@ function DictionaryWordNewMeaningForm({
                             name='word'
                             value={formData.word}
                             onChange={handleInputChange}
-                            style={{border: "2px solid #a9a9a9"}}
+                            style={{border: isWordEmpty ? "2px solid #e74c3c" : "2px solid #a9a9a9"}}
 
                         />
 
@@ -242,7 +247,7 @@ function DictionaryWordNewMeaningForm({
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Is inherit translations?</FormLabel>
                             <SelectBox
-                                id={formData.is_inherit_translations}
+                                id={formData.is_inherit_translations.toString()}
                                 name="is_inherit_translations"
                                 value={formData.is_inherit_translations === false ? "False" : "True"}
                                 onChange={handleInputChange}
