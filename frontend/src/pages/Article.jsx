@@ -3,7 +3,7 @@ import {useContext, useEffect, useRef, useState} from "react";
 import api from "../api";
 import {UserContext} from "../user-content/UserContent";
 import styled from "styled-components";
-import ArticleReadingArea from "../components/ArticleReadingArea";
+import ArticleReadingArea from "../components/article/ArticleReadingArea";
 import {splitText} from "../utils/splitText";
 import {calculatePages} from "../utils/calculatePages";
 import StaffDictionaryArea from "../components/dictionary/StaffDictionaryArea";

@@ -1,6 +1,6 @@
-import arrow_left from "../assets/icons/arrow_left_24dp.svg"
-import arrow_right from "../assets/icons/arrow_right_24dp.svg"
-import check from "../assets/icons/check_24dp.svg"
+import arrow_left from "../../assets/icons/arrow_left_24dp.svg"
+import arrow_right from "../../assets/icons/arrow_right_24dp.svg"
+import check from "../../assets/icons/check_24dp.svg"
 import styled from "styled-components";
 
 

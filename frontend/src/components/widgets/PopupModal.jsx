@@ -1,4 +1,4 @@
-import {FilledButton} from "../styles/buttonStyles";
+import {FilledButton} from "../../styles/buttonStyles";
 import styled from "styled-components";
 
 function PopupModal({

@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import styled from "styled-components"
-import {UserContext} from "../user-content/UserContent";
+import {UserContext} from "../../user-content/UserContent";
 
 
 export default function ArticleWord({

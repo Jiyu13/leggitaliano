@@ -14,7 +14,7 @@ import {replace, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {SubmitInputButton} from "../styles/buttonStyles";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
-import {VisibilityIcon} from "../components/VisibilityIcon";
+import {VisibilityIcon} from "../components/widgets/VisibilityIcon";
 import {UserContext} from "../user-content/UserContent";
 
 

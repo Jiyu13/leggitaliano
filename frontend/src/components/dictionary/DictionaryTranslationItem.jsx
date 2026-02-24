@@ -3,8 +3,8 @@ import {FilledButton, StaffDictTranslationButton, StaffDictionaryButton} from ".
 import {useState, useEffect} from "react";
 import {RequiredWarning, Textarea} from "../../styles/formStyles";
 import api from "../../api";
-import PopupModal from "../PopupModal";
-import ToastMessage from "../ToastMessage";
+import PopupModal from "../widgets/PopupModal";
+import ToastMessage from "../widgets/ToastMessage";
 import {showToast} from "../../utils/showToast";
 
 

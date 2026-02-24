@@ -6,7 +6,7 @@ import {
 } from "../styles/formStyles";
 import {useNavigate} from "react-router-dom";
 import {SubmitInputButton} from "../styles/buttonStyles";
-import {VisibilityIcon} from "../components/VisibilityIcon";
+import {VisibilityIcon} from "../components/widgets/VisibilityIcon";
 import {UserContext} from "../user-content/UserContent";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 
