@@ -1,6 +1,6 @@
-import arrow_left from "../assets/icons/arrow_left_24dp.svg"
-import arrow_right from "../assets/icons/arrow_right_24dp.svg"
-import check from "../assets/icons/check_24dp.svg"
+import arrow_left from "../../assets/icons/arrow_left_24dp.svg"
+import arrow_right from "../../assets/icons/arrow_right_24dp.svg"
+import check from "../../assets/icons/check_24dp.svg"
 import styled from "styled-components";
 
 
@@ -54,7 +54,7 @@ const ArrowContainer = styled.div`
 `
 
 const ArrowImg = styled.img`
-  width: 36px;
+  width: 100%;
   height: 36px;
   //filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(0deg);
 

@@ -1,18 +1,16 @@
 import styled from "styled-components";
-
-
 import {useNavigate} from "react-router-dom";
 import {useContext, useEffect, useRef, useState} from "react";
-import {HeaderMenuItem} from "./HeaderMenuItem";
-import api from "../api";
-import {UserContext} from "../user-content/UserContent";
+import {HeaderAccountMenuItem} from "./HeaderAccountMenuItem";
+import api from "../../api";
+import {UserContext} from "../../user-content/UserContent";
 
 
-export function HeaderMenu() {
+export function HeaderAccountMenu() {
 
     const { setIsLogin, currentUser, setCurrentUser } = useContext(UserContext)
 
-   const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate()
 
 
@@ -53,18 +51,18 @@ export function HeaderMenu() {
                 <UserName>{currentUser?.username}</UserName>
             </MenuTrigger>
 
-            {isOpen && (
-              <MenuDropdownList>
-                <HeaderMenuItem
-                  icon={""}
-                  icon_info="aacount icon"
-                  text="Account"
-                  goTo="/account"
-                />
+            {/*{isOpen && (*/}
+            {/*  <MenuDropdownList>*/}
+            {/*    <HeaderAccountMenuItem*/}
+            {/*      icon={""}*/}
+            {/*      icon_info="aacount icon"*/}
+            {/*      text="Account"*/}
+            {/*      goTo="/account"*/}
+            {/*    />*/}
 
                 {/*{*/}
                 {/*  (currentUser.user_id === 33 || currentUser.id === 1) && (*/}
-                {/*    <HeaderMenu*/}
+                {/*    <HeaderAccountMenu*/}
                 {/*      icon={""}*/}
                 {/*      icon_info="admin icon"*/}
                 {/*      text="Admin"*/}
@@ -74,15 +72,15 @@ export function HeaderMenu() {
                 {/*  )*/}
                 {/*}*/}
 
-                <HeaderMenuItem
-                  icon={""}
-                  icon_info="logout icon"
-                  text="Log out"
-                  handleClick={handleLogout}
-                  goTo="javascript:void(0)"
-                />
-              </MenuDropdownList>
-            )}
+                {/*<HeaderAccountMenuItem*/}
+                {/*  icon={""}*/}
+                {/*  icon_info="logout icon"*/}
+                {/*  text="Log out"*/}
+                {/*  handleClick={handleLogout}*/}
+                {/*  goTo="javascript:void(0)"*/}
+                {/*/>*/}
+              {/*</MenuDropdownList>*/}
+            {/*)}*/}
         </MenuContainer>
     )
 }
@@ -95,6 +93,9 @@ const UserName = styled.div`
     justify-content: center;
     align-items: center;
     vertical-align: middle;
+    &:hover {
+      color: #17BC5A;
+    } ;
 `
 
 const MenuDropdownList = styled.div`

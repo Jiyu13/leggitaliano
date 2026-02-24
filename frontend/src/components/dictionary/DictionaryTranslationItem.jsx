@@ -1,22 +1,23 @@
 import styled from "styled-components";
-import {FilledButton} from "../styles/buttonStyles";
+import {FilledButton, StaffDictTranslationButton, StaffDictionaryButton} from "../../styles/buttonStyles";
 import {useState, useEffect} from "react";
-import {RequiredWarning, Textarea} from "../styles/formStyles";
-import api from "../api";
-import PopupModal from "./PopupModal";
-import ToastMessage from "./ToastMessage";
+import {RequiredWarning, Textarea} from "../../styles/formStyles";
+import api from "../../api";
+import PopupModal from "../widgets/PopupModal";
+import ToastMessage from "../widgets/ToastMessage";
+import {showToast} from "../../utils/showToast";
 
 
 function DictionaryTranslationItem({
     translationItem, wordId, translationIndex,
-    clickedWord, wordType, dictionaryWords, setDictionaryWords
+    clickedWord, wordType, dictionaryWords, setDictionaryWords, searchResult, setSearchResult, searchInputData
 }) {
     // translationItem = ["1....", "s1 -- t1", "s2 -- t2", ...],
     // it is one of the translations of each word -> word.translations = ["1...", "2...", ...]
 
     useEffect(() => {
         // to update the UI instantly
-        setTransItem(translationItem)}, [dictionaryWords])
+        setTransItem(translationItem)}, [dictionaryWords, translationItem])
 
     const [transItem, setTransItem] = useState(translationItem)
     const [textareaError, setTextareaError] = useState(null)
@@ -41,37 +42,38 @@ function DictionaryTranslationItem({
             translation_index: translationIndex,
             translation: updatedItem,
         }
+
         api.patch(`/word/update_translation/${wordId}/`, data)
            .then(res => {
                const result = res.data
-               const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
-               setDictionaryWords(updatedWords)
-               setTargetTransId(index)
-               setShowToast(msg)
-               setTimeout(function() {
-                    setShowToast(null)
-               }, 1000)
+               // const updatedWords = dictionaryWords.map((dw) => dw.id === result.id ? result : dw)
+               // setDictionaryWords(updatedWords)
 
+               if (searchResult) {
+                   const updateSearchResult= searchResult.data?.map(dw => dw.id === result.id ? result : dw)
+                   setSearchResult({...searchResult, data: updateSearchResult})
+                   setTransItem(updatedItem)
+               } else {
+                 const updatedWords = dictionaryWords?.map(dw => dw.id === result.id ? result : dw)
+                   setDictionaryWords(updatedWords)
+               }
+
+               setTargetTransId(index)
+               showToast(setShowToast, msg)
             })
             .catch(error => {
                if (error.response) {// server responded with error status
                     setError(error.response.data.error);
                     setPopupOpen(true)
 
-                    setShowToast("Update failed.")
-                        setTimeout(function() {
-                        setShowToast(null)
-                    }, 1000)
+                    showToast(setShowToast, "Update failed.")
 
               } else {// network / CORS / other failure
                    console.log("network error", error.message)
                     setError(error.message);
                     setPopupOpen(true)
-                    setShowToast("Update failed.")
-                    setTimeout(function() {
-                        setShowToast(null)
-                    }, 1000)
 
+                    showToast(setShowToast, "Update failed.")
             }})
     }
 
@@ -83,6 +85,7 @@ function DictionaryTranslationItem({
             setTextareaError([index,"Required."])
         } else {
             const updatedItem = transItem.map((original_item, i) => index === i ? tran_item: original_item)
+            // console.log(updatedItem)
             updateTranslationItem(updatedItem, index, "Updated!")
         }
     }
@@ -92,6 +95,34 @@ function DictionaryTranslationItem({
         // exclude the removed target by checking the id
         const updatedTransItem = translationItem.filter((original_item, i) => index !== i)
         updateTranslationItem(updatedTransItem, index, "Deleted!")
+    }
+
+    function handleAddToSentences(index) {
+        const targetItem = transItem.filter((ti, i) => index === i)
+        const splitItem = targetItem[0].split("--")
+        const targetSentence = splitItem[0]
+        const sentenceTranslation = splitItem[1]
+
+        const data = {
+            word: clickedWord,
+            word_type: wordType,
+            sentence: targetSentence.trim(),
+            sentence_translation: sentenceTranslation.trim()
+        }
+        api.post(`/sentence/add/${wordId}/`, data)
+               .then(res => {
+                    if (res.status === 201) {
+                       setTargetTransId(index)
+                        showToast(setShowToast, "Sentence added!")
+                    }
+                })
+                .catch(error => {
+                   if (error.response) {
+                   setError(error.response.data.error);
+                  } else {
+                    console.log("network error", error.message);
+                    setError("network error")
+                }})
     }
 
     function handleMoveToSentences(index) {
@@ -114,12 +145,21 @@ function DictionaryTranslationItem({
                 sentence: targetSentence.trim(),
                 sentence_translation: sentenceTranslation.trim()
             }
-            api.post(`/sentence/add/${wordId}/`, data)
+            api.post(`/sentence/move/${wordId}/`, data)
                .then(res => {
                     const result = res.data
                     const updatedWord = result["word"]
-                    const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
-                   setDictionaryWords(updatedWords)
+
+                   if (searchResult) {
+                       const updateSearchResult = searchResult.data?.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
+                       setSearchResult({...searchResult, data: updateSearchResult})
+                       setTransItem(updatedItems)
+
+                   } else {
+                       const updatedWords = dictionaryWords.map((dw) => dw.id === updatedWord.id ? updatedWord : dw)
+                       setDictionaryWords(updatedWords)
+                   }
+
                 })
                 .catch(error => {
                    if (error.response) {
@@ -158,36 +198,48 @@ function DictionaryTranslationItem({
                         <RequiredWarning>{textareaError[1]}</RequiredWarning>
                     )}
 
-                    <div style={{display: "flex", gap:"0.5rem"}}>
-                        <FilledButton
-                            // disabled={transItems[index] === ""}
-                            style={{
-                                border: "1px solid #fff", marginTop: "8px",
-                                //cursor: transItems[index] === "" ? "no-drop" : "pointer",
-                            }}
-                            onClick={ () => handleUpdateTranslationItem(tran_item, index)}
-                        >
-                            update
-                        </FilledButton>
+                    <DictionaryButtonsContainer>
+                        {index === 0 ?
+                            <StaffDictTranslationButton
+                                style={{marginTop: "8px",}}
+                                onClick={ () => handleUpdateTranslationItem(tran_item, index)}
+                            >
+                                update
+                            </StaffDictTranslationButton>
 
-                        <FilledButton
-                            // disabled={transItems[index] === ""}
-                            style={{
-                                border: "1px solid #fff", marginTop: "8px",
-                                //cursor: transItems[index] === "" ? "no-drop" : "pointer",
-                            }}
-                            onClick={ () => handleMoveToSentences(index)}
-                        >
-                            Move to sentences
-                        </FilledButton>
+                            :
 
-                        <FilledButton
-                            style={{border: "1px solid #fff", marginTop: "8px"}}
-                            onClick={ () => handleDeleteTranslationItem(tran_item, index)}
-                        >
-                            Delete
-                        </FilledButton>
-                    </div>
+                            <>
+                                <StaffDictionaryButton
+                                    style={{marginTop: "8px",}}
+                                    onClick={ () => handleUpdateTranslationItem(tran_item, index)}
+                                >
+                                    update
+                                </StaffDictionaryButton>
+                                <StaffDictionaryButton
+                                    style={{marginTop: "8px", padding: "0"}}
+                                    onClick={ () => handleMoveToSentences(index)}
+                                >
+                                    Move to sentences
+                                </StaffDictionaryButton>
+
+                                <StaffDictionaryButton
+                                    style={{marginTop: "8px",  padding: "0"}}
+                                    onClick={ () => handleAddToSentences(index)}
+                                >
+                                    add to sentences
+                                </StaffDictionaryButton>
+
+                                <StaffDictionaryButton
+                                    style={{marginTop: "8px"}}
+                                    onClick={ () => handleDeleteTranslationItem(tran_item, index)}
+                                >
+                                    Delete
+                                </StaffDictionaryButton>
+                            </>
+                        }
+
+                    </DictionaryButtonsContainer>
 
                     {isShowToast !== null && targetTranslationId === index &&(
                         <ToastMessage message={isShowToast}/>
@@ -204,5 +256,10 @@ const TranslationItem = styled.li`
   display: flex;
   flex-direction: column;
   padding: 1rem 0;
+`
+const DictionaryButtonsContainer = styled.div`
+  display: flex; 
+  gap:0.5rem;
+  justify-content: space-around;
 `
 export default DictionaryTranslationItem

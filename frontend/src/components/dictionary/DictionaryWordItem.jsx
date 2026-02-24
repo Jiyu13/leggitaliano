@@ -1,17 +1,19 @@
 import styled from "styled-components";
 import DictionaryTranslationItem from "./DictionaryTranslationItem";
-import arrow_down_icon from "../assets/icons/arrow_down.svg";
-import arrow_up_icon from "../assets/icons/arrow_up.svg";
-import edit_icon from "../assets/icons/edit_24dp.svg"
-import delete_icon from "../assets/icons/delete_24dp.svg"
+import arrow_down_icon from "../../assets/icons/arrow_down.svg";
+import arrow_up_icon from "../../assets/icons/arrow_up.svg";
+import edit_icon from "../../assets/icons/edit_24dp.svg"
+import delete_icon from "../../assets/icons/delete_24dp.svg"
 import DictionaryWordEditForm from "./DictionaryWordEditForm";
-import api from "../api";
+import api from "../../api";
 import {useRef} from "react";
+import {showToast} from "../../utils/showToast";
 
 
 function DictionaryWordItem({
     clickedWord, wordItem, wordItemId, dictionaryWords, setDictionaryWords,
     setShowMeaningId, showMeaningId, setShowEditFormId, showEditFormId,
+    searchResult, setSearchResult, searchInputData, setIsDeleted, setDeletedWord
 }) {
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
@@ -40,14 +42,35 @@ function DictionaryWordItem({
         scrollToElement()
     }
 
+    function handleShowDeleteMessage() {
+        setIsDeleted(true)
+        setTimeout (() => {
+            setIsDeleted(false);
+            setDeletedWord(null)
+        }, 2000)
+    }
+
     function handleDeleteWordItemByType() {
         setShowMeaningId(null)
+        // handleShowDeleteMessage() // ????not showing modal
+        // setDeletedWord(wordItem)
         api.delete(`/word/id/${wordItem.id}/`)
                .then(res => {
-                   const updatedWords = dictionaryWords?.filter(dw => {
-                       return dw.id !== wordItem.id
-                   })
-                   setDictionaryWords(updatedWords)
+
+                   // setDictionaryWords(updatedWords)
+                   if (searchResult) {
+                       const updatedSearchResult = searchResult?.data.filter(dw => {
+                            return dw.id !== wordItem.id
+                       })
+                       setSearchResult({...searchResult, data: updatedSearchResult})
+                   } else {
+                       const updatedWords = dictionaryWords?.filter(dw => {
+                            return dw.id !== wordItem.id
+                       })
+                       setDictionaryWords(updatedWords)
+                   }
+                   setDeletedWord(wordItem)
+                   handleShowDeleteMessage()
                 })
                 .catch(error => {
                    if (error.response) {
@@ -58,30 +81,35 @@ function DictionaryWordItem({
 
     }
 
+    const icon = isShowMeaning ? arrow_up_icon : arrow_down_icon
+    const iconAlt =  isShowMeaning ? "close meaning icon" : "show meaning icon"
+
     return (
         <WordItemContainer className="word-item-container" ref={itemScrollRef} id={wordItem.id}>
 
-            <div style={{display: "flex", justifyContent: "space-between"}}>
+            <div style={{display: "flex", justifyContent: "space-between",alignItems: "center"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <WordType>{wordType}</WordType>
-                    {isShowMeaning && (
-                        <Img
-                            alt="close meaning icon"
-                            src={arrow_up_icon}
-                            onClick={handleToggleShowMeaning}
+                    <WordType>
 
-                        />
-                    )}
+                        {wordType}
+
+                        {
+                            wordItem.is_verb && wordItem.parent &&
+                            <>
+                                <span>&nbsp;→</span>
+                                <span style={{fontWeight: "bolder"}}>&nbsp;{wordItem.parent}</span>
+                            </>
+
+                        }
+                    </WordType>
 
 
-                    {!isShowMeaning && (
-                        <Img
-                            alt="show meaning icon"
-                            src={arrow_down_icon}
-                            onClick={handleToggleShowMeaning}
-                        />
+                    <Img
+                        alt={iconAlt}
+                        src={icon}
+                        onClick={handleToggleShowMeaning}
 
-                    )}
+                    />
                 </div>
                 <div style={{display: "flex", alignItems: "center"}}>
                      <Img
@@ -133,6 +161,10 @@ function DictionaryWordItem({
                                 wordType={wordType}
                                 dictionaryWords={dictionaryWords}
                                 setDictionaryWords={setDictionaryWords}
+
+                                setSearchResult={setSearchResult}
+                                searchResult={searchResult}
+                                searchInputData={searchInputData}
                             />
                         )}
                     )}
@@ -147,6 +179,10 @@ function DictionaryWordItem({
                     setShowEditFormId={setShowEditFormId}
                     setShowMeaningId={setShowMeaningId}
                     scrollToElement={scrollToElement}
+
+                    setSearchResult={setSearchResult}
+                    searchResult={searchResult}
+                    searchInputData={searchInputData}
                 />
             )}
 

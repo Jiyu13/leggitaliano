@@ -1,20 +1,20 @@
 import {OptionBox, SelectBox, Textarea} from "../styles/formStyles";
 
 export const CONJUGATIONS = [
-    "gerundo", "participio presente", "participio passato",
+    "gerundio", "participio presente", "participio passato",
     "indicativo presente", "indicativo imperfetto", "indicativo passato remoto", "indicativo futuro",
     "perfetto", "congiuntivo_presente", "congiuntivo_imperfetto", "condizionale", "imperativo"
 
 ]
 
-function ConjugationOptions({handleChangeVerbTense, isVerb, handleNoteChange, index, note}) {
+function NotesOptions({handleChangeVerbTense, isVerb, handleNoteChange, index, note}) {
     return (
         <>
             {isVerb ?
                 <SelectBox
                     // id={formData.word_type}
                     name="notes"
-                    value={note.split(",")[0]}
+                    value={note ? note.split(",")[0] : ""}
                     onChange={(e) => handleChangeVerbTense(e, index)}
                     style={{
                         width: "100%",
@@ -25,6 +25,10 @@ function ConjugationOptions({handleChangeVerbTense, isVerb, handleNoteChange, in
                     }}
 
                 >
+                    <OptionBox value="" disabled hidden>
+                        Select tense...
+                    </OptionBox>
+
                     {CONJUGATIONS?.map((conjugation, index) =>
                         <OptionBox
                             key={index}
@@ -50,4 +54,4 @@ function ConjugationOptions({handleChangeVerbTense, isVerb, handleNoteChange, in
     )
 
 }
-export default ConjugationOptions
+export default NotesOptions

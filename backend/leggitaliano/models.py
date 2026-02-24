@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -53,6 +55,11 @@ class Article(models.Model):
     finished = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def total_words(self):
+        words = re.findall(r'\b\w+\b', self.content)
+        return len(words)
 
     class Meta:
         ordering = ["-created_at"]

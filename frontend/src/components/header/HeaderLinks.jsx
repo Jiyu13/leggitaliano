@@ -1,11 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import {UserContext} from "../user-content/UserContent";
-
 
 export function HeaderLinks() {
-    const {} = useContext(UserContext)
-
     return (
         <>
             <NavLinksContainer>
@@ -24,23 +20,6 @@ export function HeaderLinks() {
                             Currently Reading
                             <HideTitle className="last-open-title">No current reading.</HideTitle>
                         </Link>
-                        {/*{currentArticle ?*/}
-                        {/*    <Link*/}
-                        {/*        className="recent-reading"*/}
-                        {/*        href={`/articles/${currentArticle?.id}/${cleanURL(currentArticle?.title)}`}*/}
-                        {/*        style={{}}*/}
-                        {/*    >*/}
-                        {/*        <div>*/}
-                        {/*            Currently Reading*/}
-                        {/*        </div>*/}
-                        {/*        <HideTitle className="last-open-title">{currentArticle?.title}</HideTitle>*/}
-                        {/*    </Link>*/}
-                        {/*    :*/}
-                        {/*    <Link className="recent-reading" style={{cursor: "pointer"}}>*/}
-                        {/*        Currently Reading*/}
-                        {/*        <HideTitle className="last-open-title">No current reading.</HideTitle>*/}
-                        {/*    </Link>*/}
-                        {/*}*/}
                     </LinkItem>
 
                 </LinksWrapper>
@@ -78,7 +57,7 @@ const LinksWrapper = styled.ul`
 const LinkItem = styled.li`
     height: 100%;
     margin: 0 1.1em;
-    color: # 222;
+    color: #222;
     font-weight: 500;
     font-size: 18px;
     align-items: center;
@@ -99,10 +78,11 @@ const LinkItem = styled.li`
 
 const Link = styled.a`
     text-decoration: none;
-    color: rgba(0, 0, 0, 0.5);
+    color: #fff;
     font-size: inherit;
   
-  &:hover {
-    color: #000000;
-  }
+   &:hover {
+      color: #17BC5A;
+   } ;
+  
 `;

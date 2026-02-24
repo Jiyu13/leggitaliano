@@ -1,17 +1,24 @@
 // Wrapper for a protected route, need an authentication token before accessing the route
 import {useContext, useEffect, useState} from "react";
-import {Navigate, Outlet} from "react-router-dom";
+import {Navigate, Outlet, useLocation} from "react-router-dom";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 import {jwtDecode} from "jwt-decode";
 import api from "../api";
-import Header from "./Header";
+import Header from "./header/Header";
 import styled from "styled-components";
 import {UserContext} from "../user-content/UserContent";
+import FloatingHeaderNoBackground from "./header/FloatingHeaderNoBackground";
+import ArticleHeader from "./header/ArticleHeader";
 
 function ProtectedRoutes() {
 
-    const {setIsLogin} = useContext(UserContext)
+    const {setIsLogin, currentArticle} = useContext(UserContext)
     const [isAuthorized, setIsAuthorized] = useState(null)
+
+    const location = useLocation()
+    // article-reading-page, article/add
+    const notShowHeader = location.pathname.startsWith("/article")
+    const headerTitle = location.pathname === "/article/add" ? "Add a new article" : currentArticle?.title
 
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false))
@@ -83,7 +90,8 @@ function ProtectedRoutes() {
     if (isAuthorized === null) return <div>Loading...</div>
     return isAuthorized ?
         <PageContainer>
-            <Header />
+            {/*<Header />*/}
+            {!notShowHeader ? <FloatingHeaderNoBackground /> :  <ArticleHeader articleTitle={headerTitle}/>}
             <Main>
                <Outlet />
             </Main>
@@ -95,11 +103,12 @@ function ProtectedRoutes() {
 
 const PageContainer = styled.div``
 const Main = styled.main`
-    height: 100vh;
-    width: 725px;
-    margin: 60px auto 0;
+    //min-height: calc(100vh - 120px);
+    //width: 725px;
+    margin: 0 auto 0;
     display: flex;
     justify-content: center;
+    height: 100vh;   // newly added
 `;
 
 export default ProtectedRoutes

@@ -3,15 +3,19 @@ import {useContext, useEffect, useRef, useState} from "react";
 import api from "../api";
 import {UserContext} from "../user-content/UserContent";
 import styled from "styled-components";
-import ArticleReadingArea from "../components/ArticleReadingArea";
+import ArticleReadingArea from "../components/article/ArticleReadingArea";
 import {splitText} from "../utils/splitText";
 import {calculatePages} from "../utils/calculatePages";
-import DictionaryArea from "../components/DictionaryArea";
+import StaffDictionaryArea from "../components/dictionary/StaffDictionaryArea";
+import UserDictionaryArea from "../components/dictionary/UserDictionaryArea";
+import {ArticleHeaderContainer, CustomContainer} from "../styles/containerStyles";
+
+const WORD_EACH_PAGE = 100
 
 function Article() {
 
     const { article_title, article_id } = useParams()
-    const {currentArticle, setCurrentArticle} = useContext(UserContext)
+    const {currentArticle, setCurrentArticle, currentUser} = useContext(UserContext)
 
     const [isLoading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(0)
@@ -21,7 +25,7 @@ function Article() {
     const [clickedWordIndex, setClickedWordIndex] = useState(null)
 
     const [ipa, setIpa] = useState(null)
-    const [dictionaryWords, setDictionaryWords] = useState(null)
+    const [dictionaryWords, setDictionaryWords] = useState(null)             // {} a word model data
     const [wordNotFound, setNotFound] = useState(null)
 
     const [totalWords, setTotalWords] = useState(0)
@@ -29,6 +33,14 @@ function Article() {
     const [lastClick, setLastClick] = useState(null)
 
     const [isShowNewMeaningForm, setShowNewMeaningForm] = useState(false)
+
+    const [userDictSearchInputData, setUserDictSearchInputData] = useState("")
+    const [userDictSearchResult, setUserDictSearchResult] = useState(null)
+    const [userDictSearchError, setUserDictSearchError] = useState(null)
+
+    const [staffDictSearchInputData, setStaffDictSearchInputData] = useState("")
+    const [staffDictSearchResult, setStaffDictSearchResult] = useState(null)   // {word, ipa, data(a word model data)}
+    const [staffDictSearchError, setStaffDictSearchError] = useState(null)
 
 
 
@@ -54,9 +66,16 @@ function Article() {
     function handleWordClicked(word) {
         setShowNewMeaningForm(false)
         setDictionaryWords(null)
-        setNotFound(null)
         setClickedWord(null)
         setIpa(null)
+        setNotFound(null)
+
+        setUserDictSearchError(null)
+        setUserDictSearchResult(null)
+        setUserDictSearchInputData("")
+        setStaffDictSearchError(null)
+        setStaffDictSearchResult(null)
+        setStaffDictSearchInputData("")
 
         const cleanWord = word
             .trim()
@@ -83,8 +102,8 @@ function Article() {
 
     // ======================== article -> paragraphs -> words =========================================================
     const articleWords = splitText(currentArticle?.content)
-    const pages = calculatePages(articleWords)
-    const textInPages = articleWords?.slice((currentPage) * 250, (currentPage) * 250 + 250) // slice, get words from [0-250], page increases/decreases by 1
+    const pages = calculatePages(articleWords, WORD_EACH_PAGE)
+    const textInPages = articleWords?.slice((currentPage) * WORD_EACH_PAGE, (currentPage) * WORD_EACH_PAGE + WORD_EACH_PAGE) // slice, get words from [0-250], page increases/decreases by 1
                         .join(' ')    // join 250 words with space to make it a paragraph
                         .replaceAll("##", "\n\n")
     const paragraphs = textInPages?.split("\n\n").map(p => p.trim())
@@ -94,6 +113,12 @@ function Article() {
 
     const divRef = useRef(null)
     function handlePrevPage() {
+        setClickedWord(null)
+        setClickedWordIndex(null)
+        setDictionaryWords(null)
+        setIpa(null)
+
+
         if (currentPage > 0){
             const prevPage = currentPage - 1
             setCurrentPage(prevPage)
@@ -105,8 +130,8 @@ function Article() {
         }
         setFinishReading(false)
 
-        if (totalWords >= currentPage*250){
-            setTotalWords(totalWords - 250)
+        if (totalWords >= currentPage * WORD_EACH_PAGE){
+            setTotalWords(totalWords - WORD_EACH_PAGE)
         }
         divRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -118,15 +143,20 @@ function Article() {
 
 
     function handleNextPage() {
+        setClickedWord(null)
+        setClickedWordIndex(null)
+        setDictionaryWords(null)
+        setIpa(null)
+
         let timeNow = new Date().getTime()
         if (currentPage < pages - 1) {
             const nextPage = currentPage + 1
             setCurrentPage(nextPage)
             updatePageInDB(nextPage)
             if (lastClick && timeNow > (lastClick + 25000)) {
-                handleWordsRead(250)
+                handleWordsRead(WORD_EACH_PAGE)
             }
-            setTotalWords(totalWords + 250)
+            setTotalWords(totalWords + WORD_EACH_PAGE)
         }
         divRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -148,7 +178,7 @@ function Article() {
         if ( currentArticle.finished !== true ) {
             try {
                 const rest = api.patch(`/article/${currentArticle.id}/`, {finished: true,})
-                const lastPageWords = articleWords?.length - (pages - 1)*250
+                const lastPageWords = articleWords?.length - (pages - 1) * WORD_EACH_PAGE
                 handleWordsRead(lastPageWords)
                 setTotalWords(totalWords + lastPageWords)
                 setFinishReading(true)
@@ -168,51 +198,76 @@ function Article() {
     }
 
     return (
-        <ArticleContainer className="article-container">
-            <ArticleReadingArea
-                currentPage={currentPage}
-                paragraphs={paragraphs}
-                isLoading={isLoading}
-                divRef={divRef}
-                pages={pages}
-                setClickedWordIndex={setClickedWordIndex}
-                clickedWordIndex={clickedWordIndex}
-                handleWordClicked={handleWordClicked}
-                handlePrevPage={handlePrevPage}
-                handleNextPage={handleNextPage}
-                handleFinishReading={handleFinishReading}
-                sentence={sentence}
-                setSentence={setSentence}
-            />
-            <DictionaryArea
-                ipa={ipa}
-                setIpa={setIpa}
-                clickedWord={clickedWord}
-                dictionaryWords={dictionaryWords}
-                setDictionaryWords={setDictionaryWords}
-                wordNotFound={wordNotFound}
-                setNotFound={setNotFound}
-                isShowNewMeaningForm={isShowNewMeaningForm}
-                setShowNewMeaningForm={setShowNewMeaningForm}
-            />
-        </ArticleContainer>
+        <>
+            {currentArticle && (
+                <ArticleContainer className="article-container">
+                    <ArticleReadingArea
+                        currentPage={currentPage}
+                        paragraphs={paragraphs}
+                        isLoading={isLoading}
+                        divRef={divRef}
+                        pages={pages}
+                        setClickedWordIndex={setClickedWordIndex}
+                        clickedWordIndex={clickedWordIndex}
+                        handleWordClicked={handleWordClicked}
+                        handlePrevPage={handlePrevPage}
+                        handleNextPage={handleNextPage}
+                        handleFinishReading={handleFinishReading}
+                        sentence={sentence}
+                        setSentence={setSentence}
+                    />
+                    {currentUser?.is_staff && (
+                        <StaffDictionaryArea
+                            ipa={ipa}
+                            setIpa={setIpa}
+                            clickedWord={clickedWord}
+                            clickedWordIndex={clickedWordIndex}
+                            dictionaryWords={dictionaryWords}
+                            setDictionaryWords={setDictionaryWords}
+                            wordNotFound={wordNotFound}
+                            setNotFound={setNotFound}
+                            isShowNewMeaningForm={isShowNewMeaningForm}
+                            setShowNewMeaningForm={setShowNewMeaningForm}
+                            searchResult={staffDictSearchResult}
+                            setSearchResult={setStaffDictSearchResult}
+                            searchInputData={staffDictSearchInputData}
+                            setSearchInputData={setStaffDictSearchInputData}
+                            searchError={staffDictSearchError}
+                            setSearchError={setStaffDictSearchError}
+                        />
+
+                    )}
+                    <UserDictionaryArea
+                        ipa={ipa}
+                        setIpa={setIpa}
+                        clickedWord={clickedWord}
+                        clickedWordIndex={clickedWordIndex}
+                        dictionaryWords={dictionaryWords}
+                        setDictionaryWords={setDictionaryWords}
+                        wordNotFound={wordNotFound}
+                        setNotFound={setNotFound}
+                        searchResult={userDictSearchResult}
+                        setSearchResult={setUserDictSearchResult}
+                        searchInputData={userDictSearchInputData}
+                        setSearchInputData={setUserDictSearchInputData}
+                        searchError={userDictSearchError}
+                        setSearchError={setUserDictSearchError}
+                    />
+                </ArticleContainer>
+            )}
+        </>
     )
 }
-const ArticleContainer = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 424px;
-    //flex-direction: row;
-   justify-content: center;
+const ArticleContainer = styled(ArticleHeaderContainer)`
+    display: flex;
+    justify-content: center;
     align-items: stretch;
-    //gap: 1px;
-    margin: 20px auto 0;
     box-sizing: border-box;
-    //width: 100%;
     min-height: 450px;
     font-size: 20px;
     line-height: 1.6;
-    height: calc(100% - 60px);  // Handle top bar which is 60px
     position: fixed;
+    padding: 0 1rem;
 `
 
 export default Article

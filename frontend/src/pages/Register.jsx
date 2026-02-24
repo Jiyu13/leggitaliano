@@ -8,13 +8,13 @@ import {
     FormLabel,
     FormPageContainer,
     FormWrapper,
-    FormTitle, FormContainer, PasswordWrapper, FormButtonWrapper, LoginLink, FormErrorContainer,
+    FormTitle, FormContainer, PasswordWrapper, FormButtonWrapper, LoginLink, FormErrorContainer, LinkText,
 } from "../styles/formStyles";
 import {replace, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {SubmitInputButton} from "../styles/buttonStyles";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
-import {VisibilityIcon} from "../components/VisibilityIcon";
+import {VisibilityIcon} from "../components/widgets/VisibilityIcon";
 import {UserContext} from "../user-content/UserContent";
 
 
@@ -174,20 +174,20 @@ function Register() {
                                 value="Create Account"
                                 disabled={disabledButton}
                                 style={{
-                                    backgroundColor: disabledButton ? "rgba(40,44,52,.7)" : "rgba(40,44,52, 1)",
-                                    opacity: disabledButton ? 0.6 : 1,
+                                    backgroundColor: disabledButton ? "rgba(23,188,90, 0.8)" : "rgba(23,188,90, 1)",
+                                    cursor: disabledButton ? "no-drop" : "pointer",
                                 }}
                             />
                         </FormButtonWrapper>
                     </Form>
 
-                    <div style={{fontSize: "0.9rem"}}>
+                    <LinkText>
                         Already have an account?
                         <LoginLink href="/login">
                             Login
                         </LoginLink>
                         here!
-                    </div>
+                    </LinkText>
 
                 </FormWrapper>
             </FormContainer>

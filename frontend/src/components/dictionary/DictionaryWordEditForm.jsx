@@ -1,73 +1,78 @@
-import {FieldBox, FormButtonWrapper, FormLabel, OptionBox, SelectBox, Textarea} from "../styles/formStyles";
+import {
+    FieldBox,
+    FormButtonWrapper,
+    FormErrorContainer,
+    FormLabel,
+    OptionBox,
+    SelectBox,
+    Textarea
+} from "../../styles/formStyles";
 import {useContext, useState} from "react";
+import {UserContext} from "../../user-content/UserContent";
+import {SubmitInputButton} from "../../styles/buttonStyles";
 import styled from "styled-components";
-import {SubmitInputButton} from "../styles/buttonStyles";
-import {UserContext} from "../user-content/UserContent";
-import add_another_translation_icon from "../assets/icons/add_24dp.svg";
-import remove_this_translation_icon from "../assets/icons/remove_24dp.svg";
-import api from "../api";
-import {IS_INHERIT} from "./DictionaryWordEditForm";
+import api from "../../api";
+import add_another_translation_icon from "../../assets/icons/add_24dp.svg";
+import remove_this_translation_icon from "../../assets/icons/remove_24dp.svg";
+import {CONJUGATIONS} from "../NotesOptions";
+import NotesOptions from "../NotesOptions";
 
+export const IS_INHERIT = [{is_inherit: "True"}, {is_inherit: "False"}]
 
-function DictionaryWordNewMeaningForm({
-      clickedWord, setIpa, setDictionaryWords, setNotFound, setShowNewMeaningForm
+function DictionaryWordEditForm({word, dictionaryWords, setDictionaryWords, setShowEditFormId, setShowMeaningId,
+    scrollToElement, searchResult, setSearchResult, searchInputData
 }) {
-    const {wordTypes} = useContext(UserContext)
+    // console.log(word.notes[0].split(", ")[0])
+    const {wordTypes, } = useContext(UserContext)
 
     const initialValue = {
-        word: clickedWord,
-        translations: [""],
-        ipa: "",
-        parent_id: "",         // pass "word string" to post request but convert to word id in the backend
-        notes: null,
-        word_type_id: null,   // pass "string" id to post request
-        is_inherit_notes: false,
-        is_inherit_translations: false,
+        id: word.id,
+        word: word.word,
+        translations: word.translations,
+        is_inherit_translations: word.is_inherit_translations,
+        ipa: word.ipa,
+        parent: word.parent || "",
+        notes: word.notes,
+        is_inherit_notes: word.is_inherit_notes,
+        word_type: word.word_type   // pass "string" type name to post request
     }
 
     const [formData, setFormData] = useState(initialValue)
-    const [wordTypeEmpty, setWordTypeEmpty] = useState(false)
+    const [editFormError, setEditFormError] = useState(null)
 
-    function handleFormSubmit(e) {
+    function handleSubmitEditForm(e) {
         e.preventDefault()
-        setWordTypeEmpty(false)
-        if (!formData.word_type_id) {
-            setWordTypeEmpty(true)
-        } else {
-            const translations_payload = formData.is_inherit_translations ? [] : formData.translations
-            const notess_payload = formData.is_inherit_notes ? "" : formData.notes
+        // console.log(formData)
+        const validNotes = formData.notes.filter(note => note !=="")
+        const payload = {...formData, notes: validNotes}
 
-            const payload = {...formData, "translations": translations_payload, "notes": notess_payload}
-            // console.log(payload)
-            api.post(`/words/`, payload)
+        api.patch(`/word/id/${word.id}/`, payload)
                .then(res => {
                    const result = res.data
-                   console.log("add word result-------------", result)
-                   const ipa = result["ipa"]
-                   const data = result["data"]
-                   setIpa(ipa)
-                   setDictionaryWords(prev => {
-                       if (prev === null) {
-                           return [data]
-                       } else {
-                           return [...prev, data]
-                       }
-                   })
-                   setShowNewMeaningForm(false)
-                   setNotFound(null)
+                   // check if it's search input result, or clicked word result
+                   if (searchResult) {
+                       const updateSearchResult= searchResult.data?.map(dw => dw.id === word.id ? result : dw)
+                       setSearchResult({...searchResult, data: updateSearchResult})
+                   } else {
+                     const updatedWords = dictionaryWords?.map(dw => dw.id === word.id ? result : dw)
+                       setDictionaryWords(updatedWords)
+                   }
+                   setShowEditFormId(null)
+                   setShowMeaningId(word.id)
+                   scrollToElement()
                 })
                 .catch(error => {
                    if (error.response) {
-                   console.log(error.response.data.error);
+                       setEditFormError(error.response.data.error)
+                       console.log(error.response.data.error);
                   } else {
                     console.log("network error", error.message);
                 }})
-        }
-
 
     }
 
-     function handleInputChange(e) {
+    function handleInputChange(e){
+        // formData.notes is a string , converted to list in the backend
         const name = e.target.name
         let value
         if (name === "is_inherit_translations" || name === "is_inherit_notes") {
@@ -75,9 +80,9 @@ function DictionaryWordNewMeaningForm({
         } else {
             value = e.target.value
         }
+        setEditFormError(null)
         setFormData({...formData, [name]:value})
     }
-
 
     function handleTranslationChange(e, index) {
         const value = e.target.value
@@ -97,49 +102,79 @@ function DictionaryWordNewMeaningForm({
         setFormData({...formData, translations: updated})
     }
 
+    function handleNoteChange(e, index) {
+        const value = e.target.value
+
+        setFormData(prev => {
+            const next = [...prev.notes];
+            next[index] = value;
+            return { ...prev, notes: next };
+        });
+
+    }
+
+    function handleChangeVerbTense(e, index) {
+        const newTense = e.target.value
+        setFormData(prev => {
+            const notesCopy = [...prev.notes]
+            notesCopy[index] = newTense
+            return {
+                ...prev,
+                notes: notesCopy,
+            };
+        })
+    }
+
+    function handleAddNoteClick() {
+        const newNote = word.is_verb ? CONJUGATIONS[0] : ""
+        setFormData({...formData, notes: [...formData.notes, newNote]})
+    }
+
+    function handleRemoveNoteClick(index) {
+        const updated = formData.notes.filter((note, idx) => idx !== index)
+        setFormData({...formData, notes: updated})
+
+    }
+
+    const inputBorder =  editFormError === "parent_word_error"  ? "1.5px solid rgba(231, 76, 60, 1)" : "1.5px solid rgba(169, 169, 169, 1)"
+
     return (
-        <NewWordContainer className="new-word-container">
+        <NewWordContainer className="edit-word-container">
             <NewWordContainerWrapper>
 
             </NewWordContainerWrapper>
             <NewWordFormTitle>
-                New Meaning
+                Edit Meaning
             </NewWordFormTitle>
-            <NewWordFormWrapper className="new-word-form-wrapper">
-                <NewWordForm onSubmit={handleFormSubmit} className="form">
+            <NewWordFormWrapper className="edit-word-form-wrapper">
+                <NewWordForm onSubmit={handleSubmitEditForm} className="form">
 
                     <FieldBox className="field-box">
                         <FormLabel style={{color: "#ddd"}}>Word</FormLabel>
-                        <div
+                        <Textarea
                             className="form-input"
-                            style={{boxSizing: "border-box", fontSize: "1rem", padding: "8px 12px", border: "2px solid #a9a9a9", borderRadius: "8px"}}
-                        >
-                            {formData.word}
-                        </div>
+                            type="text"
+                            name='word'
+                            defaultValue={formData.word}
+                            disabled={true}
+                            style={{border: "2px solid #a9a9a9"}}
+
+                        />
                     </FieldBox>
 
 
                     <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                         <FormLabel style={{color: "#ddd"}}>Word Type</FormLabel>
                         <SelectBox
-                            id={formData.word_type_id}
-                            name="word_type_id"
-                            value={formData.word_type_id || "" }
+                            id={formData.word_type}
+                            name="word_type"
+                            value={formData.word_type}
                             onChange={handleInputChange}
-                            style={{
-                                color: "#ddd",
-                                background: "#222",
-                                borderRadius: "8px",
-                                border: wordTypeEmpty ? "2px solid #e74c3c" : "2px solid #a9a9a9"
-                            }}
+                            style={{color: "#ddd", background: "#222", borderRadius: "8px", border:  inputBorder}}
 
                         >
-                            <OptionBox value="" disabled>Select word type</OptionBox>
                             {wordTypes?.map((type, index) =>
-                                <OptionBox
-                                    key={index}
-                                    value={type.id}
-                                >
+                                <OptionBox key={index} value={type.type}>
                                     {type.type}
                                 </OptionBox>
                             )}
@@ -164,29 +199,38 @@ function DictionaryWordNewMeaningForm({
                         <Textarea
                             className="form-input"
                             type="text"
-                            name='parent_id'
-                            value={formData.parent_id}
+                            name='parent'
+                            value={formData.parent}
                             onChange={handleInputChange}
-                            style={{border: "2px solid #a9a9a9"}}
+                            style={{border: inputBorder}}
 
                         />
                     </FieldBox>
 
-                    {formData.parent_id && (
+                    {editFormError === "parent_word_error" && (
+                        <FormErrorContainer style={{margin: "0rem"}}>
+                            <li>
+                                Parent word &nbsp;
+                                <span style={{fontWeight: "Bolder", textDecoration: "underline"}}>{formData.parent}</span>
+                                &nbsp;with word type &nbsp;
+                                <span style={{fontWeight: "Bolder", textDecoration: "underline"}}>{formData.word_type}</span>
+                                &nbsp; not found.
+                            </li>
+                         </FormErrorContainer>
+                    )}
+
+                    {formData.parent && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Is inherit translations?</FormLabel>
                             <SelectBox
-                                id={formData.is_inherit_translations}
+                                // id={formData.is_inherit_translations}
                                 name="is_inherit_translations"
                                 value={formData.is_inherit_translations === false ? "False" : "True"}
                                 onChange={handleInputChange}
                                 style={{color: "#ddd", background: "#222", borderRadius: "8px", border: "2px solid #a9a9a9"}}
                             >
                                 {IS_INHERIT?.map((each, index) =>
-                                    <OptionBox
-                                        key={index}
-                                        value={each.is_inherit}
-                                    >
+                                    <OptionBox key={index} value={each.is_inherit}>
                                         {each.is_inherit}
                                     </OptionBox>
                                 )}
@@ -195,15 +239,14 @@ function DictionaryWordNewMeaningForm({
                         </FieldBox>
                     )}
 
-                    {(formData.is_inherit_translations === false ) && (
+                    {formData.is_inherit_translations === false  && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Translations</FormLabel>
                             {formData.translations.length !== 0 ? (
 
                                 formData.translations.map((t, index) =>
-                                    <div style={{display: "flex", alignItems: "center"}}>
+                                    <div style={{display: "flex", alignItems: "center"}} key={index}>
                                         <Textarea
-                                            key={index}
                                             className="form-input"
                                             type='text'
                                             name='translations'
@@ -253,21 +296,17 @@ function DictionaryWordNewMeaningForm({
                         </FieldBox>
                     )}
 
-                    {formData.parent_id && (
+                    {formData.parent && (
                         <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
                             <FormLabel style={{color: "#ddd"}}>Is inherit notes?</FormLabel>
                             <SelectBox
-                                id={formData.is_inherit_notes}
                                 name="is_inherit_notes"
                                 value={formData.is_inherit_notes === false ? "False" : "True"}
                                 onChange={handleInputChange}
                                 style={{color: "#ddd", background: "#222", borderRadius: "8px", border: "2px solid #a9a9a9"}}
                             >
                                 {IS_INHERIT?.map((each, index) =>
-                                    <OptionBox
-                                        key={index}
-                                        value={each.is_inherit}
-                                    >
+                                    <OptionBox key={index} value={each.is_inherit}>
                                         {each.is_inherit}
                                     </OptionBox>
                                 )}
@@ -275,32 +314,67 @@ function DictionaryWordNewMeaningForm({
                             </SelectBox>
                         </FieldBox>
                     )}
+
                     {formData.is_inherit_notes === false && (
+                        <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
+                            <FormLabel style={{color: "#ddd"}}>Notes</FormLabel>
+                            {formData.notes.length !== 0 ? (
+                                formData.notes.map((note, index) =>
+                                    <div style={{display: "flex", alignItems: "center"}} key={index}>
+                                        <NotesOptions
+                                            handleChangeVerbTense={handleChangeVerbTense}
+                                            handleNoteChange={handleNoteChange}
+                                            isVerb={word.is_verb}
+                                            index={index}
+                                            note={note}
+                                        />
+                                        {index === formData?.notes.length - 1 ?
 
-                    <FieldBox className="field-box" style={{padding: "1rem 0 0"}}>
-                        <FormLabel style={{color: "#ddd"}}>Notes (e.g. note1; note2; ...)</FormLabel>
-                        <Textarea
-                            className="form-input"
-                            type="text"
-                            name='notes'
-                            value={formData.notes}
-                            onChange={handleInputChange}
-                            style={{border: "2px solid #a9a9a9"}}
+                                            <AddTranslationIconImg
+                                                alt="add another note icon"
+                                                src={add_another_translation_icon}
+                                                onClick={handleAddNoteClick}
+                                            />
+                                            :
+                                            <AddTranslationIconImg
+                                                alt="remove this note icon"
+                                                src={remove_this_translation_icon}
+                                                onClick={() => handleRemoveNoteClick(index)}
+                                            />
+                                        }
 
-                        />
-                    </FieldBox>
+
+                                    </div>
+                                ))
+                                :
+                                (
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <NotesOptions
+                                            handleChangeVerbTense={handleChangeVerbTense}
+                                            handleNoteChange={handleNoteChange}
+                                            isVerb={word.is_verb}
+                                            index={0}
+                                            note=""
+                                        />
+
+                                        <AddTranslationIconImg
+                                            alt="add another note icon"
+                                            src={add_another_translation_icon}
+                                            onClick={handleAddNoteClick}
+                                        />
+                                    </div>
+                                )
+                            }
+                        </FieldBox>
                     )}
+
 
                     <FormButtonWrapper>
                         <SubmitInputButton
                             type="submit"
-                            value="Add"
+                            value="Edit"
                             // disabled={disabledButton}
-                            style={{
-                                border: "2px solid #a9a9a9", marginTop: "1rem"
-                                // backgroundColor: disabledButton ? "rgba(40,44,52,.7)" : "rgba(40,44,52, 1)",
-                                // cursor: disabledButton ? "no-drop" : "pointer",
-                            }}
+                            style={{border: "2px solid #a9a9a9", marginTop: "1rem"}}
                         />
                     </FormButtonWrapper>
                 </NewWordForm>
@@ -352,4 +426,4 @@ export const NewWordContainer = styled.div`
   padding-bottom: 2rem;
 `
 
-export default DictionaryWordNewMeaningForm
+export default DictionaryWordEditForm

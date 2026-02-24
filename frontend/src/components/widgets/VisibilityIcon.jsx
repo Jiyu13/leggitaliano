@@ -1,6 +1,6 @@
 import styled from "styled-components"
-import visibility_dark_24 from "../assets/icons/visibility_dark_24dp.svg"
-import visibility_off_dark_24 from "../assets/icons/visibility_off_dark_24dp.svg"
+import visibility_dark_24 from "../../assets/icons/visibility_dark_24dp.svg"
+import visibility_off_dark_24 from "../../assets/icons/visibility_off_dark_24dp.svg"
 
 export function VisibilityIcon( {ToggleIcon, visible} ) {
 

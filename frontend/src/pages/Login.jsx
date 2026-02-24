@@ -1,11 +1,12 @@
 import {useContext, useState} from "react";
 import api from "../api";
-import {Form, FieldBox, FormInput, FormLabel, FormPageContainer, FormWrapper,
-    FormTitle, FormContainer, PasswordWrapper, FormButtonWrapper, LoginLink, FormErrorContainer,
+import {
+    Form, FieldBox, FormInput, FormLabel, FormPageContainer, FormWrapper,
+    FormTitle, FormContainer, PasswordWrapper, FormButtonWrapper, LoginLink, FormErrorContainer, LinkText,
 } from "../styles/formStyles";
 import {useNavigate} from "react-router-dom";
 import {SubmitInputButton} from "../styles/buttonStyles";
-import {VisibilityIcon} from "../components/VisibilityIcon";
+import {VisibilityIcon} from "../components/widgets/VisibilityIcon";
 import {UserContext} from "../user-content/UserContent";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants";
 
@@ -130,20 +131,20 @@ function Login() {
                                 value="Sign in"
                                 disabled={disabledButton}
                                 style={{
-                                    backgroundColor: disabledButton ? "rgba(40,44,52,.7)" : "rgba(40,44,52, 1)",
+                                    backgroundColor: disabledButton ? "rgba(23,188,90, 0.8)" : "rgba(23,188,90, 1)",
                                     cursor: disabledButton ? "no-drop" : "pointer",
                                 }}
                             />
                         </FormButtonWrapper>
                     </Form>
 
-                    <div style={{fontSize: "0.9rem"}}>
+                    <LinkText>
                         Don't have an account?
                         <LoginLink href="/register">
                             Sign Up
                         </LoginLink>
                         Now!
-                    </div>
+                    </LinkText>
 
                 </FormWrapper>
             </FormContainer>

@@ -172,20 +172,23 @@ class DictionaryWordView(APIView):
 
     def post(self, request):
         """
-        Accept word_type id as string, Return a word with new type.
-        notes -> string, is separated by "; ", "note1.1, note1.2, ...; note2.1, note 2.2, ..."
+        1. Accept word_type id as string, Return a word with new type.
+        2. notes for verb: ["tense1", "tense2"...]
+        3. notes for NON-verb: ["form1", "form2"...]
+        4. return word with all types
         """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
+        word = data["word"]
         word_type_id = int(data['word_type_id'])  # a string of id number
         parent_string = data['parent_id']  # a string of word, need to convert to ID / None
         ipa = data['ipa']
         translations = data['translations']
         is_inherit_translations = data['is_inherit_translations']
 
-        notes_string = data["notes"]  # a string, need to be separated by "; " | null
+        notes_list = data["notes"]  # is a list
         # notes_list = notes_string.split("; ") if notes_string else notes_string
         is_inherit_notes = data['is_inherit_notes']
 
@@ -193,8 +196,8 @@ class DictionaryWordView(APIView):
         if parent_word:
             if is_inherit_notes is False:
                 if parent_word.word_type.id in [9, 12, 62, 63, 64, 65, 66, 67, 68, 96]:
-                    if len(notes_string) != 0:
-                        notes_list = notes_string.split("; ")
+                    if len(notes_list) != 0:
+                        # notes_list = notes_string.split("; ")
                         updated_notes = []
                         for tense in notes_list:
                             verb = Verb.objects.filter(infinitive=parent_word.word).first()
@@ -209,7 +212,7 @@ class DictionaryWordView(APIView):
             data["parent_id"] = parent_word.id
 
         else:
-            data["notes"] = notes_string.split("; ") if notes_string else []
+            # data["notes"] = notes_string.split("; ") if notes_string else []
             data["parent_id"] = None
 
         data["dictionary"] = 1
@@ -219,9 +222,11 @@ class DictionaryWordView(APIView):
         if not new_word_serializer.is_valid():
             return Response(new_word_serializer.errors, status=400)
         obj = new_word_serializer.save()
-        new_word_out = DictionaryWordSerializer(obj).data
 
-        return Response({"data": new_word_out, "ipa": ipa}, status=status.HTTP_201_CREATED)
+        all_words = DictionaryWord.objects.filter(word__iexact=obj.word).order_by("word_type__type")
+        all_words_out = DictionaryWordSerializer(all_words, many=True).data
+
+        return Response({"data": all_words_out, "ipa": ipa, "word": word}, status=status.HTTP_201_CREATED)
 
 
 class DictionaryWordByWordView(APIView):
@@ -253,10 +258,14 @@ class DictionaryWordByIDView(APIView):
             response = {"error": "Word not found"}
             return Response(response)
 
+    @transaction.atomic
     def patch(self, request, word_id):
-        """ Edit word form ,
-            Receive complete data object from request,
-            notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...]
+        """ 1. Edit word form ,
+            2. Receive complete data object from request,
+            3. notes for verb: ["tense1, form1, form2, ...", "tense2, form1, form2, ..."...]
+            4. notes for non-verb: ["form1", "form2, ..."...]
+            5. parent word: if PARENT word_type changes, synchronize all CHILD words word_type
+            6. to update word type use 'word_type_id', same for 'parent_id'
         """
         if not request.user.is_staff:
             return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
@@ -272,9 +281,28 @@ class DictionaryWordByIDView(APIView):
 
         word = DictionaryWord.objects.get(pk=word_id)
         word_type = WordType.objects.get(type=word_type_string)
-        parent_word = DictionaryWord.objects.filter(word__iexact=parent_string, word_type=word_type.id).first()
 
+        # Find chosen parent (if any)
+        parent_word = None
+        if parent_string:
+            parent_word = DictionaryWord.objects.filter(
+                    word__iexact=parent_string,
+                    word_type_id=word_type.id
+                ).first()
+            if not parent_word:
+                return Response(
+                    data={"error": "parent_word_error"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+        # ============ parent_word exists =====================
         if parent_word:
+            """ if parent_word, means it's a CHILD  word """
+            data["parent_id"] = parent_word.id
+
+            # ============ inherit parent_word word_type_id ===================
+            data["word_type_id"] = parent_word.word_type_id
+
             if is_inherit_translations:
                 data["translations"] = []
 
@@ -285,16 +313,32 @@ class DictionaryWordByIDView(APIView):
                         for note in notes_string:
                             split_note = note.split(", ")
                             tense = split_note[0]
-                            verb = Verb.objects.filter(infinitive=word.parent.word).first()
+                            verb = Verb.objects.filter(infinitive=parent_string).first()
+                            # print(verb)
                             verb_tense = tense.replace(" ", "_")
                             verb_conjugation = getattr(verb, verb_tense, None)
+
+                            # if verb_conjugation is None:
+                            #     it's nul in the database, could do some editings
+
                             verb_conjugation.insert(0, tense)
                             formatted_note = ", ".join(verb_conjugation)
                             updated_notes.append(formatted_note)
                         data["notes"] = updated_notes
             else:
                 data["notes"] = []
+        else:
+            """ an empty 'parent_string' from data """
+            data["parent_id"] = None
+            """ this is a PARENT word / normal word, ---> update parent word + all child words word_type_id """
+            data["word_type_id"] = word_type.id
 
+            all_child_words = DictionaryWord.objects.filter(parent=word.id)
+            if len(all_child_words) > 0:
+                all_child_words.update(word_type_id=word_type.id)
+
+        if data["notes"] == [""]:
+            data["notes"] = []
         # print(data)
         serializer = DictionaryWordSerializer(word, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -344,6 +388,35 @@ class GetAllSentencesView(ListAPIView):
 
 
 class CreateSentenceView(CreateAPIView):
+    """ add sentence """
+    """ do NOT remove the sentence from word translations)"""
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"detail": "403 Forbidden"}, status=status.HTTP_403_FORBIDDEN)
+
+        word_id = kwargs["word_id"]
+        sentence = request.data.get("sentence")
+        sentence_translation = request.data.get("sentence_translation")
+
+        # 1) check if word exists before adding sentence + updating word
+        try:
+            dict_word = DictionaryWord.objects.get(pk=word_id)
+        except DictionaryWord.DoesNotExist:
+            raise NotFound("Word not found.")
+
+        # 2). add the sentence - using serializer (or model)
+        new_sentence_serializer = SentenceSerializer(data={
+            "word": word_id,  # If Sentence.word is a FK
+            "sentence": sentence,
+            "translation": sentence_translation,
+        })
+        new_sentence_serializer.is_valid(raise_exception=True)
+        new_sentence_serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
+        # return Response({}, status=status.HTTP_201_CREATED)
+
+
+class MoveSentenceView(CreateAPIView):
     """create sentence + remove the sentence from word translations"""
 
     @transaction.atomic
