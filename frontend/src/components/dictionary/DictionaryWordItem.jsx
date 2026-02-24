@@ -7,12 +7,13 @@ import delete_icon from "../../assets/icons/delete_24dp.svg"
 import DictionaryWordEditForm from "./DictionaryWordEditForm";
 import api from "../../api";
 import {useRef} from "react";
+import {showToast} from "../../utils/showToast";
 
 
 function DictionaryWordItem({
     clickedWord, wordItem, wordItemId, dictionaryWords, setDictionaryWords,
     setShowMeaningId, showMeaningId, setShowEditFormId, showEditFormId,
-    searchResult, setSearchResult, searchInputData
+    searchResult, setSearchResult, searchInputData, setIsDeleted, setDeletedWord
 }) {
     // console.log("wordItem", wordItem)
     const wordType = wordItem.word_type
@@ -41,14 +42,24 @@ function DictionaryWordItem({
         scrollToElement()
     }
 
+    function handleShowDeleteMessage() {
+        setIsDeleted(true)
+        setTimeout (() => {
+            setIsDeleted(false);
+            setDeletedWord(null)
+        }, 2000)
+    }
+
     function handleDeleteWordItemByType() {
         setShowMeaningId(null)
+        // handleShowDeleteMessage() // ????not showing modal
+        // setDeletedWord(wordItem)
         api.delete(`/word/id/${wordItem.id}/`)
                .then(res => {
 
                    // setDictionaryWords(updatedWords)
                    if (searchResult) {
-                       const updatedSearchResult = searchResult.filter(dw => {
+                       const updatedSearchResult = searchResult?.data.filter(dw => {
                             return dw.id !== wordItem.id
                        })
                        setSearchResult({...searchResult, data: updatedSearchResult})
@@ -58,6 +69,8 @@ function DictionaryWordItem({
                        })
                        setDictionaryWords(updatedWords)
                    }
+                   setDeletedWord(wordItem)
+                   handleShowDeleteMessage()
                 })
                 .catch(error => {
                    if (error.response) {
