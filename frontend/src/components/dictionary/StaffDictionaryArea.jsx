@@ -3,6 +3,7 @@ import DictionaryWordItem from "./DictionaryWordItem";
 import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
 import {useState} from "react";
 import DictionarySearchBar from "./DictionarySearchBar";
+import ToastMessage from "../widgets/ToastMessage";
 
 function StaffDictionaryArea({
     ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
@@ -13,6 +14,8 @@ function StaffDictionaryArea({
     // const [isShowEditForm, setShowEditForm] = useState(false)
     const [showMeaningId, setShowMeaningId] = useState(null)
     const [showEditFormId, setShowEditFormId] = useState(null)
+    const [deletedWord, setDeletedWord] = useState(null)
+    const [isDeleted, setIsDeleted] = useState(false)
 
     const wordToShow = searchResult !== null ? searchResult.word : clickedWord
     const ipaToShow = searchResult !== null ? searchResult.ipa : ipa
@@ -40,20 +43,26 @@ function StaffDictionaryArea({
                 {!isShowNewMeaningForm && (
                     <div>
                         <HeadSectionContainer className="staff-dictionary-header">
-                        <WordInfoWrapper>
-                            <Word>{wordToShow}</Word>
-                            <Ipa>{ipaToShow}</Ipa>
-                        </WordInfoWrapper>
-                        {/*<AddNewButtonWrapper className="add-meaning-button-wrapper" >*/}
-                        {/*    <StaffDictionaryButton*/}
-                        {/*        style={{width: "100%", padding: "0.75rem"}}*/}
-                        {/*        onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}*/}
-                        {/*    >*/}
-                        {/*        New meaning*/}
-                        {/*    </StaffDictionaryButton>*/}
-                        {/*</AddNewButtonWrapper>*/}
+                            <WordInfoWrapper>
+                                <Word>{wordToShow}</Word>
+                                <Ipa>{ipaToShow}</Ipa>
+                            </WordInfoWrapper>
+                            {/*<AddNewButtonWrapper className="add-meaning-button-wrapper" >*/}
+                            {/*    <StaffDictionaryButton*/}
+                            {/*        style={{width: "100%", padding: "0.75rem"}}*/}
+                            {/*        onClick={() => setShowNewMeaningForm(!isShowNewMeaningForm)}*/}
+                            {/*    >*/}
+                            {/*        New meaning*/}
+                            {/*    </StaffDictionaryButton>*/}
+                            {/*</AddNewButtonWrapper>*/}
 
-                    </HeadSectionContainer>
+                        </HeadSectionContainer>
+
+                        {isDeleted && (
+                            <ToastMessage
+                                message={<>Remove <b>{deletedWord?.word_type}</b> from <b>{deletedWord?.word}</b></>}
+                            />
+                        )}
 
                         {!isShowNewMeaningForm && (
                             <DictionaryWrapper className="dinctionary-wrapper">
@@ -75,6 +84,8 @@ function StaffDictionaryArea({
                                         setSearchResult={setSearchResult}
                                         searchResult={searchResult}
                                         searchInputData={searchInputData}
+                                        setIsDeleted={setIsDeleted}
+                                        setDeletedWord={setDeletedWord}
                                     />
                                 )}
                             </DictionaryWrapper>
