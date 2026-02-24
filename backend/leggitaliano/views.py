@@ -317,6 +317,10 @@ class DictionaryWordByIDView(APIView):
                             # print(verb)
                             verb_tense = tense.replace(" ", "_")
                             verb_conjugation = getattr(verb, verb_tense, None)
+
+                            # if verb_conjugation is None:
+                            #     it's nul in the database, could do some editings
+
                             verb_conjugation.insert(0, tense)
                             formatted_note = ", ".join(verb_conjugation)
                             updated_notes.append(formatted_note)
