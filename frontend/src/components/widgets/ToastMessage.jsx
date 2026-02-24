@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import check_circle_fill_icon from "../assets/icons/check_circle_fill_24dp.svg"
+import check_circle_fill_icon from "../../assets/icons/check_circle_fill_24dp.svg"
 
 function ToastMessage({ message }) {
     return (
