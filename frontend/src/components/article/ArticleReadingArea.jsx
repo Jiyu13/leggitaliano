@@ -63,7 +63,7 @@ const ReadableArea = styled.div`
     color: #ddd;
     overflow: auto;
     border-radius: 8px;
-    padding: 16px;
+    padding: 16px 0;
 
 `
 

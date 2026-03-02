@@ -23,7 +23,7 @@ function StaffDictionaryArea({
 
 
     return (
-        <DictionaryContainer className="dinctionary-area-container" style={{marginRight: "0.25rem"}}>
+        <DictionaryContainer className="dinctionary-area-container" style={{marginLeft: "0.5rem", marginRight: "0.25rem"}}>
 
             <DictionarySection className="dinctionary-section">
                 <DictionarySearchBar
