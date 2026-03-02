@@ -50,7 +50,7 @@ class Article(models.Model):
 
     title = models.CharField(max_length=255, db_index=True)
     content = models.TextField()
-    current_page = models.PositiveIntegerField(default=0)
+    current_page = models.PositiveIntegerField(default=1)
     uuid = models.UUIDField(default=_uuid.uuid4, editable=False, unique=True)
     finished = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
