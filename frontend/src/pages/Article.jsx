@@ -18,7 +18,7 @@ function Article() {
     const {currentArticle, setCurrentArticle, currentUser} = useContext(UserContext)
 
     const [isLoading, setLoading] = useState(false)
-    const [currentPage, setCurrentPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(currentArticle?.current_page)
     const [sentence, setSentence] = useState(null)
 
     const [clickedWord, setClickedWord] = useState(null)
@@ -28,9 +28,7 @@ function Article() {
     const [dictionaryWords, setDictionaryWords] = useState(null)             // {} a word model data
     const [wordNotFound, setNotFound] = useState(null)
 
-    const [totalWords, setTotalWords] = useState(0)
-    const [finishReading, setFinishReading] = useState(null)
-    const [lastClick, setLastClick] = useState(null)
+    // const [lastClick, setLastClick] = useState(null)
 
     const [isShowNewMeaningForm, setShowNewMeaningForm] = useState(false)
 
@@ -103,9 +101,11 @@ function Article() {
     // ======================== article -> paragraphs -> words =========================================================
     const articleWords = splitText(currentArticle?.content)
     const pages = calculatePages(articleWords, WORD_EACH_PAGE)
-    const textInPages = articleWords?.slice((currentPage) * WORD_EACH_PAGE, (currentPage) * WORD_EACH_PAGE + WORD_EACH_PAGE) // slice, get words from [0-250], page increases/decreases by 1
-                        .join(' ')    // join 250 words with space to make it a paragraph
-                        .replaceAll("##", "\n\n")
+    const textInPages = articleWords?.slice(             // slice, get words from [0-250], page increases/decreases by 1
+            (currentPage - 1) * WORD_EACH_PAGE,
+            (currentPage) * WORD_EACH_PAGE + WORD_EACH_PAGE
+        ).join(' ')    // join 250 words with space to make it a paragraph
+        .replaceAll("##", "\n\n")
     const paragraphs = textInPages?.split("\n\n").map(p => p.trim())
     // =================================================================================================================
 
@@ -118,28 +118,23 @@ function Article() {
         setDictionaryWords(null)
         setIpa(null)
 
-
-        if (currentPage > 0){
+        if (currentPage > 1){
             const prevPage = currentPage - 1
             setCurrentPage(prevPage)
-            updatePageInDB(prevPage)
+            updatePage(prevPage)
         }
-        else if (currentPage === 0) {
-             setCurrentPage(0)
-             updatePageInDB(0)
+        else if (currentPage === 1) {
+             setCurrentPage(1)
+             updatePage(1)
         }
-        setFinishReading(false)
 
-        if (totalWords >= currentPage * WORD_EACH_PAGE){
-            setTotalWords(totalWords - WORD_EACH_PAGE)
-        }
         divRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    useEffect(() => {
-        let timeNow = new Date().getTime()
-        setLastClick(timeNow)
-    }, [currentPage, setLastClick])
+    // useEffect(() => {
+    //     let timeNow = new Date().getTime()
+    //     setLastClick(timeNow)
+    // }, [currentPage, setLastClick])
 
 
     function handleNextPage() {
@@ -148,40 +143,35 @@ function Article() {
         setDictionaryWords(null)
         setIpa(null)
 
-        let timeNow = new Date().getTime()
-        if (currentPage < pages - 1) {
+        if (currentPage < pages) {
             const nextPage = currentPage + 1
             setCurrentPage(nextPage)
-            updatePageInDB(nextPage)
-            if (lastClick && timeNow > (lastClick + 25000)) {
-                handleWordsRead(WORD_EACH_PAGE)
-            }
-            setTotalWords(totalWords + WORD_EACH_PAGE)
+            updatePage(nextPage)
         }
         divRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function handleWordsRead(wordsRead) {
+    // function handleWordsRead(wordsRead) {
+    //     const rest = api.patch(`/article/${currentArticle.id}/`, {finished: true,})
+    //
+    //     // apiFetch('/stats', {
+    //     //     method: "POST",
+    //     //     headers: {"Content-Type": "application/json"},
+    //     //     body: JSON.stringify({
+    //     //         user_id: user.id,
+    //     //         words_read: wordsRead,
+    //     //     })
+    //     // })
+    // }
 
-        // apiFetch('/stats', {
-        //     method: "POST",
-        //     headers: {"Content-Type": "application/json"},
-        //     body: JSON.stringify({
-        //         user_id: user.id,
-        //         words_read: wordsRead,
-        //     })
-        // })
-    }
 
-
-    function handleFinishReading() {
+    async function handleFinishReading() {
         if ( currentArticle.finished !== true ) {
             try {
-                const rest = api.patch(`/article/${currentArticle.id}/`, {finished: true,})
-                const lastPageWords = articleWords?.length - (pages - 1) * WORD_EACH_PAGE
-                handleWordsRead(lastPageWords)
-                setTotalWords(totalWords + lastPageWords)
-                setFinishReading(true)
+                const res = await api.patch(`/article/${currentArticle.id}/`, {finished: true,})
+                const updatedData = res.data
+                setCurrentArticle(updatedData)
+
             } catch (error) {
                 console.log(error.response?.data)
             }
@@ -189,12 +179,15 @@ function Article() {
 
     }
 
-    function updatePageInDB(page) {
-        try {
-            const rest = api.patch(`/article/${currentArticle.id}/`, {current_page: page})
-        } catch (error) {
-            console.log(error.response?.data)
-        }
+    function updatePage(page) {
+        api.patch(`/article/${currentArticle.id}/`, {current_page: page})
+            .then(res => {
+                const updatedData = res.data
+                setCurrentArticle(updatedData)
+            })
+            .catch (error => {
+                console.log(error.response?.data)
+            })
     }
 
     return (
@@ -215,6 +208,7 @@ function Article() {
                         handleFinishReading={handleFinishReading}
                         sentence={sentence}
                         setSentence={setSentence}
+
                     />
                     {currentUser?.is_staff && (
                         <StaffDictionaryArea

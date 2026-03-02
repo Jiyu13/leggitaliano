@@ -52,7 +52,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = (
             "id", "user", "title", "content", "uuid", "current_page", "finished", "created_at", "update_at", "total_words"
         )
-        read_only_fields = ("user", "uuid", "current_page", "finished", "created_at", "update_at")
+        read_only_fields = ("user", "uuid", "created_at")
 
 
 class WordTypeSerializer(serializers.ModelSerializer):
