@@ -139,7 +139,7 @@ class ArticlesByIDView(APIView):
         article = get_object_or_404(Article, pk=article_id, user=request.user)
         serializer = ArticleSerializer(article, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, article_id):
