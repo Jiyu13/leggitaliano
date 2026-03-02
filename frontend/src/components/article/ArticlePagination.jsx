@@ -80,7 +80,8 @@ const ArrowIcon = styled.svg`
   align-items: center;
   padding: 0.5rem 0;
   border-radius: 8px;
-  
+  transition: color 120ms ease;
+
   & path {
     fill: currentColor;
   }
