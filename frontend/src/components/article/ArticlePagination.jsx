@@ -1,12 +1,20 @@
 import arrow_left from "../../assets/icons/arrow_left_24dp.svg"
 import arrow_right from "../../assets/icons/arrow_right_24dp.svg"
-import check from "../../assets/icons/check_24dp.svg"
+import {ReactComponent as CheckIcon} from "../../assets/icons/check_24dp.svg"
 import styled from "styled-components";
+import {UserContext} from "../../user-content/UserContent";
+import {useContext} from "react";
 
 
-function ArticlePagination({currentPage, pages, handlePrevPage, handleNextPage, handleFinishReading, }) {
-        // ===== handle show next/prev page container & update current_page =========
-    const leftArrow = currentPage === 0 ? "hidden" : "visible"
+function ArticlePagination({
+       currentPage, pages, handlePrevPage, handleNextPage, handleFinishReading,
+}) {
+    // ===== handle show next/prev page container & update current_page =========
+
+    const { currentArticle } = useContext(UserContext)
+
+    const isFinished = currentArticle?.finished
+    const leftArrow = currentPage === 1 ? "hidden" : "visible"
 
     return(
         <PaginationContainer className="pagination-container">
@@ -20,12 +28,12 @@ function ArticlePagination({currentPage, pages, handlePrevPage, handleNextPage, 
             </ArrowContainer>
 
             <NumberContainer className="number-container">
-                <NumberDisplay>{currentPage + 1} / {pages}</NumberDisplay>
+                <NumberDisplay>{currentPage} / {pages}</NumberDisplay>
             </NumberContainer>
 
-            {currentPage === pages - 1 ?
+            {currentPage === pages ?
                 <ArrowContainer onClick={handleFinishReading}>
-                    <ArrowImg src={check} alt="finish reading icon"/>
+                    <CheckIconStyled $isFinished={isFinished} aria-label="finish reading icon" />
                 </ArrowContainer>
                 :
                 <ArrowContainer onClick={handleNextPage}>
@@ -50,6 +58,16 @@ const ArrowContainer = styled.div`
   &:hover  {
     background-color: #4a4a4a;
     border-radius: 8px;
+  }
+`
+
+const CheckIconStyled = styled(CheckIcon)`
+  width: 100%;
+  height: 36px;
+  color: ${({ $isFinished }) => ( $isFinished ? "rgb(23,188,90)" : "#fff" )};
+  transition: color 120ms ease;
+  &:hover {
+    color: ${({ $isFinished }) => ($isFinished ? "rgb(23,188,90)" : "#fff")};
   }
 `
 
