@@ -114,7 +114,7 @@ const LogoImg = styled.div`
 `
 
 const LogoText = styled.h2`
-    font-size: 28px;
+    font-size: 1.5rem;
     margin: 0 0 0 4px;
     color: inherit;
     font-weight: 500;
