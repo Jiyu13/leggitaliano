@@ -132,7 +132,7 @@ export const MenuTrigger = styled.div``
 export const AccountAccessibilityContainer = styled.div`
   background-color: #e3e3e3;
   border-radius: 45px;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   height: 100%;
   display: flex;
   align-items: center;
