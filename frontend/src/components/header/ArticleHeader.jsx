@@ -4,7 +4,7 @@ import close_icon from "../../assets/icons/close_24dp.svg"
 function ArticleHeader({articleTitle}) {
 
     return (
-        <HeaderContainer className="heading-container">
+        <HeaderContainer className="article-heading-container">
             <HeaderWrapper>
 
                 <MiddleSection>

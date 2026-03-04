@@ -11,6 +11,8 @@ import {ACCESS_TOKEN} from "./constants";
 import api from "./api";
 import Article from "./pages/Article";
 import ArticleCreate from "./pages/ArticleCreate";
+import {useMediaQuery} from "react-responsive";
+import {DeviceSize} from "./utils/responsive";
 
 function Logout() {
   localStorage.clear()
@@ -88,12 +90,16 @@ function App() {
         }
     }, [isLogin])
 
+    const isMobile = useMediaQuery({ minWidth: DeviceSize.mobile })
+    const isTablet = useMediaQuery({ minWidth: DeviceSize.tablet })
+    const isLaptop = useMediaQuery({ minWidth: DeviceSize.laptop })
+
 
     // console.log(isLogin, localStorage.getItem("isLogin"))
     const userContextValue = {
         isLogin,setIsLogin,
         currentUser, setCurrentUser, articles, setArticles, currentArticle, setCurrentArticle,
-        wordTypes
+        wordTypes, isMobile, isTablet, isLaptop
     }
 
 

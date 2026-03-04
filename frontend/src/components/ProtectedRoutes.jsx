@@ -9,11 +9,20 @@ import styled from "styled-components";
 import {UserContext} from "../user-content/UserContent";
 import FloatingHeaderNoBackground from "./header/FloatingHeaderNoBackground";
 import ArticleHeader from "./header/ArticleHeader";
+import MobileMenu from "./header/MobileMenu";
+import MobileMenuBtn from "./header/MobileMenuBtn";
+
 
 function ProtectedRoutes() {
 
-    const {setIsLogin, currentArticle} = useContext(UserContext)
+    const {setIsLogin, currentArticle, isLaptop} = useContext(UserContext)
     const [isAuthorized, setIsAuthorized] = useState(null)
+
+    const [isOpenMenu, setOpenMenu] = useState(false)
+
+    function handleOpenHeaderMenu() {
+        setOpenMenu(!isOpenMenu)
+    }
 
     const location = useLocation()
     // article-reading-page, article/add
@@ -91,9 +100,28 @@ function ProtectedRoutes() {
     return isAuthorized ?
         <PageContainer>
             {/*<Header />*/}
-            {!notShowHeader ? <FloatingHeaderNoBackground /> :  <ArticleHeader articleTitle={headerTitle}/>}
+            {notShowHeader ?
+                <ArticleHeader articleTitle={headerTitle}/>
+                :
+                <FloatingHeaderNoBackground/>
+            }
+
+            {!isLaptop && (
+                <MobileMenuBtn
+                  isOpenMenu={isOpenMenu}
+                  handleOpenHeaderMenu={handleOpenHeaderMenu}
+                />
+            )}
+
+            {/* keep MobileMenu mounted, it is mounting only when isOpenMenu is true */}
+            <MobileMenu
+               isOpenMenu={isOpenMenu}
+               handleOpenHeaderMenu={handleOpenHeaderMenu}
+            />
+
+
             <Main>
-               <Outlet />
+              <Outlet />
             </Main>
 
         </PageContainer>

@@ -36,7 +36,7 @@ function ExploreMenu({setIsOpen, isOpen, setSortOption, sortOption, isFilterFini
         setFilterFinishedClicked(!isFilterFinishedClicked)
     }
 
-    const sortByText = sortOption ? sortOption : "Sort by"
+    const sortByText = sortOption ? sortOption : "Sort"
     const arrow = isOpen ? arrow_up_icon : arrow_down_icon
     const bgColor = isOpen ? "#fff" : "#000"
     const textColor = isOpen ? "#000" : "#fff"
@@ -110,7 +110,7 @@ const SortByMenuContainer = styled.div`
   border-radius: 45px;
   border: 1px solid #939393;
   //color: #fff;
-  padding: 0.2rem 2rem;
+  padding: 0.2rem 1.5rem;
 
   &:hover {
     border: 1px solid #fff;
@@ -130,7 +130,7 @@ const SortByOptions = styled.div`
   top: 120%;   /* directly below parent */
   left: 0;     /* align left edges (or change to right:0 if needed) */
 
-  width: 100%; /* full width of SortByMenuContainer */
+  //width: 100%; /* full width of SortByMenuContainer */
   background: #fff;
   box-shadow: 0 2px 12px rgba(0,0,0,0.25);
   z-index: 999;
@@ -144,6 +144,7 @@ const OptionsWrapper = styled.div`
 const SortOption = styled.div`
   margin-top: 15px;
   margin-bottom: 15px;
+  text-wrap: nowrap;
   &:hover{
     cursor: pointer;
   }
@@ -158,7 +159,7 @@ const FilterOptionContainer = styled.div`
   border-radius: 45px;
   border: 1px solid #939393;
   color: #fff;
-  padding: 0.2rem 2rem;
+  padding: 0.2rem 1.5rem;
 
   &:hover {
     border: 1px solid #fff;
@@ -182,7 +183,7 @@ const AddArticleButtonLink = styled(CustomLink)`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.25rem 2rem;
+    padding: 0.25rem 1.5rem;
   
     &:hover {
       cursor: pointer;

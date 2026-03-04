@@ -5,7 +5,7 @@ import logo from "../../assets/logo/leggitaliano.svg"
 import leggitaliano_grey_border from "../../assets/logo/leggitaliano-grey-border.svg"
 import {HeaderLinks} from "./HeaderLinks";
 
-
+// unused
 function Header() {
 
     return (

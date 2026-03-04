@@ -62,40 +62,45 @@ function Article() {
 
     // ======================= fetch translation of the clicked word ==================================================
     function handleWordClicked(word) {
-        setShowNewMeaningForm(false)
-        setDictionaryWords(null)
-        setClickedWord(null)
-        setIpa(null)
-        setNotFound(null)
+        if (!clickedWord) {
+            setShowNewMeaningForm(false)
+            setDictionaryWords(null)
+            setClickedWord(null)
+            setIpa(null)
+            setNotFound(null)
 
-        setUserDictSearchError(null)
-        setUserDictSearchResult(null)
-        setUserDictSearchInputData("")
-        setStaffDictSearchError(null)
-        setStaffDictSearchResult(null)
-        setStaffDictSearchInputData("")
+            setUserDictSearchError(null)
+            setUserDictSearchResult(null)
+            setUserDictSearchInputData("")
+            setStaffDictSearchError(null)
+            setStaffDictSearchResult(null)
+            setStaffDictSearchInputData("")
 
-        const cleanWord = word
-            .trim()
-            .replace(/^[\p{P}\p{S}]+|[\p{P}\p{S}]+$/gu, "")
-            .toLowerCase();
+            const cleanWord = word
+                .trim()
+                .replace(/^[\p{P}\p{S}]+|[\p{P}\p{S}]+$/gu, "")
+                .toLowerCase();
 
-        setClickedWord(cleanWord)
-        api.get(`/word/word/${cleanWord}/`)
-            .then(res => {
-                const result = res.data
-                setIpa(result["ipa"])
-                // console.log("result", result.data)
-                setDictionaryWords(result.data)
-            })
-            .catch(error => {
-               if (error.response) {
-                // server responded with error status
-               setNotFound(error.response.data.error);
-              } else {
-                // network / CORS / other failure
-                console.log("network error", error.message);
-            }})
+            setClickedWord(cleanWord)
+            api.get(`/word/word/${cleanWord}/`)
+                .then(res => {
+                    const result = res.data
+                    setIpa(result["ipa"])
+                    // console.log("result", result.data)
+                    setDictionaryWords(result.data)
+                })
+                .catch(error => {
+                   if (error.response) {
+                    // server responded with error status
+                   setNotFound(error.response.data.error);
+                  } else {
+                    // network / CORS / other failure
+                    console.log("network error", error.message);
+                }})
+        } else {
+            setClickedWord(null)
+        }
+
     }
 
     // ======================== article -> paragraphs -> words =========================================================
@@ -210,7 +215,7 @@ function Article() {
                         setSentence={setSentence}
 
                     />
-                    {currentUser?.is_staff && (
+                    {currentUser?.is_staff && clickedWord && (
                         <StaffDictionaryArea
                             ipa={ipa}
                             setIpa={setIpa}
@@ -231,22 +236,26 @@ function Article() {
                         />
 
                     )}
-                    <UserDictionaryArea
-                        ipa={ipa}
-                        setIpa={setIpa}
-                        clickedWord={clickedWord}
-                        clickedWordIndex={clickedWordIndex}
-                        dictionaryWords={dictionaryWords}
-                        setDictionaryWords={setDictionaryWords}
-                        wordNotFound={wordNotFound}
-                        setNotFound={setNotFound}
-                        searchResult={userDictSearchResult}
-                        setSearchResult={setUserDictSearchResult}
-                        searchInputData={userDictSearchInputData}
-                        setSearchInputData={setUserDictSearchInputData}
-                        searchError={userDictSearchError}
-                        setSearchError={setUserDictSearchError}
-                    />
+
+                    { clickedWord && (
+                        <UserDictionaryArea
+                            ipa={ipa}
+                            setIpa={setIpa}
+                            clickedWord={clickedWord}
+                            clickedWordIndex={clickedWordIndex}
+                            dictionaryWords={dictionaryWords}
+                            setDictionaryWords={setDictionaryWords}
+                            wordNotFound={wordNotFound}
+                            setNotFound={setNotFound}
+                            searchResult={userDictSearchResult}
+                            setSearchResult={setUserDictSearchResult}
+                            searchInputData={userDictSearchInputData}
+                            setSearchInputData={setUserDictSearchInputData}
+                            searchError={userDictSearchError}
+                            setSearchError={setUserDictSearchError}
+                        />
+                    )}
+
                 </ArticleContainer>
             )}
         </>

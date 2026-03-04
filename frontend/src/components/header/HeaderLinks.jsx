@@ -59,7 +59,7 @@ const LinkItem = styled.li`
     margin: 0 1.1em;
     color: #222;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 1rem;
     align-items: center;
     justify-content: center;
     display: flex;
