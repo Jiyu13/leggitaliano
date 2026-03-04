@@ -1,17 +1,19 @@
 import styled from "styled-components";
-import {useNavigate} from "react-router-dom";
 import leggitaliano_grey_border from "../../assets/logo/leggitaliano-grey-border.svg"
 import {UserContext} from "../../user-content/UserContent";
-import api from "../../api";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext} from "react";
 import {AccountAccessibility} from "./AccountAccessibility";
 
 
 function FloatingHeaderNoBackground() {
 
+    const { isLaptop } = useContext(UserContext)
+
+
     return (
         <HeaderContainer className="heading-container">
-            <HeaderWrapper>
+            <HeaderWrapper className="heading-wrapper">
+
                 <LeftSection>
                     <a href ="/" style={{textDecoration:'none', color: "inherit"}}>
                         <LogoWrapper>
@@ -19,40 +21,47 @@ function FloatingHeaderNoBackground() {
                                 <img src={leggitaliano_grey_border} alt="Leggitaliano Logo" style={{backgroundColor: "transparent"}}/>
                             </LogoImg>
 
-                            <LogoText>Leggitaliano</LogoText>
+                            { isLaptop && ( <LogoText>Leggitaliano</LogoText> )}
+
                         </LogoWrapper>
                     </a>
                 </LeftSection>
 
-                {/* call NavLinks component */}
-                <MiddleSection>
 
-                    <NavLinksContainer>
-                        <LinksWrapper>
+                {isLaptop && (
+                    <>
+                        {/* call NavLinks component */}
+                        <MiddleSection>
+                            <NavLinksContainer>
+                                <LinksWrapper>
 
-                            <LinkItem>
-                                <Link href="/">Home</Link>
-                            </LinkItem>
+                                    <LinkItem>
+                                        <Link href="/">Home</Link>
+                                    </LinkItem>
 
-                            <LinkItem>
-                                <Link href="/">Word Decks</Link>
-                            </LinkItem>
+                                    <LinkItem>
+                                        <Link href="/">Word Decks</Link>
+                                    </LinkItem>
 
-                            <LinkItem>
-                                <Link className="recent-reading" style={{cursor: "pointer"}}>
-                                    Currently Reading
-                                    <HideTitle className="last-open-title">No current reading.</HideTitle>
-                                </Link>
-                            </LinkItem>
+                                    <LinkItem>
+                                        <Link className="recent-reading" style={{cursor: "pointer"}}>
+                                            Currently Reading
+                                            <HideTitle className="last-open-title">No current reading.</HideTitle>
+                                        </Link>
+                                    </LinkItem>
 
-                        </LinksWrapper>
-                    </NavLinksContainer>
-                </MiddleSection>
+                                </LinksWrapper>
+                            </NavLinksContainer>
+                        </MiddleSection>
 
-                {/* call Accessibility component */}
-                <RightSection>
-                    <AccountAccessibility />
-                </RightSection>
+                        {/* call Accessibility component */}
+                        <RightSection>
+                            <AccountAccessibility />
+                        </RightSection>
+                   </>
+
+                )}
+
             </HeaderWrapper>
         </HeaderContainer>
     )
@@ -76,9 +85,8 @@ const HeaderContainer = styled.header`
 const HeaderWrapper = styled.div`
   width: 100%;
   padding: 0 1.5em;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
 `
 
