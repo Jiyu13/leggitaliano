@@ -9,13 +9,15 @@ import {calculatePages} from "../utils/calculatePages";
 import StaffDictionaryArea from "../components/dictionary/StaffDictionaryArea";
 import UserDictionaryArea from "../components/dictionary/UserDictionaryArea";
 import {ArticleHeaderContainer, CustomContainer} from "../styles/containerStyles";
+import MobileEditDictionaryBtn from "../components/dictionary/MobileEditDictionaryBtn";
+import UserDictionaryMobile from "../components/dictionary/UserDictionaryMobile";
 
 const WORD_EACH_PAGE = 100
 
 function Article() {
 
     const { article_title, article_id } = useParams()
-    const {currentArticle, setCurrentArticle, currentUser} = useContext(UserContext)
+    const {currentArticle, setCurrentArticle, currentUser, isLaptop, isTablet, isMobile} = useContext(UserContext)
 
     const [isLoading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(currentArticle?.current_page)
@@ -40,6 +42,8 @@ function Article() {
     const [staffDictSearchResult, setStaffDictSearchResult] = useState(null)   // {word, ipa, data(a word model data)}
     const [staffDictSearchError, setStaffDictSearchError] = useState(null)
 
+    const [isMobileDictionaryOpen, setMobileDictionaryOpen] = useState(false)
+
 
 
     useEffect(() => {
@@ -62,7 +66,7 @@ function Article() {
 
     // ======================= fetch translation of the clicked word ==================================================
     function handleWordClicked(word) {
-        if (!clickedWord) {
+        if (!clickedWord || clickedWord.toLowerCase() !== word.toLowerCase()) {
             setShowNewMeaningForm(false)
             setDictionaryWords(null)
             setClickedWord(null)
@@ -88,6 +92,7 @@ function Article() {
                     setIpa(result["ipa"])
                     // console.log("result", result.data)
                     setDictionaryWords(result.data)
+                    setMobileDictionaryOpen(true)
                 })
                 .catch(error => {
                    if (error.response) {
@@ -122,6 +127,8 @@ function Article() {
         setClickedWordIndex(null)
         setDictionaryWords(null)
         setIpa(null)
+        setMobileDictionaryOpen(false)
+
 
         if (currentPage > 1){
             const prevPage = currentPage - 1
@@ -147,6 +154,8 @@ function Article() {
         setClickedWordIndex(null)
         setDictionaryWords(null)
         setIpa(null)
+        setMobileDictionaryOpen(false)
+
 
         if (currentPage < pages) {
             const nextPage = currentPage + 1
@@ -199,6 +208,19 @@ function Article() {
         <>
             {currentArticle && (
                 <ArticleContainer className="article-container">
+
+                    {/* overlay for mobile dictionary*/}
+                    {(!isTablet && !isLaptop ) && isMobileDictionaryOpen && (
+                        /* eslint-disable jsx-a11y/anchor-is-valid */
+                        /* eslint-disable jsx-a11y/anchor-has-content */
+
+                        <a href="#"
+                           className="mobile dictionary-overlay"
+                            style={{width: "100%", position: "fixed", height: "120px"}}
+                            onClick={() => setMobileDictionaryOpen(false)}
+                        />
+                    )}
+
                     <ArticleReadingArea
                         currentPage={currentPage}
                         paragraphs={paragraphs}
@@ -215,53 +237,91 @@ function Article() {
                         setSentence={setSentence}
 
                     />
-                    {currentUser?.is_staff && clickedWord && (
-                        <StaffDictionaryArea
-                            ipa={ipa}
-                            setIpa={setIpa}
-                            clickedWord={clickedWord}
-                            clickedWordIndex={clickedWordIndex}
-                            dictionaryWords={dictionaryWords}
-                            setDictionaryWords={setDictionaryWords}
-                            wordNotFound={wordNotFound}
-                            setNotFound={setNotFound}
-                            isShowNewMeaningForm={isShowNewMeaningForm}
-                            setShowNewMeaningForm={setShowNewMeaningForm}
-                            searchResult={staffDictSearchResult}
-                            setSearchResult={setStaffDictSearchResult}
-                            searchInputData={staffDictSearchInputData}
-                            setSearchInputData={setStaffDictSearchInputData}
-                            searchError={staffDictSearchError}
-                            setSearchError={setStaffDictSearchError}
-                        />
+                    {(isTablet || isLaptop ) ?
+                        (
+                            <>
+                                {currentUser?.is_staff && clickedWord && (
+                                    <StaffDictionaryArea
+                                        ipa={ipa}
+                                        setIpa={setIpa}
+                                        clickedWord={clickedWord}
+                                        clickedWordIndex={clickedWordIndex}
+                                        dictionaryWords={dictionaryWords}
+                                        setDictionaryWords={setDictionaryWords}
+                                        wordNotFound={wordNotFound}
+                                        setNotFound={setNotFound}
+                                        isShowNewMeaningForm={isShowNewMeaningForm}
+                                        setShowNewMeaningForm={setShowNewMeaningForm}
+                                        searchResult={staffDictSearchResult}
+                                        setSearchResult={setStaffDictSearchResult}
+                                        searchInputData={staffDictSearchInputData}
+                                        setSearchInputData={setStaffDictSearchInputData}
+                                        searchError={staffDictSearchError}
+                                        setSearchError={setStaffDictSearchError}
+                                    />
 
-                    )}
+                                )}
 
-                    { clickedWord && (
-                        <UserDictionaryArea
-                            ipa={ipa}
-                            setIpa={setIpa}
-                            clickedWord={clickedWord}
-                            clickedWordIndex={clickedWordIndex}
-                            dictionaryWords={dictionaryWords}
-                            setDictionaryWords={setDictionaryWords}
-                            wordNotFound={wordNotFound}
-                            setNotFound={setNotFound}
-                            searchResult={userDictSearchResult}
-                            setSearchResult={setUserDictSearchResult}
-                            searchInputData={userDictSearchInputData}
-                            setSearchInputData={setUserDictSearchInputData}
-                            searchError={userDictSearchError}
-                            setSearchError={setUserDictSearchError}
-                        />
-                    )}
+                                { clickedWord && (
+                                    <UserDictionaryArea
+                                        ipa={ipa}
+                                        setIpa={setIpa}
+                                        clickedWord={clickedWord}
+                                        clickedWordIndex={clickedWordIndex}
+                                        dictionaryWords={dictionaryWords}
+                                        setDictionaryWords={setDictionaryWords}
+                                        wordNotFound={wordNotFound}
+                                        setNotFound={setNotFound}
+                                        searchResult={userDictSearchResult}
+                                        setSearchResult={setUserDictSearchResult}
+                                        searchInputData={userDictSearchInputData}
+                                        setSearchInputData={setUserDictSearchInputData}
+                                        searchError={userDictSearchError}
+                                        setSearchError={setUserDictSearchError}
+                                    />
+                                )}
+
+                            </>
+                        )
+                        :
+                        (
+                            <UserDictionaryMobile
+                                isMobileDictionaryOpen={isMobileDictionaryOpen}
+                                ipa={ipa}
+                                setIpa={setIpa}
+                                clickedWord={clickedWord}
+                                clickedWordIndex={clickedWordIndex}
+                                dictionaryWords={dictionaryWords}
+                                setDictionaryWords={setDictionaryWords}
+                                wordNotFound={wordNotFound}
+                                setNotFound={setNotFound}
+                                isShowNewMeaningForm={isShowNewMeaningForm}
+                                setShowNewMeaningForm={setShowNewMeaningForm}
+                                staffDictSearchResult={staffDictSearchResult}
+                                setStaffDictSearchResult={setStaffDictSearchResult}
+                                staffDictSearchInputData={staffDictSearchInputData}
+                                setStaffDictSearchInputData={setStaffDictSearchInputData}
+                                staffDictSearchError={staffDictSearchError}
+                                setStaffDictSearchError={setStaffDictSearchError}
+
+                                userDictSearchResult={userDictSearchResult}
+                                setUserDictSearchResult={setUserDictSearchResult}
+                                userDictSearchInputData={userDictSearchInputData}
+                                setUserDictSearchInputData={setUserDictSearchInputData}
+                                userDictSearchError={userDictSearchError}
+                                setUserDictSearchError={setUserDictSearchError}
+                            />
+
+                        )
+                    }
+
 
                 </ArticleContainer>
             )}
         </>
     )
 }
-const ArticleContainer = styled(ArticleHeaderContainer)`
+const ArticleContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -271,6 +331,47 @@ const ArticleContainer = styled(ArticleHeaderContainer)`
     line-height: 1.6;
     position: fixed;
     padding: 0 1rem;
+    margin: 100px auto 0;
+   height: calc(100% - 120px)
 `
+
+const DictionaryArea = styled.div`
+  flex: 1;        /* right column takes half-ish; adjust if you want */
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+`;
+
+const DictionaryRow = styled.div`
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  gap: 1rem;
+
+  /* if only UserDictionaryArea exists, let it take full width */
+  ${({ $twoCols }) => !$twoCols && `
+    gap: 0;
+  `}
+`;
+
+const DictPanel = styled.div`
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+
+  /* If you want the single User panel to always fill, this is optional */
+  ${({ $full }) => $full && `
+    flex: 1;
+  `}
+`;
+
+const DictionaryRegionMobile = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 
 export default Article
