@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import DictionaryWordItem from "./DictionaryWordItem";
 import DictionaryWordNewMeaningForm from "./DictionaryWordNewMeaningForm";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import DictionarySearchBar from "./DictionarySearchBar";
 import ToastMessage from "../widgets/ToastMessage";
+import {UserContext} from "../../user-content/UserContent";
 
 function StaffDictionaryArea({
     ipa, setIpa, clickedWord, dictionaryWords, setDictionaryWords, wordNotFound, setNotFound,
@@ -11,6 +12,8 @@ function StaffDictionaryArea({
     setSearchResult, searchError, setSearchError
 
 }) {
+     const {isLaptop, isTablet} = useContext(UserContext)
+
     // const [isShowEditForm, setShowEditForm] = useState(false)
     const [showMeaningId, setShowMeaningId] = useState(null)
     const [showEditFormId, setShowEditFormId] = useState(null)
@@ -21,9 +24,13 @@ function StaffDictionaryArea({
     const ipaToShow = searchResult !== null ? searchResult.ipa : ipa
     const dictionaryWordsToShow = searchResult !== null ? searchResult.data : dictionaryWords
 
+    const maxWidth = isLaptop || isTablet ? "450px" : ""
 
     return (
-        <DictionaryContainer className="dinctionary-area-container" style={{marginLeft: "0.5rem", marginRight: "0.25rem"}}>
+        <DictionaryContainer
+            className="dinctionary-area-container"
+            style={{marginRight: "0.25rem", maxWidth: maxWidth}} //marginLeft: "0.5rem",
+        >
 
             <DictionarySection className="dinctionary-section">
                 <DictionarySearchBar
@@ -161,7 +168,6 @@ export const DictionarySection = styled.div`
 `
 export const DictionaryContainer = styled.div`
     display: flex;
-    max-width: 450px;
     width: 100%;
     background-color: #333333;
     border-radius: 8px;

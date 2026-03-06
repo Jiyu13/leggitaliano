@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import UserDictionaryWordItem from "./UserDictionaryWordItem";
 import {
     DictionaryContainer, DictionarySection,
@@ -9,23 +9,26 @@ import {
     Word, WordInfoWrapper
 } from "./StaffDictionaryArea";
 import DictionarySearchBar from "./DictionarySearchBar";
+import {UserContext} from "../../user-content/UserContent";
 
 
 function UserDictionaryArea({
     ipa, clickedWord, dictionaryWords, wordNotFound, setNotFound,
     searchInputData, setSearchInputData, searchResult, setSearchResult, searchError, setSearchError
 }) {
+    const {isLaptop, isTablet} = useContext(UserContext)
 
     const [showMeaningId, setShowMeaningId] = useState(null)
-
-
 
     const wordToShow = searchResult !== null ? searchResult.word : clickedWord
     const ipaToShow = searchResult !== null ? searchResult.ipa : ipa
     const dictionaryWordsToShow = searchResult !== null ? searchResult.data : dictionaryWords
 
+    const maxWidth = isLaptop || isTablet ? "450px" : ""
+
+
     return (
-        <DictionaryContainer className="dinctionary-area-container">
+        <DictionaryContainer className="dinctionary-area-container" style={{maxWidth: maxWidth}}>
             <DictionarySection className="dinctionary-section">
 
                 <DictionarySearchBar
