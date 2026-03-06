@@ -25,11 +25,12 @@ function StaffDictionaryArea({
     const dictionaryWordsToShow = searchResult !== null ? searchResult.data : dictionaryWords
 
     const maxWidth = isLaptop || isTablet ? "450px" : ""
+    const marginLeft = isLaptop || isTablet ? "0.5rem" : ""
 
     return (
         <DictionaryContainer
             className="dinctionary-area-container"
-            style={{marginRight: "0.25rem", maxWidth: maxWidth}} //marginLeft: "0.5rem",
+            style={{marginRight: "0.25rem", marginLeft: marginLeft, maxWidth: maxWidth}} //marginLeft: marginLeft,
         >
 
             <DictionarySection className="dinctionary-section">
