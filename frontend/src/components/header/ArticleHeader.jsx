@@ -5,9 +5,9 @@ function ArticleHeader({articleTitle}) {
 
     return (
         <HeaderContainer className="article-heading-container">
-            <HeaderWrapper>
+            <HeaderWrapper className="article-heading-wrapper">
 
-                <MiddleSection>
+                <MiddleSection className="article-heading-middle">
                     <a href ="/" style={{textDecoration:'none', color: "inherit"}}>
                         <LogoWrapper>
                             <LogoImg>
@@ -27,13 +27,9 @@ function ArticleHeader({articleTitle}) {
 
 
 const HeaderContainer = styled.header`
-    //width: 100%;
     height: 60px;
-    //box-shadow: 0 0.5px 3px rgba(15, 15, 0.13);
     display: flex;
     align-items: center;
-    //justify-content: center;
-    //padding: 0 1.5em;
     // prevent padding from making 100% width extend beyond screen
     box-sizing: border-box;
     position: fixed;
@@ -54,18 +50,8 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const LeftSection = styled.div`
-    display: flex;
-`;
 const MiddleSection = styled.div`
     display: flex;
-    //flex: 2;
-    //height: 100%;
-    //justify-content: center;
-`;
-const RightSection = styled.div`
-  display: flex;
-  justify-content: flex-end;
 `;
 
 // Logo Wrapper
@@ -90,6 +76,7 @@ const LogoText = styled.h2`
     margin: 0 4px;
     color: inherit;
     font-weight: 500;
+    white-space:nowrap;
 `
 
 export default ArticleHeader;
