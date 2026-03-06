@@ -8,8 +8,6 @@ import {splitText} from "../utils/splitText";
 import {calculatePages} from "../utils/calculatePages";
 import StaffDictionaryArea from "../components/dictionary/StaffDictionaryArea";
 import UserDictionaryArea from "../components/dictionary/UserDictionaryArea";
-import {ArticleHeaderContainer, CustomContainer} from "../styles/containerStyles";
-import MobileEditDictionaryBtn from "../components/dictionary/MobileEditDictionaryBtn";
 import UserDictionaryMobile from "../components/dictionary/UserDictionaryMobile";
 
 const WORD_EACH_PAGE = 100
