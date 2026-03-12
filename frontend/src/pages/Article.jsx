@@ -111,7 +111,7 @@ function Article() {
     const pages = calculatePages(articleWords, WORD_EACH_PAGE)
     const textInPages = articleWords?.slice(             // slice, get words from [0-250], page increases/decreases by 1
             (currentPage - 1) * WORD_EACH_PAGE,
-            (currentPage) * WORD_EACH_PAGE + WORD_EACH_PAGE
+            (currentPage) * WORD_EACH_PAGE
         ).join(' ')    // join 250 words with space to make it a paragraph
         .replaceAll("##", "\n\n")
     const paragraphs = textInPages?.split("\n\n").map(p => p.trim())
